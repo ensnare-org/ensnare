@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# Copyright (c) 2024 Mike Tsao
+
+for f in $(find . -name \*.rs -not -path "./target/*" -not -path "./vendor/*")
+do
+    if ! grep -q -E '^\/\/ Copyright' "$f"
+    then
+        echo "$f missing header"
+        exit 1
+    fi
+done
+
+cargo fmt --all && \
+    cargo doc --no-deps --workspace --examples && \
+    cargo build --no-default-features && \
+    cargo test --workspace

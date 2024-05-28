@@ -1,0 +1,35 @@
+# Copyright (c) 2024 Mike Tsao
+
+[workspace.package]
+authors = ["Mike Tsao <mike@sowbug.com>"]
+documentation = "https://docs.rs/ensnare/"
+edition = "2021"
+homepage = "https://github.com/ensnare-org/ensnare"
+license = "BSD-3-Clause"
+readme = "README.md"
+repository = "https://github.com/ensnare-org/ensnare"
+version = "0.0.1"
+
+[package]
+name = "ensnare"
+description = "A library for generating digital audio"
+keywords = ["audio", "music"]
+readme.workspace = true
+authors.workspace = true
+documentation.workspace = true
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+anyhow = "1.0.86"
+getrandom = { version = "0.2.12", features = [] }
+
+[dev-dependencies]
+clap = { version = "4.5.4", features = ["derive"] }
+
+[features]
+default = ["std"]
+std = ["getrandom/std"]
