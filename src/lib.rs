@@ -10,23 +10,9 @@ pub use version::app_version;
 /// A collection of imports that are useful to users of this crate. `use
 /// ensnare::prelude::*;` for easier onboarding.
 pub mod prelude {
-    // TODO
+    pub use super::types::prelude::*;
 }
+
+pub mod types;
 
 mod version;
-
-/// Adds two integers.
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
