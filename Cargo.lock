@@ -479,14 +479,13 @@ dependencies = [
 
 [[package]]
 name = "ensnare-proc-macros"
-version = "0.0.2-alpha.2"
+version = "0.0.1-alpha.1"
 dependencies = [
  "anyhow",
  "convert_case 0.6.0",
  "proc-macro-crate",
  "proc-macro2",
  "quote",
- "rustc-hash",
  "strum",
  "strum_macros",
  "syn 1.0.109",

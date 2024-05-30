@@ -32,7 +32,7 @@ delegate = "0.12.0"
 derivative = { version = "2.2.0", features = ["use_core"] }
 derive_builder = "0.20.0"
 derive_more = "0.99.17"
-ensnare-proc-macros = { path = "crates/proc-macros" }
+ensnare-proc-macros = { version = "0.0.1-alpha.1", path = "crates/proc-macros" }
 getrandom = { version = "0.2.12", features = [] }
 midly = "0.5.3"
 nonoverlapping_interval_tree = "0.1.5"
