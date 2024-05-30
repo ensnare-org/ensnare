@@ -26,7 +26,7 @@ Cargo commands that I like:
 Various Bash commands that I use during Ensnare development:
 
 * `./precheck`: runs formatting and tests that should precede any commit.
-* `cargo release --workspace -x alpha`: Generates a new release and pushes it to
+* `./do-release`: Generates a new release and pushes it to
   [GitHub](https://github.com/ensnare-org/ensnare) and
   [crates.io](https://crates.io/crates/ensnare).
 
