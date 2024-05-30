@@ -13,5 +13,7 @@ done
 
 cargo fmt --all && \
     cargo doc --no-deps --workspace --examples && \
-    cargo build --no-default-features && \
     cargo test --workspace
+
+# cargo build --no-default-features && \
+# this is disabled - see https://github.com/ensnare-org/ensnare/issues/1

@@ -1,0 +1,26 @@
+# Copyright (c) 2024 Mike Tsao
+
+[package]
+name = "ensnare-proc-macros"
+description = "Proc macros supporting the ensnare crate"
+publish = false
+authors.workspace = true
+documentation.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[lib]
+proc-macro = true
+
+[dependencies]
+anyhow = "1.0.75"
+convert_case = "0.6"
+proc-macro-crate = "3.1"
+proc-macro2 = "1.0.78"
+quote = "1.0"
+rustc-hash = "1.1.0"
+strum = "0.26"
+strum_macros = "0.26"
+syn = "1.0"
