@@ -49,3 +49,6 @@ clap = { version = "4.5.4", features = ["derive"] }
 default = ["std"]
 cpal = ["dep:cpal"]
 std = ["getrandom/std", "anyhow/std"]
+
+[workspace]
+members = ["crates/proc-macros", "crates/services"]
