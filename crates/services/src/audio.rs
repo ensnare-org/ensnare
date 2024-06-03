@@ -1,7 +1,7 @@
 // Copyright (c) 2024 Mike Tsao
 
-//! [CpalAudioService] provides channel-based communication with the cpal audio
-//! interface.
+//! [CpalAudioService] provides channel-based communication with the
+//! [cpal](https://crates.io/crates/cpal) audio interface.
 
 use crate::{CrossbeamChannel, ProvidesService};
 use core::fmt::Debug;
