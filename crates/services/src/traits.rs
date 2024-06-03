@@ -45,3 +45,92 @@ pub trait ProvidesService<I: core::fmt::Debug, E: core::fmt::Debug> {
         input_result
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::CrossbeamChannel;
+    use crossbeam::channel::Select;
+    use std::time::Duration;
+
+    #[derive(Debug)]
+    enum TestServiceInput {
+        Add(u8, u8),
+    }
+
+    #[derive(Debug, PartialEq)]
+    enum TestServiceEvent {
+        Added(u8),
+    }
+
+    #[derive(Debug)]
+    struct TestService {
+        inputs: CrossbeamChannel<TestServiceInput>,
+        events: CrossbeamChannel<TestServiceEvent>,
+    }
+    impl Default for TestService {
+        fn default() -> Self {
+            let r = Self {
+                inputs: Default::default(),
+                events: Default::default(),
+            };
+
+            let receiver = r.inputs.receiver.clone();
+            let sender = r.events.sender.clone();
+            std::thread::spawn(move || {
+                while let Ok(input) = receiver.recv() {
+                    match input {
+                        TestServiceInput::Add(a, b) => {
+                            let _ = sender.send(TestServiceEvent::Added(a + b));
+                        }
+                    }
+                }
+            });
+
+            r
+        }
+    }
+    impl ProvidesService<TestServiceInput, TestServiceEvent> for TestService {
+        fn sender(&self) -> &Sender<TestServiceInput> {
+            &self.inputs.sender
+        }
+
+        fn receiver(&self) -> &Receiver<TestServiceEvent> {
+            &self.events.receiver
+        }
+    }
+
+    #[test]
+    fn provides_service() {
+        let s = TestService::default();
+        let _ = s.send_input(TestServiceInput::Add(1, 2));
+
+        let mut sel = Select::default();
+
+        let test_receiver = s.receiver().clone();
+        let test_index = sel.recv(&test_receiver);
+
+        loop {
+            match sel.select_timeout(Duration::from_secs(1)) {
+                Ok(oper) => match oper.index() {
+                    index if index == test_index => {
+                        if let Ok(input) = TestService::recv_operation(oper, &test_receiver) {
+                            match input {
+                                TestServiceEvent::Added(sum) => {
+                                    assert_eq!(sum, 3);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    other => {
+                        panic!("Unexpected select index: {other}");
+                    }
+                },
+                Err(e) => {
+                    panic!("select failed: {e:?}");
+                }
+            }
+        }
+    }
+}

@@ -18,3 +18,17 @@ impl<T> Default for CrossbeamChannel<T> {
         Self { sender, receiver }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn crossbeam_channel() {
+        let channel = CrossbeamChannel::default();
+
+        let _ = channel.sender.send(42);
+
+        assert_eq!(channel.receiver.recv().unwrap(), 42);
+    }
+}

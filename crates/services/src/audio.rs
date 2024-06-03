@@ -399,3 +399,17 @@ impl CpalAudioService {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn audio_queue() {
+        let queue = AudioQueue::new(8);
+        assert_eq!(queue.pop(), None);
+
+        queue.force_push((0.5, -0.5));
+        assert_eq!(queue.pop(), Some((0.5, -0.5)));
+    }
+}
