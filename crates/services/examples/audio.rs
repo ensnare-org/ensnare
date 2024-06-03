@@ -2,9 +2,7 @@
 
 use clap::Parser;
 use derivative::Derivative;
-use ensnare_services::{
-    AudioStereoSampleType, CpalAudioService, CpalAudioServiceEvent, ProvidesService,
-};
+use ensnare_services::prelude::*;
 use std::{f32::consts::PI, sync::Arc};
 
 #[derive(clap::Parser, Debug, Default)]
@@ -15,6 +13,18 @@ struct Args {
     frequency: Option<f32>,
 }
 
+/// This struct doesn't use (f32, f32) to represent a stereo sample. We've
+/// designed it that way to show how to convert to the expected
+/// [AudioStereoSampleType].
+struct ToneSample((i16, i16));
+impl ToneSample {
+    fn left(&self) -> i16 {
+        self.0 .0
+    }
+    fn right(&self) -> i16 {
+        self.0 .1
+    }
+}
 #[derive(Derivative)]
 #[derivative(Default)]
 struct ToneGenerator {
@@ -22,7 +32,7 @@ struct ToneGenerator {
     frequency: f32,
     frame_count: f32,
     sample_rate: f32,
-    buffer: Vec<AudioStereoSampleType>,
+    buffer: Vec<ToneSample>,
 }
 impl ToneGenerator {
     #[allow(dead_code)]
@@ -44,14 +54,15 @@ impl ToneGenerator {
     fn generate(&mut self, frame_count: usize) {
         self.buffer.clear();
         for _ in 0..frame_count {
-            let sample_value =
-                ((self.frame_count / self.sample_rate) * self.frequency * 2.0 * PI).sin();
-            self.buffer.push((sample_value, sample_value));
+            let sample_value = (((self.frame_count / self.sample_rate) * self.frequency * 2.0 * PI)
+                .sin()
+                * i16::MAX as f32) as i16;
+            self.buffer.push(ToneSample((sample_value, sample_value)));
             self.frame_count += 1.0;
         }
     }
 
-    fn buffer(&self) -> &[AudioStereoSampleType] {
+    fn buffer(&self) -> &[ToneSample] {
         &self.buffer
     }
 
@@ -112,7 +123,16 @@ fn main() -> anyhow::Result<()> {
                 tone_generator.generate(frame_count);
                 // Send the audio buffer to the service.
                 let _ = sender.send(ensnare_services::CpalAudioServiceInput::Frames(Arc::new(
-                    tone_generator.buffer().to_vec(),
+                    tone_generator
+                        .buffer()
+                        .iter()
+                        .map(|s| {
+                            (
+                                s.left() as f32 / i16::MAX as f32,
+                                s.right() as f32 / i16::MAX as f32,
+                            )
+                        })
+                        .collect(),
                 )));
 
                 // Have we run long enough?
