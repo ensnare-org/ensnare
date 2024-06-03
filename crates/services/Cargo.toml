@@ -15,7 +15,7 @@ anyhow = "1.0.86"
 cpal = { version = "0.15.3", optional = true }
 crossbeam = "0.8.4"
 delegate = "0.12.0"
-ensnare = { path = "../.." }
+ensnare = "0.0.2-alpha.6"
 
 [dev-dependencies]
 anyhow = "1.0.86"

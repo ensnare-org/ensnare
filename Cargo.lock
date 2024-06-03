@@ -488,7 +488,31 @@ dependencies = [
  "derivative",
  "derive_builder",
  "derive_more",
- "ensnare-proc-macros",
+ "ensnare-proc-macros 0.0.3-alpha.2",
+ "getrandom",
+ "midly",
+ "nonoverlapping_interval_tree",
+ "oorandom",
+ "serde",
+ "strum",
+ "strum_macros",
+ "synonym",
+]
+
+[[package]]
+name = "ensnare"
+version = "0.0.2-alpha.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "701319262a586cc0d62349866167577b143a6d0626b4abca2b58c11771b84a22"
+dependencies = [
+ "anyhow",
+ "byteorder",
+ "crossbeam",
+ "delegate",
+ "derivative",
+ "derive_builder",
+ "derive_more",
+ "ensnare-proc-macros 0.0.3-alpha.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "getrandom",
  "midly",
  "nonoverlapping_interval_tree",
@@ -513,6 +537,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "ensnare-proc-macros"
+version = "0.0.3-alpha.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "39f27ce6b887242bcd058b3524a2ecbb22952254cde9a20fbd5cd4ee76c7219c"
+dependencies = [
+ "convert_case 0.6.0",
+ "proc-macro-crate",
+ "proc-macro2",
+ "quote",
+ "strum",
+ "strum_macros",
+ "syn 1.0.109",
+]
+
+[[package]]
 name = "ensnare-services"
 version = "0.0.2"
 dependencies = [
@@ -522,7 +561,7 @@ dependencies = [
  "crossbeam",
  "delegate",
  "derivative",
- "ensnare",
+ "ensnare 0.0.2-alpha.6 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
