@@ -2,6 +2,7 @@
 
 use clap::Parser;
 use derivative::Derivative;
+use ensnare::traits::ProvidesService;
 use ensnare_services::prelude::*;
 use std::{f32::consts::PI, sync::Arc};
 

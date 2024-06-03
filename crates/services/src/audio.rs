@@ -3,7 +3,6 @@
 //! [CpalAudioService] provides channel-based communication with the
 //! [cpal](https://crates.io/crates/cpal) audio interface.
 
-use crate::{CrossbeamChannel, ProvidesService};
 use core::fmt::Debug;
 use cpal::{
     traits::{DeviceTrait, HostTrait, StreamTrait},
@@ -15,6 +14,7 @@ use crossbeam::{
     queue::ArrayQueue,
 };
 use delegate::delegate;
+use ensnare::{traits::ProvidesService, types::CrossbeamChannel};
 use std::sync::Arc;
 
 /// The fundamental type of an audio sample.
