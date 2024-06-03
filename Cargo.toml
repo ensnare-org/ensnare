@@ -27,7 +27,7 @@ version.workspace = true
 anyhow = { version = "1.0.86", default-features = false }
 byteorder = "1.5.0"
 cpal = { version = "0.15.3", optional = true }
-crossbeam-channel = "0.5.13"
+crossbeam = "0.8.4"
 delegate = "0.12.0"
 derivative = { version = "2.2.0", features = ["use_core"] }
 derive_builder = "0.20.0"
