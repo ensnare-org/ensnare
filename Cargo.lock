@@ -477,7 +477,7 @@ checksum = "3dca9240753cf90908d7e4aac30f630662b02aebaa1b58a3cadabdb23385b58b"
 
 [[package]]
 name = "ensnare"
-version = "0.0.2-alpha.4"
+version = "0.0.2-alpha.5"
 dependencies = [
  "anyhow",
  "byteorder",
@@ -501,7 +501,7 @@ dependencies = [
 
 [[package]]
 name = "ensnare-proc-macros"
-version = "0.0.3-alpha.1"
+version = "0.0.3-alpha.2"
 dependencies = [
  "convert_case 0.6.0",
  "proc-macro-crate",
@@ -514,7 +514,7 @@ dependencies = [
 
 [[package]]
 name = "ensnare-services"
-version = "0.0.2-alpha.1"
+version = "0.0.2-alpha.2"
 dependencies = [
  "anyhow",
  "clap",
