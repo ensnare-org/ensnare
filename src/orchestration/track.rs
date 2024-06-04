@@ -25,6 +25,7 @@ impl IsUid for TrackUid {
     }
 }
 
+/// Mints unique [TrackUid]s.
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TrackUidFactory(UidFactory<TrackUid>);
 impl Default for TrackUidFactory {
@@ -35,6 +36,7 @@ impl Default for TrackUidFactory {
 impl TrackUidFactory {
     delegate! {
         to self.0 {
+            #[allow(missing_docs)]
             pub fn mint_next(&self) -> TrackUid;
         }
     }

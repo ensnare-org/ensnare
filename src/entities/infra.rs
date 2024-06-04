@@ -102,6 +102,7 @@ impl<E: Entity + ?Sized> EntityFactory<E> {
 
 /// The purpose of this trait is to allow MidiRouter not to have to worry about
 /// [Entity] trait bounds.
+#[allow(dead_code)]
 pub trait ReturnsHandlesMidi {
     fn get_handles_midi_mut(&mut self, uid: &Uid) -> Option<&mut dyn HandlesMidi>;
 }
@@ -130,6 +131,7 @@ impl<E: Entity + ?Sized> Default for EntityStore<E> {
         }
     }
 }
+#[allow(dead_code)]
 impl<E: Entity + ?Sized> EntityStore<E> {
     /// Adds an [Entity] to the store.
     pub fn add(&mut self, mut entity: Box<E>, uid: Uid) -> anyhow::Result<()> {
@@ -333,6 +335,7 @@ impl<E: Entity + ?Sized> PartialEq for EntityStore<E> {
     }
 }
 
+/// Mints unique entity [Uid]s.
 #[derive(Synonym, Debug, Serialize, Deserialize)]
 #[synonym(skip(Default))]
 pub struct EntityUidFactory(pub UidFactory<Uid>);
@@ -341,6 +344,7 @@ impl EntityUidFactory {
 
     delegate! {
         to self.0 {
+            #[allow(missing_docs)]
             pub fn mint_next(&self) -> Uid;
         }
     }

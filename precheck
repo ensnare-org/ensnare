@@ -12,7 +12,7 @@ do
 done
 
 cargo fmt --all && \
-    cargo doc --no-deps --workspace --examples && \
+    cargo doc --no-deps --workspace --examples --document-private-items && \
     cargo test --workspace
 
 # cargo build --no-default-features && \

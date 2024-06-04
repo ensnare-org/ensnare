@@ -3,7 +3,7 @@
 use clap::Parser;
 use derivative::Derivative;
 use ensnare::traits::ProvidesService;
-use ensnare_services::prelude::*;
+use ensnare_services::{prelude::*, AudioStereoSampleType};
 use std::{f32::consts::PI, sync::Arc};
 
 #[derive(clap::Parser, Debug, Default)]
@@ -128,10 +128,11 @@ fn main() -> anyhow::Result<()> {
                         .buffer()
                         .iter()
                         .map(|s| {
-                            (
+                            let converted_sample: AudioStereoSampleType = (
                                 s.left() as f32 / i16::MAX as f32,
                                 s.right() as f32 / i16::MAX as f32,
-                            )
+                            );
+                            converted_sample
                         })
                         .collect(),
                 )));

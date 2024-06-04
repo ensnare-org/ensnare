@@ -1,7 +1,9 @@
 // Copyright (c) 2024 Mike Tsao
 
-#![warn(missing_docs)]
 #![cfg_attr(not(feature = "std"), no_std)]
+#![deny(missing_docs)]
+#![allow(dead_code)] // TODO: remove when big migration is complete
+#![allow(rustdoc::private_intra_doc_links)]
 
 //! Ensnare helps create digital audio.
 

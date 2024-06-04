@@ -3217,8 +3217,7 @@ dependencies = [
 [[package]]
 name = "synonym"
 version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "648ffa7fcdbf898777556abba9d5e45245909f961dd447e34196aca7a9ef3de4"
+source = "git+https://github.com/sowbug/synonym#c34aada3ecbad3ee6e48fe8c68bf5005cda7c5f2"
 dependencies = [
  "darling",
  "proc-macro2",

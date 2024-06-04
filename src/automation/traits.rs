@@ -6,11 +6,12 @@ use strum_macros::Display;
 use super::PathUid;
 
 /// Something that is [Controllable] exposes a set of attributes, each with a
-/// text name, that an [IsController] can change. If you're familiar with DAWs,
-/// this is typically called automation.
+/// text name, that a [Controls] can change. If you're familiar with DAWs, this
+/// is typically called automation.
 ///
 /// The [Controllable] trait is more powerful than ordinary getters/setters
-/// because it allows runtime binding of an [IsController] to a [Controllable].
+/// because it allows runtime binding of a [Controls]'s output to a
+/// [Controllable]'s parameter/setting/control.
 #[allow(unused_variables)]
 pub trait Controllable {
     // See https://stackoverflow.com/a/71988904/344467 to show that we could
@@ -45,8 +46,8 @@ pub trait Controllable {
 /// Passes [WorkEvent]s to the caller. Used in [Controls::work()].
 pub type ControlEventsFn<'a> = dyn FnMut(WorkEvent) + 'a;
 
-/// A device that [Controls] produces [EntityEvent]s that control other things.
-/// It also has a concept of a performance that has a beginning and an end. It
+/// A device that [Controls] produces [WorkEvent]s that control other things. It
+/// also has a concept of a performance that has a beginning and an end. It
 /// knows how to respond to requests to start, stop, restart, and seek within
 /// the performance.
 #[allow(unused_variables)]
@@ -54,9 +55,9 @@ pub trait Controls: Send {
     /// Returns the current [MusicalTime] range, or [None] if not performing or
     /// not applicable.
     ///
-    /// TODO: should this return Option<&TimeRange> instead? Since there is a
-    /// Range<> involved, it's not Copy, so it feels like we're doing extra work
-    /// (though there are no mallocs, so maybe it ends up looking ugly but
+    /// TODO: should this return `Option<&TimeRange>` instead? Since there is a
+    /// `Range<>` involved, it's not `Copy`, so it feels like we're doing extra
+    /// work (though there are no mallocs, so maybe it ends up looking ugly but
     /// acting the same).
     fn time_range(&self) -> Option<TimeRange> {
         None
@@ -73,7 +74,7 @@ pub trait Controls: Send {
 
     /// Performs work for the time range specified in the previous
     /// [Controls::update_time_range()]. If the work produces any events,
-    /// calling [control_events_fn] asks the system to queue them. They might be
+    /// calling `control_events_fn` asks the system to queue them. They might be
     /// handled right away, or later.
     fn work(&mut self, control_events_fn: &mut ControlEventsFn) {}
 

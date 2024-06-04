@@ -1,8 +1,11 @@
 // Copyright (c) 2024 Mike Tsao
 
-//! This crate provides macros that make Entity development easier.
+//! This crate provides proc macros for
+//! [Ensnare](https://crates.io/crates/ensnare) development.
 //!
 //! PRO TIP: use `cargo expand --lib entities` to see what's being generated
+
+#![deny(missing_docs)]
 
 use entity::parse_and_generate_entity;
 use proc_macro::TokenStream;

@@ -449,9 +449,12 @@ impl From<Range<MusicalTime>> for ViewRange {
 #[serde(rename_all = "kebab-case")]
 pub struct TimeRange(pub core::ops::Range<MusicalTime>);
 impl TimeRange {
+    /// Creates a new [TimeRange] with the given absolute start and end.
     pub fn new_with_start_and_end(start: MusicalTime, end: MusicalTime) -> Self {
         Self(start..end)
     }
+    /// Creates a new [TimeRange] with the given absolute start and (relative)
+    /// duration.
     pub fn new_with_start_and_duration(start: MusicalTime, duration: MusicalTime) -> Self {
         Self(start..(start + duration))
     }
@@ -479,16 +482,18 @@ impl TimeRange {
         TimeRange(new_start..new_start + self.duration())
     }
 
-    // Returns true if this TimeRange overlaps with the given one.
+    /// Returns true if this TimeRange overlaps with the given one.
     pub fn overlaps(&self, other: TimeRange) -> bool {
         // https://stackoverflow.com/a/3269471
         self.0.start < other.0.end && other.0.start < self.0.end
     }
 
+    #[allow(missing_docs)]
     pub fn start(&self) -> MusicalTime {
         self.0.start
     }
 
+    #[allow(missing_docs)]
     pub fn end(&self) -> MusicalTime {
         self.0.end
     }
@@ -508,6 +513,7 @@ impl From<Range<MusicalTime>> for TimeRange {
     }
 }
 
+/// Represents the [seconds](https://en.wikipedia.org/wiki/Second) unit of time.
 #[derive(Synonym, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub struct Seconds(pub f64);
@@ -515,11 +521,14 @@ impl Seconds {
     /// The number of seconds in a Normal(1.0)
     const SCALE_FACTOR: f64 = 30.0;
 
-    pub fn zero() -> Seconds {
+    /// Zero seconds.
+    pub const fn zero() -> Seconds {
         Seconds(0.0)
     }
 
-    pub fn infinite() -> Seconds {
+    /// Infinite seconds. The purpose of this number is as a sentinel to mark
+    /// special conditions.
+    pub const fn infinite() -> Seconds {
         Seconds(-1.0)
     }
 }
@@ -611,7 +620,6 @@ impl Into<cpal::SampleRate> for SampleRate {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::automation::{ControlIndex, ControlValue, Controllable};
 
     #[test]
     fn tempo() {
@@ -674,7 +682,8 @@ mod tests {
         let tempo = Tempo::default();
         let sample_rate = SampleRate::default();
 
-        // These are here to catch any change in defaults that would invalidate lots of tests.
+        // These are here to catch any change in defaults that would invalidate
+        // lots of tests.
         assert_eq!(ts.top, 4);
         assert_eq!(ts.bottom, 4);
         assert_eq!(tempo.0, 128.0);
@@ -746,16 +755,18 @@ mod tests {
         let ts = TimeSignature::default();
         let tempo = Tempo::default();
 
-        // We're picking a nice round number so that we don't hit tricky .99999 issues.
+        // We're picking a nice round number so that we don't hit tricky .99999
+        // issues.
         let sample_rate = SampleRate::from(32768);
 
         for bars in 0..4 {
             for beats in 0..ts.top() {
                 for parts in 0..MusicalTime::PARTS_IN_BEAT {
-                    // If we stick to just a part-level division of MusicalTime, then we expect time ->
-                    // frames -> time to be exact, because frames is
-                    // (typically) higher resolution than time. But frames
-                    // -> time -> frames is not expected to be exact.
+                    // If we stick to just a part-level division of MusicalTime,
+                    // then we expect time -> frames -> time to be exact,
+                    // because frames is (typically) higher resolution than
+                    // time. But frames -> time -> frames is not expected to be
+                    // exact.
                     let units = 0;
                     let t = MusicalTime::new(&ts, bars, beats, parts, units);
                     let frames = t.as_frames(tempo, sample_rate);

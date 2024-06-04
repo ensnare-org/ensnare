@@ -25,9 +25,10 @@ clap = { version = "4.5.4", features = ["derive"] }
 derivative = "2.2.0"
 
 [features]
-default = ["audio", "midi"]
+default = ["audio", "midi", "std"]
 audio = ["dep:cpal"]
 midi = ["dep:midir", "dep:midly"]
+std = []
 
 [[example]]
 name = "audio"

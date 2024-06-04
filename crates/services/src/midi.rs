@@ -48,7 +48,7 @@ pub enum MidiServiceInput {
     RestoreMidiOutput(String),
 }
 
-/// The service provides updates to the client through [MidiInterfaceServiceEvent]
+/// The service provides updates to the client through [MidiServiceEvent]
 /// messages.
 #[derive(Clone, Debug)]
 pub enum MidiServiceEvent {
@@ -75,11 +75,13 @@ pub enum MidiServiceEvent {
     /// the interface to tell us what we already know?
     MidiOut,
 
-    /// The MIDI engine has successfully processed
-    /// [MidiHandlerInput::QuitRequested], and the service will go away shortly.
+    /// The MIDI engine has successfully processed [MidiServiceInput::Quit], and
+    /// the service will go away shortly.
     Quit,
 }
 
+/// Wraps the [midir](https://crates.io/crates/midir) crate with a
+/// crossbeam-channels interface.
 #[derive(Debug)]
 pub struct MidiService {
     inputs: CrossbeamChannel<MidiServiceInput>,
@@ -91,6 +93,7 @@ impl Default for MidiService {
     }
 }
 impl MidiService {
+    #[allow(missing_docs)]
     pub fn new() -> Self {
         let r = Self {
             inputs: Default::default(),

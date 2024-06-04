@@ -1,4 +1,7 @@
-# ensnare-services: wrappers around third-party crates that make them easier to use with crossbeam channels
+# ensnare-services
+
+Wrappers around third-party crates that make them easier to use with crossbeam
+channels.
 
 This crate wraps certain crates used by the [ensnare
 crate](https://crates.io/crates/ensnare) and makes them easier to use with

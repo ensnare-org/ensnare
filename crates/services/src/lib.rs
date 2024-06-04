@@ -1,5 +1,11 @@
 // Copyright (c) 2024 Mike Tsao
 
+//! Wrappers around third-party crates that make them easier to use with
+//! crossbeam channels.
+
+#![deny(missing_docs)]
+#![cfg_attr(not(feature = "std"), no_std)]
+
 /// The most commonly used imports.
 pub mod prelude {
     #[cfg(feature = "audio")]

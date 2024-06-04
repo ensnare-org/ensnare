@@ -275,6 +275,7 @@ impl Sub<MidiNote> for MidiNote {
         self - rhs as u8
     }
 }
+#[allow(missing_docs)]
 impl MidiNote {
     // TODO # rather than #
     pub fn note_name_with_octave(&self) -> &str {

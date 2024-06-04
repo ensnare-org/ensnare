@@ -396,7 +396,7 @@ pub trait Generates<V: Default + Clone>: Send + core::fmt::Debug + Configurable 
 }
 
 /// A [TransformsAudio] takes input audio, which is typically produced by
-/// [SourcesAudio], does something to it, and then outputs it. It's what effects
+/// [Generates], does something to it, and then outputs it. It's what effects
 /// do.
 pub trait TransformsAudio: core::fmt::Debug {
     /// Transforms a buffer of audio.
