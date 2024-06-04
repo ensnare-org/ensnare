@@ -1,7 +1,8 @@
 // Copyright (c) 2024 Mike Tsao
 
 #![cfg_attr(not(feature = "std"), no_std)]
-#![deny(missing_docs)]
+#![allow(missing_docs)] // REMOVE WHEN synonym = 0.1.3
+//#![deny(missing_docs)]
 #![allow(dead_code)] // TODO: remove when big migration is complete
 #![allow(rustdoc::private_intra_doc_links)]
 
