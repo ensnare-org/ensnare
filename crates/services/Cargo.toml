@@ -2,12 +2,12 @@
 name = "ensnare-services"
 description = "Wrappers around third-party crates that make them easier to use with crossbeam channels."
 version = "0.0.4"
+readme = "README.md"
 authors.workspace = true
 documentation.workspace = true
 edition.workspace = true
 homepage.workspace = true
 license.workspace = true
-readme.workspace = true
 repository.workspace = true
 
 [dependencies]
