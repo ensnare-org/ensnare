@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 use synonym::Synonym;
 
 pub use midly::num::{u4, u7};
+pub use midly::MidiMessage;
 
 /// Newtype for MIDI channel.
 #[derive(Synonym, Serialize, Deserialize)]

@@ -12,7 +12,7 @@ pub mod prelude {
 
 pub use {
     channels::{BoundedCrossbeamChannel, CrossbeamChannel},
-    midi::{u4, u7, MidiChannel, MidiPortDescriptor},
+    midi::{u4, u7, MidiChannel, MidiMessage, MidiPortDescriptor},
     numbers::{FrequencyHz, ParameterType, Ratio, Sample, StereoSample},
     ranges::{BipolarNormal, Normal},
     time::{MusicalTime, SampleRate, Seconds, Tempo, TimeRange, TimeSignature},
