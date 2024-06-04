@@ -12,12 +12,13 @@ pub use version::app_version;
 /// ensnare::prelude::*;` for easier onboarding.
 pub mod prelude {
     pub use super::{
-        automation::prelude::*, orchestration::prelude::*, traits::prelude::*, types::prelude::*,
-        util::prelude::*,
+        automation::prelude::*, entities::prelude::*, orchestration::prelude::*,
+        traits::prelude::*, types::prelude::*, util::prelude::*,
     };
 }
 
 pub mod automation;
+pub mod entities;
 pub mod orchestration;
 pub mod traits;
 pub mod types;

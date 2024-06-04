@@ -3,15 +3,15 @@
 //! The traits that define many characteristics and relationships among parts of
 //! the system.
 
-use crate::{prelude::*, types::MidiMessage};
+use crate::{prelude::*, types::MidiNote};
 use crossbeam::channel::{Receiver, Sender};
+#[cfg(feature = "egui")]
 use strum_macros::Display;
 
 /// Quick import of all important traits.
 pub mod prelude {
-    #[cfg(feature = "egui")]
-    pub use super::Displays;
     pub use super::{
+        //CanPrototype,
         Configurable,
         Configurables,
         ControlEventsFn,
@@ -19,15 +19,28 @@ pub mod prelude {
         Controllable,
         Controls,
         ControlsAsProxy,
+        Entity,
+        Generates,
+        // GeneratesEnvelope,
+        GenerationBuffer,
+        HandlesMidi,
         HasExtent,
-        // CanPrototype,  DisplaysAction, EntityBounds, Generates,
-        // GeneratesEnvelope, GenerationBuffer, HandlesMidi,
-        // HasMetadata, HasSettings, IsStereoSampleVoice, IsVoice,
-        // MidiMessagesFn, PlaysNotes, Sequences, SequencesMidi, StoresVoices,
-        // TransformsAudio,
+        HasMetadata,
+        // HasSettings,
+        // IsStereoSampleVoice,
+        // IsVoice,
+        MidiMessagesFn,
+        MidiNoteLabelMetadata,
+        // PlaysNotes,
+        // Sequences,
+        // SequencesMidi,
         Serializable,
+        // StoresVoices,
+        TransformsAudio,
         WorkEvent,
     };
+    #[cfg(feature = "egui")]
+    pub use super::{Displays, DisplaysAction};
 }
 
 // We re-export here so that consumers of traits don't have to worry as much
@@ -219,6 +232,23 @@ pub trait ProvidesService<I: core::fmt::Debug, E: core::fmt::Debug> {
     }
 }
 
+/// A [HasMetadata] has basic information about an [Entity]. Some methods apply
+/// to the "class" of [Entity] (for example, all `ToyInstrument`s share the name
+/// "ToyInstrument"), and others apply to each instance of a class (for example,
+/// one ToyInstrument instance might be Uid 42, and another Uid 43).
+pub trait HasMetadata {
+    /// The [Uid] is a globally unique identifier for an instance of an
+    /// [Entity].
+    fn uid(&self) -> Uid;
+    /// Assigns a [Uid].
+    fn set_uid(&mut self, uid: Uid);
+    /// A string that describes this class of [Entity]. Suitable for debugging
+    /// or quick-and-dirty UIs.
+    fn name(&self) -> &'static str;
+    /// A kebab-case string that identifies this class of [Entity].
+    fn key(&self) -> &'static str;
+}
+
 /// The actions that might result from [Displays::ui()].
 #[cfg(feature = "egui")]
 #[derive(Debug, Display)]
@@ -252,8 +282,161 @@ pub trait Displays {
     #[allow(unused_variables)]
     fn set_view_range(&mut self, view_range: &ViewRange) {}
 }
+/// Disabled (requires feature `egui`)
 #[cfg(not(feature = "egui"))]
 pub trait Displays {}
+
+/// If an instrument responds to only a subset of possible MIDI notes, then it
+/// can describe them here. Drumkits will typically override this method to
+/// provide sample names for each note (Kick 1, Snare 3, etc).
+#[derive(Debug)]
+pub struct MidiNoteLabelMetadata {
+    /// The contiguous range of recognized [MidiNote]s.
+    pub range: core::ops::RangeInclusive<MidiNote>,
+    /// One label for each [MidiNote] in the range.
+    pub labels: Vec<String>,
+}
+
+/// Passes MIDI messages to the caller.
+pub type MidiMessagesFn<'a> = dyn FnMut(MidiChannel, MidiMessage) + 'a;
+
+/// Indicates that an instrument knows about MIDI.
+pub trait HandlesMidi {
+    /// Takes standard MIDI messages and optionally produces more in response.
+    /// For example, an arpeggiator might produce notes in response to a note-on
+    /// message.
+    ///
+    /// This method provides no way for a device to produce [WorkEvent::Control]
+    /// events. If it needs to do this, it can send them at the next
+    /// [Controls::work()].
+    #[allow(missing_docs)]
+    #[allow(unused_variables)]
+    fn handle_midi_message(
+        &mut self,
+        channel: MidiChannel,
+        message: MidiMessage,
+        midi_messages_fn: &mut MidiMessagesFn,
+    ) {
+    }
+
+    /// Provides [MidiNoteLabelMetadata] to describe the notes an instrument
+    /// supports. The caller promises to be smart about caching the results, so
+    /// it's OK to generate this struct on the fly each time.
+    ///
+    /// Returning None means that this instrument responds to notes 0-127, and
+    /// that they should be labeled according to standard musical notes (C, D,
+    /// E#, etc.).
+    fn midi_note_label_metadata(&self) -> Option<MidiNoteLabelMetadata> {
+        None
+    }
+}
+
+/// A convenience struct for consumers of [Generates]. This buffer ensures that
+/// capacity and len, in Vec terms, are always the same. We call it "size."
+#[derive(Debug, Default, Clone, PartialEq)]
+pub struct GenerationBuffer<V: Default + Clone + std::ops::AddAssign> {
+    vec: Vec<V>,
+}
+impl<V: Default + Clone + Copy + std::ops::AddAssign> GenerationBuffer<V> {
+    /// Returns the current size of the buffer.
+    pub fn buffer_size(&self) -> usize {
+        self.vec.len()
+    }
+
+    /// Sets the buffer size. Does nothing if the buffer is already this size.
+    pub fn resize(&mut self, size: usize) {
+        if size != self.buffer_size() {
+            self.vec.resize(size, V::default());
+        }
+    }
+
+    /// Returns a reference to the buffer.
+    pub fn buffer(&self) -> &[V] {
+        &self.vec
+    }
+
+    /// Returns a mutable reference to the buffer.
+    pub fn buffer_mut(&mut self) -> &mut [V] {
+        &mut self.vec
+    }
+
+    /// Sets the buffer's contents to the default value. Does not change its size.
+    pub fn clear(&mut self) {
+        self.vec.fill(V::default());
+    }
+
+    /// Merges (adds) a slice of the same size/type to this one.
+    pub fn merge(&mut self, other: &[V]) {
+        assert_eq!(self.buffer_size(), other.len());
+        for (src, dst) in other.iter().zip(self.buffer_mut().iter_mut()) {
+            *dst += *src;
+        }
+    }
+
+    /// Creates a buffer of the specified size.
+    pub fn new_with(size: usize) -> Self {
+        let mut r = GenerationBuffer::default();
+        r.resize(size);
+        r
+    }
+}
+
+/// Something that [Generates] creates the given type `<V>` as its work product
+/// over time. Examples are envelopes, which produce a [Normal] signal, and
+/// oscillators, which produce a [BipolarNormal] signal.
+#[allow(unused_variables)]
+pub trait Generates<V: Default + Clone>: Send + core::fmt::Debug + Configurable {
+    /// Fills a batch of values with new signal. Returns true if the signal was
+    /// non-default; for example, in the case of a [StereoSample] signal,
+    /// returns true if any part of the generated signal was non-silent.
+    fn generate(&mut self, values: &mut [V]) -> bool {
+        values.fill(V::default());
+        false
+    }
+}
+
+/// A [TransformsAudio] takes input audio, which is typically produced by
+/// [SourcesAudio], does something to it, and then outputs it. It's what effects
+/// do.
+pub trait TransformsAudio: core::fmt::Debug {
+    /// Transforms a buffer of audio.
+    fn transform(&mut self, samples: &mut [StereoSample]) {
+        for sample in samples {
+            *sample = StereoSample(
+                self.transform_channel(0, sample.0),
+                self.transform_channel(1, sample.1),
+            )
+        }
+    }
+
+    /// channel: 0 is left, 1 is right. Use the value as an index into arrays.
+    #[allow(unused_variables)]
+    fn transform_channel(&mut self, channel: usize, input_sample: Sample) -> Sample {
+        // Default implementation is passthrough
+        input_sample
+    }
+}
+
+/// An [Entity] is a generic musical instrument, which includes MIDI
+/// instruments like synths, effects like reverb, and controllers like MIDI
+/// sequencers. Almost everything in this system is an Entity of some kind. A
+/// struct's implementation of these trait methods is usually generated by the
+/// [IsEntity](ensnare_proc_macros::IsEntity) proc macro.
+#[typetag::serde(tag = "type")]
+pub trait Entity:
+    HasMetadata
+    + Controls
+    + Controllable
+    + Displays
+    + Generates<StereoSample>
+    + HandlesMidi
+    + Serializable
+    + TransformsAudio
+    + core::fmt::Debug
+    + Send
+    + Sync
+{
+}
 
 #[cfg(test)]
 mod tests {
