@@ -19,11 +19,19 @@ impl Configurable for ProjectV2 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::traits::tests::test_trait_configurable;
 
     #[test]
     fn project_mainline() {
         let p = ProjectV2::default();
 
         assert_eq!(p.sample_rate(), SampleRate::from(44100))
+    }
+
+    #[ignore = "we'll get to this soon"]
+    #[test]
+    fn project_adheres_to_trait_tests() {
+        // test_trait_projects(ProjectV2::default());
+        test_trait_configurable(ProjectV2::default());
     }
 }
