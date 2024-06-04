@@ -1,7 +1,6 @@
 // Copyright (c) 2024 Mike Tsao
 
-//! [CpalAudioService] provides channel-based communication with the
-//! [cpal](https://crates.io/crates/cpal) audio interface.
+//! Provides audio interface services.
 
 use core::fmt::Debug;
 use cpal::{
@@ -335,8 +334,8 @@ impl WrappedStream {
     }
 }
 
-/// [CpalAudioService] provides channel-based communication with the cpal audio
-/// interface.
+/// [CpalAudioService] channel-based communication with the
+/// [cpal](https://crates.io/crates/cpal) audio interface.
 #[derive(Debug)]
 pub struct CpalAudioService {
     inputs: CrossbeamChannel<CpalAudioServiceInput>,

@@ -79,23 +79,23 @@ impl ToneGenerator {
 fn main() -> anyhow::Result<()> {
     let args = Args::parse();
 
-    // Instantiate the audio service. If all is well, then it will send us a
+    // Instantiate the service. If all is well, then it will send us a
     // [CpalAudioServiceEvent::Reset] event and then begin playing immediately.
     //
-    // Note that we need to keep audio_service in scope even though we don't
+    // Note that we need to keep the service in scope even though we don't
     // interact with it after setup. If we don't keep the reference, it will be
     // dropped.
-    let audio_service = CpalAudioService::default();
-    let sender = audio_service.sender().clone();
-    let receiver = audio_service.receiver().clone();
+    let service = CpalAudioService::default();
+    let sender = service.sender().clone();
+    let receiver = service.receiver().clone();
 
     let mut tone_generator = ToneGenerator::default();
     if let Some(frequency) = args.frequency {
         tone_generator.set_frequency(frequency);
     }
 
-    while let Ok(input) = receiver.recv() {
-        match input {
+    while let Ok(event) = receiver.recv() {
+        match event {
             // The audio service has been reconfigured (or, more likely,
             // started). Handle the new audio stream parameters.
             CpalAudioServiceEvent::Reset(new_sample_rate, new_channel_count) => {
