@@ -5,6 +5,7 @@
 
 use crate::{prelude::*, types::MidiMessage};
 use crossbeam::channel::{Receiver, Sender};
+use strum_macros::Display;
 
 /// Quick import of all important traits.
 pub mod prelude {
@@ -13,16 +14,28 @@ pub mod prelude {
     pub use super::{
         Configurable,
         Configurables,
-        Serializable,
-        WorkEvent,
-        // CanPrototype, ControlEventsFn, ControlProxyEventsFn, Controllable,
-        // Controls, ControlsAsProxy, DisplaysAction, EntityBounds, Generates,
-        // GeneratesEnvelope, GenerationBuffer, HandlesMidi, HasExtent,
+        ControlEventsFn,
+        ControlProxyEventsFn,
+        Controllable,
+        Controls,
+        ControlsAsProxy,
+        HasExtent,
+        // CanPrototype,  DisplaysAction, EntityBounds, Generates,
+        // GeneratesEnvelope, GenerationBuffer, HandlesMidi,
         // HasMetadata, HasSettings, IsStereoSampleVoice, IsVoice,
         // MidiMessagesFn, PlaysNotes, Sequences, SequencesMidi, StoresVoices,
         // TransformsAudio,
+        Serializable,
+        WorkEvent,
     };
 }
+
+// We re-export here so that consumers of traits don't have to worry as much
+// about exactly where they are in the code, but those working on the code can
+// still organize them.
+pub use crate::automation::{
+    ControlEventsFn, ControlProxyEventsFn, Controllable, Controls, ControlsAsProxy,
+};
 
 /// A convenience struct for the fields implied by [Configurable]. Note that
 /// this struct is not serde-compliant, because these fields typically aren't
@@ -205,6 +218,42 @@ pub trait ProvidesService<I: core::fmt::Debug, E: core::fmt::Debug> {
         input_result
     }
 }
+
+/// The actions that might result from [Displays::ui()].
+#[cfg(feature = "egui")]
+#[derive(Debug, Display)]
+pub enum DisplaysAction {
+    /// During the ui() call, the entity determined that something wants to link
+    /// with us at control param index ControlIndex.
+    Link(ControlLinkSource, ControlIndex),
+}
+
+#[cfg(feature = "egui")]
+/// Something that can be called during egui rendering to display a view of
+/// itself.
+//
+// Adapted from egui_demo_lib/src/demo/mod.rs
+pub trait Displays {
+    /// Renders this Entity. Returns a [Response](egui::Response).
+    fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
+        ui.label("Coming soon!")
+    }
+
+    /// Sets the [DisplaysAction] that resulted from this layout.
+    #[allow(unused_variables)]
+    fn set_action(&mut self, action: DisplaysAction) {}
+    /// Also resets the action to None
+    fn take_action(&mut self) -> Option<DisplaysAction> {
+        None
+    }
+
+    /// Indicates which section of the timeline is being displayed. Entities
+    /// that don't render in the timeline can ignore this.
+    #[allow(unused_variables)]
+    fn set_view_range(&mut self, view_range: &ViewRange) {}
+}
+#[cfg(not(feature = "egui"))]
+pub trait Displays {}
 
 #[cfg(test)]
 mod tests {

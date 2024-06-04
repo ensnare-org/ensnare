@@ -4,10 +4,10 @@
 
 /// The most commonly used imports.
 pub mod prelude {
-    pub use super::{Project, TrackUid, TrackUidFactory};
+    pub use super::{ProjectV2, TrackUid, TrackUidFactory};
 }
 
-pub use project::Project;
+pub use project::ProjectV2;
 pub use track::{TrackTitle, TrackUid, TrackUidFactory};
 
 mod project;

@@ -27,7 +27,7 @@ fn main() -> anyhow::Result<()> {
 
     // Project contains all the the instruments, controllers, and effects, and
     // their relationships, and uses them to produce a song.
-    let mut project = Project::default();
+    let mut project = ProjectV2::default();
 
     // It also owns the sample rate and propagates it to the devices that it
     // controls.

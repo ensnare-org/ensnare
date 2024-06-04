@@ -1,5 +1,6 @@
 // Copyright (c) 2024 Mike Tsao
 
+use super::note::MidiNote;
 use crate::prelude::*;
 use core::{
     fmt::Display,
@@ -194,7 +195,9 @@ impl StereoSample {
         (self.0.into_i16(), self.1.into_i16())
     }
 
-    pub(crate) fn almost_silent(&self) -> bool {
+    // TODO - demote to pub(crate)
+    /// Indicates whether the sample is not zero but still very quiet.
+    pub fn almost_silent(&self) -> bool {
         self.0.almost_silent() && self.1.almost_silent()
     }
 }
@@ -346,14 +349,12 @@ impl From<FrequencyHz> for usize {
         value.0 as usize
     }
 }
-#[cfg(not_yet)]
 impl From<MidiNote> for FrequencyHz {
     fn from(value: MidiNote) -> Self {
         let key = value as u8;
         Self::from(2.0_f64.powf((key as f64 - 69.0) / 12.0) * 440.0)
     }
 }
-#[cfg(not_yet)]
 // Beware: u7 is understood to represent a MIDI key ranging from 0..128. This
 // method will return very strange answers if you're expecting it to hand back
 // FrequencyHz(42) from a u7(42).
