@@ -3,7 +3,7 @@
 [package]
 name = "ensnare-proc-macros"
 description = "Proc macros supporting the ensnare crate"
-version = "0.0.3-alpha.2"
+version = "0.0.3"
 readme = "README.md"
 authors.workspace = true
 documentation.workspace = true
