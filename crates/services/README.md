@@ -1,11 +1,13 @@
 # ensnare-services
 
-Wrappers around third-party crates that make them easier to use with crossbeam
-channels.
-
 This crate wraps certain crates used by the [ensnare
 crate](https://crates.io/crates/ensnare) and makes them easier to use with
 [crossbeam channels](https://crates.io/crates/crossbeam-channel).
+
+Services available:
+
+* **audio**: wraps the [cpal](https://crates.io/crates/cpal) audio-interface crate.
+* **midi**: wraps the [midir](https://crates.io/crates/midir) MIDI-interface crate.
 
 See the examples directory for usage, or visit
 [docs.rs](https://docs.rs/ensnare-services/latest/ensnare-services/) to see the

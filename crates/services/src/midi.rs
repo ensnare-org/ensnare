@@ -1,6 +1,6 @@
 // Copyright (c) 2024 Mike Tsao
 
-//! Provides MIDI interface services.
+//! Provides MIDI-interface services.
 
 use core::fmt::Debug;
 use crossbeam::channel::Select;
@@ -74,9 +74,8 @@ pub enum MidiServiceEvent {
 /// [MidiService] error types.
 #[derive(Clone, Debug)]
 pub enum MidiServiceError {
-    InError(MidiInServiceError),
-    //    OutError(MidiOutServiceError),
     GeneralError,
+    InError(MidiInServiceError),
     OutError(MidiOutServiceError),
 }
 

@@ -1,9 +1,8 @@
 // Copyright (c) 2024 Mike Tsao
 
+use super::PathUid;
 use crate::prelude::*;
 use strum_macros::Display;
-
-use super::PathUid;
 
 /// Something that is [Controllable] exposes a set of attributes, each with a
 /// text name, that a [Controls] can change. If you're familiar with DAWs, this

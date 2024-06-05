@@ -1,6 +1,6 @@
 // Copyright (c) 2024 Mike Tsao
 
-//! Provides audio interface services.
+//! Provides audio-interface services.
 
 use core::fmt::Debug;
 use cpal::{
