@@ -3,7 +3,7 @@
 //! Provides MIDI interface services.
 
 use core::fmt::Debug;
-use ensnare::prelude::*;
+use ensnare::{prelude::*, types::MidiPortDescriptor};
 
 /// The client sends requests to the MIDI interface through [MidiServiceInput]
 /// messages.
