@@ -31,6 +31,7 @@ pub mod prelude {
         // IsVoice,
         MidiMessagesFn,
         MidiNoteLabelMetadata,
+        ProvidesService,
         // PlaysNotes,
         // Sequences,
         // SequencesMidi,

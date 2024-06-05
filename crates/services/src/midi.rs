@@ -3,11 +3,7 @@
 //! Provides MIDI interface services.
 
 use core::fmt::Debug;
-use ensnare::{
-    traits::ProvidesService,
-    types::CrossbeamChannel,
-    types::{MidiChannel, MidiMessage, MidiPortDescriptor},
-};
+use ensnare::prelude::*;
 
 /// The client sends requests to the MIDI interface through [MidiServiceInput]
 /// messages.

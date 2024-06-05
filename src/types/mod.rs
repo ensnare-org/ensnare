@@ -5,9 +5,9 @@
 /// The most commonly used imports.
 pub mod prelude {
     pub use super::{
-        u4, u7, BipolarNormal, FrequencyHz, MidiChannel, MidiMessage, MusicalTime, Normal,
-        ParameterType, Ratio, Sample, SampleRate, StereoSample, Tempo, TimeRange, TimeSignature,
-        Uid, UidFactory, ViewRange,
+        u4, u7, BipolarNormal, CrossbeamChannel, FrequencyHz, MidiChannel, MidiMessage,
+        MusicalTime, Normal, ParameterType, Ratio, Sample, SampleRate, StereoSample, Tempo,
+        TimeRange, TimeSignature, Uid, UidFactory, ViewRange,
     };
 }
 

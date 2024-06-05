@@ -13,7 +13,7 @@ use crossbeam::{
     queue::ArrayQueue,
 };
 use delegate::delegate;
-use ensnare::{traits::ProvidesService, types::CrossbeamChannel};
+use ensnare::prelude::*;
 use std::sync::Arc;
 
 /// The fundamental type of an audio sample.
