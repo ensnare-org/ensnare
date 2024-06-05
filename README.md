@@ -29,3 +29,9 @@ Various Bash commands that I use during Ensnare development:
 * `cargo release --workspace -x alpha`: Generates a new release and pushes it to
   [GitHub](https://github.com/ensnare-org/ensnare) and
   [crates.io](https://crates.io/crates/ensnare).
+
+## Crates in the Ensnare family
+
+* [ensnare-proc-macros](https://crates.io/crates/ensnare-proc-macros): proc macros ([docs](https://docs.rs/ensnare-proc-macros/) [src](https://github.com/ensnare-org/ensnare/tree/main/crates/proc-macros))
+* [ensnare-services](https://crates.io/crates/ensnare-services): service wrappers ([docs](https://docs.rs/ensnare-services/) [src](https://github.com/ensnare-org/ensnare/tree/main/crates/services))
+* [ensnare](https://crates.io/crates/ensnare): digital audio creation ([docs](https://docs.rs/ensnare/) [src](https://github.com/ensnare-org/ensnare))
