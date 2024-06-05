@@ -26,6 +26,24 @@
         {
             "type": "lldb",
             "request": "launch",
+            "name": "Debug ensnare-services example 'midi'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--example=midi",
+                    "--package=ensnare-services"
+                ],
+                "filter": {
+                    "name": "midi",
+                    "kind": "example"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
             "name": "Debug example 'hello-world'",
             "cargo": {
                 "args": [

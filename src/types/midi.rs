@@ -39,3 +39,16 @@ impl std::fmt::Display for MidiPortDescriptor {
         f.write_str(&self.name)
     }
 }
+impl MidiPortDescriptor {
+    const INVALID_PORT_NAME: &'static str = "<invalid>";
+
+    /// Constructs a new [MidiPortDescriptor] with the given index and name. If
+    /// the name is None (usually because the backend couldn't supply one), then
+    /// a label indicating invalidity is used instead.
+    pub fn new_with(index: usize, name: Option<String>) -> Self {
+        Self {
+            index,
+            name: name.unwrap_or(Self::INVALID_PORT_NAME.to_string()),
+        }
+    }
+}
