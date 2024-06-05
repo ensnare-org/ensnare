@@ -110,7 +110,6 @@ impl MidiService {
     }
 
     fn start_thread(&self) {
-        // let midi_output = MidiOutput::new("Ensnare MIDI output").unwrap();
         let receiver = self.inputs.receiver.clone();
         let sender = self.events.sender.clone();
         let in_receiver = self.in_service.events.receiver.clone();
@@ -132,31 +131,34 @@ impl MidiService {
                         if let Ok(input) = oper.recv(&receiver) {
                             match input {
                                 MidiServiceInput::RefreshPorts => {
-                                    let _ = in_sender.send(MidiInServiceInput::RefreshPorts);
-                                    let _ = out_sender.send(MidiOutServiceInput::RefreshPorts);
+                                    let _ = in_sender.try_send(MidiInServiceInput::RefreshPorts);
+                                    let _ = out_sender.try_send(MidiOutServiceInput::RefreshPorts);
                                 }
                                 MidiServiceInput::SelectInputPort(port) => {
                                     if let Some(port) = port {
-                                        let _ = in_sender.send(MidiInServiceInput::Connect(port));
+                                        let _ =
+                                            in_sender.try_send(MidiInServiceInput::Connect(port));
                                     } else {
-                                        let _ = in_sender.send(MidiInServiceInput::Disconnect);
+                                        let _ = in_sender.try_send(MidiInServiceInput::Disconnect);
                                     }
                                 }
                                 MidiServiceInput::SelectOutputPort(port) => {
                                     if let Some(port) = port {
-                                        let _ = out_sender.send(MidiOutServiceInput::Connect(port));
+                                        let _ =
+                                            out_sender.try_send(MidiOutServiceInput::Connect(port));
                                     } else {
-                                        let _ = out_sender.send(MidiOutServiceInput::Disconnect);
+                                        let _ =
+                                            out_sender.try_send(MidiOutServiceInput::Disconnect);
                                     }
                                 }
                                 MidiServiceInput::Midi(channel, message) => {
                                     let _ = out_sender
-                                        .send(MidiOutServiceInput::Midi(channel, message));
+                                        .try_send(MidiOutServiceInput::Midi(channel, message));
                                 }
                                 MidiServiceInput::Quit => {
-                                    let _ = in_sender.send(MidiInServiceInput::Quit);
-                                    let _ = out_sender.send(MidiOutServiceInput::Quit);
-                                    let _ = sender.send(MidiServiceEvent::Quit);
+                                    let _ = in_sender.try_send(MidiInServiceInput::Quit);
+                                    let _ = out_sender.try_send(MidiOutServiceInput::Quit);
+                                    let _ = sender.try_send(MidiServiceEvent::Quit);
                                 }
                             }
                         }
@@ -165,20 +167,22 @@ impl MidiService {
                         if let Ok(event) = oper.recv(&in_receiver) {
                             match event {
                                 MidiInServiceEvent::Ports(ports) => {
-                                    let _ = sender.send(MidiServiceEvent::InputPorts(ports));
+                                    let _ = sender.try_send(MidiServiceEvent::InputPorts(ports));
                                 }
                                 MidiInServiceEvent::Connected(port) => {
                                     let _ = sender
-                                        .send(MidiServiceEvent::InputPortSelected(Some(port)));
+                                        .try_send(MidiServiceEvent::InputPortSelected(Some(port)));
                                 }
                                 MidiInServiceEvent::Disconnected => {
-                                    let _ = sender.send(MidiServiceEvent::InputPortSelected(None));
+                                    let _ =
+                                        sender.try_send(MidiServiceEvent::InputPortSelected(None));
                                 }
                                 MidiInServiceEvent::Midi(channel, message) => {
-                                    let _ = sender.send(MidiServiceEvent::Midi(channel, message));
+                                    let _ =
+                                        sender.try_send(MidiServiceEvent::Midi(channel, message));
                                 }
                                 MidiInServiceEvent::Error(e) => {
-                                    let _ = sender.send(MidiServiceEvent::Error(
+                                    let _ = sender.try_send(MidiServiceEvent::Error(
                                         MidiServiceError::InError(e),
                                     ));
                                 }
@@ -189,17 +193,18 @@ impl MidiService {
                         if let Ok(event) = oper.recv(&out_receiver) {
                             match event {
                                 MidiOutServiceEvent::Ports(ports) => {
-                                    let _ = sender.send(MidiServiceEvent::OutputPorts(ports));
+                                    let _ = sender.try_send(MidiServiceEvent::OutputPorts(ports));
                                 }
                                 MidiOutServiceEvent::Connected(port) => {
                                     let _ = sender
-                                        .send(MidiServiceEvent::OutputPortSelected(Some(port)));
+                                        .try_send(MidiServiceEvent::OutputPortSelected(Some(port)));
                                 }
                                 MidiOutServiceEvent::Disconnected => {
-                                    let _ = sender.send(MidiServiceEvent::OutputPortSelected(None));
+                                    let _ =
+                                        sender.try_send(MidiServiceEvent::OutputPortSelected(None));
                                 }
                                 MidiOutServiceEvent::Error(e) => {
-                                    let _ = sender.send(MidiServiceEvent::Error(
+                                    let _ = sender.try_send(MidiServiceEvent::Error(
                                         MidiServiceError::OutError(e),
                                     ));
                                 }
@@ -258,6 +263,7 @@ enum MidiInServiceEvent {
 #[derive(Clone, Debug)]
 pub enum MidiInServiceError {
     ConnectionFailed,
+    InitFailed(String),
 }
 
 /// Wraps a [midir](https://crates.io/crates/midir) [MidiInput] with a
@@ -273,6 +279,8 @@ impl Default for MidiInService {
     }
 }
 impl MidiInService {
+    const CLIENT_NAME: &'static str = "Ensnare MIDI input";
+
     pub fn new() -> Self {
         let r = Self {
             inputs: Default::default(),
@@ -307,14 +315,26 @@ impl MidiInService {
         let receiver = self.inputs.receiver.clone();
         let sender = self.events.sender.clone();
         std::thread::spawn(move || {
-            let mut midir = MidiInput::new("Ensnare MIDI input").ok();
+            let mut midir = match MidiInput::new(Self::CLIENT_NAME) {
+                Ok(midir) => Some(midir),
+                Err(e) => {
+                    let _ = sender.try_send(MidiInServiceEvent::Error(
+                        MidiInServiceError::InitFailed(e.to_string()),
+                    ));
+                    None
+                }
+            };
             let mut connection: Option<MidiInputConnection<()>> = None;
             let (mut ports, mut port_descriptors) = Self::refresh_ports_and_descriptors(&midir);
+
+            // Send the ports after init so caller doesn't need to ask.
+            let _ = sender.try_send(MidiInServiceEvent::Ports(port_descriptors));
+
             while let Ok(input) = receiver.recv() {
                 match input {
                     MidiInServiceInput::RefreshPorts => {
                         (ports, port_descriptors) = Self::refresh_ports_and_descriptors(&midir);
-                        let _ = sender.send(MidiInServiceEvent::Ports(port_descriptors));
+                        let _ = sender.try_send(MidiInServiceEvent::Ports(port_descriptors));
                     }
                     MidiInServiceInput::Connect(port_descriptor) => {
                         if let Some(m) = midir.take() {
@@ -373,7 +393,7 @@ impl MidiInService {
                             // want a MidiInput, even if the connection took the
                             // active one, because we need one to enumerate
                             // ports.
-                            midir = MidiInput::new("Ensnare MIDI input").ok();
+                            midir = MidiInput::new(Self::CLIENT_NAME).ok();
                         }
                     }
                     MidiInServiceInput::Disconnect => {
@@ -432,6 +452,7 @@ enum MidiOutServiceEvent {
 #[derive(Clone, Debug)]
 pub enum MidiOutServiceError {
     ConnectionFailed,
+    InitFailed(String),
 }
 
 /// Wraps a [midir](https://crates.io/crates/midir) [MidiOutput] with a
@@ -447,6 +468,8 @@ impl Default for MidiOutService {
     }
 }
 impl MidiOutService {
+    const CLIENT_NAME: &'static str = "Ensnare MIDI output";
+
     pub fn new() -> Self {
         let r = Self {
             inputs: Default::default(),
@@ -481,14 +504,26 @@ impl MidiOutService {
         let receiver = self.inputs.receiver.clone();
         let sender = self.events.sender.clone();
         std::thread::spawn(move || {
-            let mut midir = MidiOutput::new("Ensnare MIDI output").ok();
+            let mut midir = match MidiOutput::new(Self::CLIENT_NAME) {
+                Ok(midir) => Some(midir),
+                Err(e) => {
+                    let _ = sender.try_send(MidiOutServiceEvent::Error(
+                        MidiOutServiceError::InitFailed(e.to_string()),
+                    ));
+                    None
+                }
+            };
             let mut connection: Option<MidiOutputConnection> = None;
             let (mut ports, mut port_descriptors) = Self::refresh_ports_and_descriptors(&midir);
+
+            // Send the ports after init so caller doesn't need to ask.
+            let _ = sender.try_send(MidiOutServiceEvent::Ports(port_descriptors));
+
             while let Ok(input) = receiver.recv() {
                 match input {
                     MidiOutServiceInput::RefreshPorts => {
                         (ports, port_descriptors) = Self::refresh_ports_and_descriptors(&midir);
-                        let _ = sender.send(MidiOutServiceEvent::Ports(port_descriptors));
+                        let _ = sender.try_send(MidiOutServiceEvent::Ports(port_descriptors));
                     }
                     MidiOutServiceInput::Connect(port_descriptor) => {
                         if let Some(m) = midir.take() {
@@ -503,7 +538,6 @@ impl MidiOutService {
                             let index = port_descriptor.index;
                             if index < ports.len() {
                                 let port = &ports[index];
-                                let sender_clone = sender.clone();
 
                                 // Is this really the same port?
                                 if Ok(port_descriptor.name.clone()) == m.port_name(port) {
@@ -529,7 +563,7 @@ impl MidiOutService {
                             // want a MidiOutput, even if the connection took
                             // the active one, because we need one to enumerate
                             // ports.
-                            midir = MidiOutput::new("Ensnare MIDI output").ok();
+                            midir = MidiOutput::new(Self::CLIENT_NAME).ok();
                         }
                     }
                     MidiOutServiceInput::Disconnect => {
