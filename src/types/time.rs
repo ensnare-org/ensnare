@@ -392,6 +392,12 @@ impl MusicalTime {
             (note_value_denominator as f64 * self.fractional_beats()) as usize + 1;
         format!("{beat}.{note_value_quarters}").to_string()
     }
+
+    /// Returns true if the value is zero. This is valid because we sometimes
+    /// use [MusicalTime] to represent durations from time zero.
+    pub const fn is_empty(&self) -> bool {
+        self.0 == MusicalTime::START.0
+    }
 }
 impl Display for MusicalTime {
     // Because MusicalTime doesn't know the time signature, it can't display the

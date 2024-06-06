@@ -4,9 +4,10 @@
 
 for f in $(find . -name \*.rs -not -path "./target/*" -not -path "./vendor/*")
 do
-    if ! grep -q -E '^\/\/ Copyright' "$f"
+    if ! grep -q -E '^\/\/ Copyright \(c\) 202[4-9] Mike Tsao$' "$f"
     then
         echo "$f missing header"
+        head -n 1 "$f"
         exit 1
     fi
 done

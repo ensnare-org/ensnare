@@ -1,7 +1,7 @@
 // Copyright (c) 2024 Mike Tsao
 
 #![cfg_attr(not(feature = "std"), no_std)]
-#![deny(missing_docs)]
+#![deny(missing_docs, unused_imports, unused_variables)]
 #![allow(dead_code)] // TODO: remove when big migration is complete
 #![allow(rustdoc::private_intra_doc_links)]
 
@@ -14,12 +14,14 @@ pub use version::app_version;
 /// ensnare::prelude::*;` for easier onboarding.
 pub mod prelude {
     pub use super::{
-        automation::prelude::*, entities::prelude::*, orchestration::prelude::*,
-        traits::prelude::*, types::prelude::*, util::prelude::*,
+        automation::prelude::*, elements::prelude::*, entities::prelude::*,
+        orchestration::prelude::*, traits::prelude::*, types::prelude::*, util::prelude::*,
     };
 }
 
 pub mod automation;
+pub mod cores;
+pub mod elements;
 pub mod entities;
 pub mod orchestration;
 pub mod traits;

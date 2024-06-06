@@ -4,18 +4,20 @@
 
 /// The most commonly used imports.
 pub mod prelude {
-    #[cfg(feature = "test")]
-    pub use super::register_test_entities;
+    #[cfg(test)]
     pub use super::{
-        infra::{EntityFactory, EntityKey, EntityUidFactory},
-        // BuiltInEntities,
+        register_test_entities, TestAudioSource, TestController,
+        TestControllerAlwaysSendsMidiMessage, TestInstrument, TestInstrumentCountsMidiMessages,
     };
+    pub use super::{BuiltInEntities, EntityFactory, EntityKey, EntityUidFactory, Timer};
 }
 
-// pub use built_in::*;
-#[cfg(feature = "test")]
+pub use built_in::{BuiltInEntities, Timer};
+pub use infra::{EntityFactory, EntityKey, EntityUidFactory};
+#[cfg(test)]
 pub use test_entities::*;
 
-// mod built_in;
+mod built_in;
 mod infra;
-// mod test_entities;
+#[cfg(test)]
+mod test_entities;
