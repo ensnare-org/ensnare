@@ -1,6 +1,9 @@
 // Copyright (c) 2024 Mike Tsao
 
-use crate::{cores::TimerCore, prelude::*};
+use crate::{
+    cores::{TimerCore, TimerCoreBuilder},
+    prelude::*,
+};
 use ensnare_proc_macros::{
     Control, InnerConfigurable, InnerControls, InnerHandlesMidi, InnerSerializable, IsEntity,
     Metadata,
@@ -31,7 +34,10 @@ impl Timer {
     pub fn new_with(uid: Uid, duration: MusicalTime) -> Self {
         Self {
             uid,
-            inner: TimerCore::new_with(duration),
+            inner: TimerCoreBuilder::default()
+                .duration(duration)
+                .build()
+                .unwrap(),
         }
     }
 }

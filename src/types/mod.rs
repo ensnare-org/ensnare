@@ -6,8 +6,8 @@
 pub mod prelude {
     pub use super::{
         u4, u7, BipolarNormal, CrossbeamChannel, FrequencyHz, MidiChannel, MidiMessage,
-        MusicalTime, Normal, ParameterType, Ratio, Sample, SampleRate, SampleType, StereoSample,
-        Tempo, TimeRange, TimeSignature, Uid, UidFactory, ViewRange,
+        MusicalTime, Normal, ParameterType, Ratio, Sample, SampleRate, SampleType, Seconds,
+        StereoSample, Tempo, TimeRange, TimeSignature, Uid, UidFactory, ViewRange,
     };
 }
 

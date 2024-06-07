@@ -3,19 +3,27 @@
 use super::TimerCore;
 use crate::prelude::*;
 use delegate::delegate;
+use derive_builder::Builder;
 use ensnare_proc_macros::Control;
 use serde::{Deserialize, Serialize};
 
 // TODO: needs tests!
 /// Issues a control event after a specified amount of time.
-#[derive(Debug, Default, Control, Serialize, Deserialize)]
+#[derive(Debug, Default, Builder, Control, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub struct TriggerCore {
+    /// The [TimerCore] that causes the trigger.
     timer: TimerCore,
 
     /// The [ControlValue] to issue.
     pub value: ControlValue,
 
+    #[serde(skip)]
+    #[builder(setter(skip))]
+    e: TriggerCoreEphemerals,
+}
+#[derive(Debug, Default)]
+pub struct TriggerCoreEphemerals {
     has_triggered: bool,
     is_performing: bool,
 }
@@ -26,8 +34,8 @@ impl Controls for TriggerCore {
     }
 
     fn work(&mut self, control_events_fn: &mut ControlEventsFn) {
-        if self.timer.is_finished() && self.is_performing && !self.has_triggered {
-            self.has_triggered = true;
+        if self.timer.is_finished() && self.e.is_performing && !self.e.has_triggered {
+            self.e.has_triggered = true;
             control_events_fn(WorkEvent::Control(self.value));
         }
     }
@@ -37,22 +45,22 @@ impl Controls for TriggerCore {
     }
 
     fn play(&mut self) {
-        self.is_performing = true;
+        self.e.is_performing = true;
         self.timer.play();
     }
 
     fn stop(&mut self) {
-        self.is_performing = false;
+        self.e.is_performing = false;
         self.timer.stop();
     }
 
     fn skip_to_start(&mut self) {
-        self.has_triggered = false;
+        self.e.has_triggered = false;
         self.timer.skip_to_start();
     }
 
     fn is_performing(&self) -> bool {
-        self.is_performing
+        self.e.is_performing
     }
 }
 impl Configurable for TriggerCore {
@@ -69,13 +77,11 @@ impl Configurable for TriggerCore {
 }
 impl HandlesMidi for TriggerCore {}
 impl TriggerCore {
-    /// Creates a new [TriggerCore].
-    pub fn new_with(timer: TimerCore, value: ControlValue) -> Self {
+    fn new_with(timer: TimerCore, value: ControlValue) -> Self {
         Self {
             timer,
             value,
-            has_triggered: Default::default(),
-            is_performing: Default::default(),
+            e: Default::default(),
         }
     }
 

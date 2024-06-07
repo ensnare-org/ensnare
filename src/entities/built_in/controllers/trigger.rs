@@ -1,7 +1,7 @@
 // Copyright (c) 2024 Mike Tsao
 
 use crate::{
-    cores::{TimerCore, TriggerCore},
+    cores::{TimerCore, TriggerCore, TriggerCoreBuilder},
     prelude::*,
 };
 use ensnare_proc_macros::{
@@ -10,6 +10,7 @@ use ensnare_proc_macros::{
 };
 use serde::{Deserialize, Serialize};
 
+/// Wraps [TriggerCore] and makes it an [Entity].
 #[derive(
     Control,
     Debug,
@@ -29,10 +30,15 @@ pub struct Trigger {
     inner: TriggerCore,
 }
 impl Trigger {
+    #[allow(missing_docs)]
     pub fn new_with(uid: Uid, timer: TimerCore, value: ControlValue) -> Self {
         Self {
             uid,
-            inner: TriggerCore::new_with(timer, value),
+            inner: TriggerCoreBuilder::default()
+                .timer(timer)
+                .value(value)
+                .build()
+                .unwrap(),
         }
     }
 }

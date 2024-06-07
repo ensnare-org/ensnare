@@ -5,8 +5,9 @@
 //! [Entity][crate::traits::Entity]. Cores exist separately from entities so
 //! that it's easier to focus on business logic when developing a new device.
 
-pub use controllers::{TestControllerAlwaysSendsMidiMessageCore, TimerCore, TriggerCore};
-pub use instruments::{TestAudioSourceCore, TestAudioSourceCoreBuilder};
+pub use controllers::*;
+pub use effects::*;
+pub use instruments::*;
 
 mod controllers;
 mod effects;

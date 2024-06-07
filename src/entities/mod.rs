@@ -12,7 +12,7 @@ pub mod prelude {
     pub use super::{BuiltInEntities, EntityFactory, EntityKey, EntityUidFactory, Timer};
 }
 
-pub use built_in::{BuiltInEntities, Timer};
+pub use built_in::*;
 pub use infra::{EntityFactory, EntityKey, EntityUidFactory};
 #[cfg(test)]
 pub use test_entities::*;

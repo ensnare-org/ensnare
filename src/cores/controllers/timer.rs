@@ -2,28 +2,32 @@
 
 use crate::prelude::*;
 use delegate::delegate;
+use derive_builder::Builder;
 use ensnare_proc_macros::Control;
 use serde::{Deserialize, Serialize};
 
 /// Runs for a specified amount of [MusicalTime], then sets [Controls::is_finished()].
-#[derive(Debug, Default, Control, Serialize, Deserialize)]
+#[derive(Debug, Builder, Default, Clone, Control, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub struct TimerCore {
+    /// The length of time before this timer expires.
     duration: MusicalTime,
 
     #[serde(skip)]
+    #[builder(setter(skip))]
+    e: TimerCoreEphemerals,
+}
+#[derive(Debug, Default, Clone)]
+pub struct TimerCoreEphemerals {
     is_performing: bool,
-    #[serde(skip)]
     is_finished: bool,
-    #[serde(skip)]
     end_time: Option<MusicalTime>,
-    #[serde(skip)]
     c: Configurables,
 }
 impl Serializable for TimerCore {}
 #[allow(missing_docs)]
 impl TimerCore {
-    pub fn new_with(duration: MusicalTime) -> Self {
+    fn new_with(duration: MusicalTime) -> Self {
         let mut r = TimerCore::default();
         r.set_duration(duration);
         r
@@ -35,13 +39,13 @@ impl TimerCore {
 
     pub fn set_duration(&mut self, duration: MusicalTime) {
         self.duration = duration;
-        self.is_finished = duration.is_empty();
+        self.e.is_finished = duration.is_empty();
     }
 
     fn set_finished_from_time_range(&mut self, range: &TimeRange) {
-        if let Some(end_time) = self.end_time {
+        if let Some(end_time) = self.e.end_time {
             if range.0.contains(&end_time) {
-                self.is_finished = true;
+                self.e.is_finished = true;
             }
         }
     }
@@ -49,7 +53,7 @@ impl TimerCore {
 impl HandlesMidi for TimerCore {}
 impl Configurable for TimerCore {
     delegate! {
-        to self.c {
+        to self.e.c {
             fn sample_rate(&self) -> SampleRate;
             fn update_sample_rate(&mut self, sample_rate: SampleRate);
             fn tempo(&self) -> Tempo;
@@ -59,38 +63,38 @@ impl Configurable for TimerCore {
         }
     }
     fn reset(&mut self) {
-        self.is_finished = false;
+        self.e.is_finished = false;
         // We use the setter to pick up the is_empty() logic.
         self.set_duration(self.duration);
     }
 }
 impl Controls for TimerCore {
     fn update_time_range(&mut self, range: &TimeRange) {
-        if self.is_performing {
-            if self.end_time.is_none() {
+        if self.e.is_performing {
+            if self.e.end_time.is_none() {
                 // The first time we're called with an update_time_range() while
                 // performing, we take that as the start of the timer. So we set
                 // the end time, and then test to see whether we've reached it.
-                self.end_time = Some(range.0.start + self.duration);
+                self.e.end_time = Some(range.0.start + self.duration);
             }
             self.set_finished_from_time_range(range);
         }
     }
 
     fn is_finished(&self) -> bool {
-        self.is_finished
+        self.e.is_finished
     }
 
     fn play(&mut self) {
-        self.is_performing = true;
+        self.e.is_performing = true;
     }
 
     fn stop(&mut self) {
-        self.is_performing = false;
+        self.e.is_performing = false;
     }
 
     fn is_performing(&self) -> bool {
-        self.is_performing
+        self.e.is_performing
     }
 }
 
