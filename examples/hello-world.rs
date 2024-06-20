@@ -3,9 +3,12 @@
 //! The `hello-world` example shows how to use basic crate functionality.
 
 use clap::Parser;
-use ensnare::{prelude::*, traits::Displays};
+use delegate::delegate;
+use derivative::Derivative;
+use ensnare::{cores::TimerCore, prelude::*, traits::Displays};
 use ensnare_proc_macros::{Control, IsEntity, Metadata};
 use serde::{Deserialize, Serialize};
+use std::f64::consts::PI;
 
 /// The program's command-line arguments.
 #[derive(clap::Parser, Debug, Default)]
@@ -18,29 +21,81 @@ struct Args {
     output_filename: Option<String>,
 }
 
-#[derive(Debug, Default, IsEntity, Control, Metadata, Serialize, Deserialize)]
-struct Instrument {
+/// [MyInstrument] emits a simple tone.
+#[derive(Debug, Derivative, IsEntity, Control, Metadata, Serialize, Deserialize)]
+#[derivative(Default)]
+struct MyInstrument {
     uid: Uid,
-}
-impl TransformsAudio for Instrument {}
-impl Serializable for Instrument {}
-impl HandlesMidi for Instrument {}
-impl Generates<StereoSample> for Instrument {}
-impl Configurable for Instrument {}
-impl Displays for Instrument {}
-impl Controls for Instrument {}
 
+    #[derivative(Default(value = "440.0"))]
+    frequency: SampleType,
+
+    #[serde(skip)]
+    frame_count: usize,
+}
+impl TransformsAudio for MyInstrument {}
+impl Serializable for MyInstrument {}
+impl HandlesMidi for MyInstrument {}
+impl Generates<StereoSample> for MyInstrument {
+    fn generate(&mut self, values: &mut [StereoSample]) -> bool {
+        for value in values.iter_mut() {
+            let sample = Sample::from(self.frequency * usize_to_sample_type(self.frame_count) / PI);
+            self.frame_count += 1;
+            *value = sample.into();
+        }
+        values.fill(<StereoSample>::default());
+        true
+    }
+}
+impl Configurable for MyInstrument {}
+impl Displays for MyInstrument {}
+impl Controls for MyInstrument {}
+
+/// [MyEffect] makes the input audio quieter.
 #[derive(Debug, Default, IsEntity, Control, Metadata, Serialize, Deserialize)]
-struct Effect {
+struct MyEffect {
     uid: Uid,
 }
-impl TransformsAudio for Effect {}
-impl Serializable for Effect {}
-impl HandlesMidi for Effect {}
-impl Generates<StereoSample> for Effect {}
-impl Configurable for Effect {}
-impl Displays for Effect {}
-impl Controls for Effect {}
+impl TransformsAudio for MyEffect {
+    fn transform_channel(&mut self, _channel: usize, input_sample: Sample) -> Sample {
+        input_sample * 0.5
+    }
+}
+impl Serializable for MyEffect {}
+impl HandlesMidi for MyEffect {}
+impl Generates<StereoSample> for MyEffect {}
+impl Configurable for MyEffect {}
+impl Displays for MyEffect {}
+impl Controls for MyEffect {}
+
+/// [MyController] ends the composition after one measure.
+#[derive(Debug, Derivative, IsEntity, Control, Metadata, Serialize, Deserialize)]
+#[derivative(Default)]
+struct MyController {
+    uid: Uid,
+    #[derivative(Default(value = "TimerCore::new_with(MusicalTime::FOUR_FOUR_MEASURE)"))]
+    timer: TimerCore,
+}
+impl TransformsAudio for MyController {}
+impl Serializable for MyController {}
+impl HandlesMidi for MyController {}
+impl Generates<StereoSample> for MyController {}
+impl Configurable for MyController {}
+impl Displays for MyController {}
+impl Controls for MyController {
+    delegate! {
+        to self.timer {
+            fn time_range(&self) -> Option<TimeRange>;
+            fn update_time_range(&mut self, time_range: &TimeRange);
+            fn work(&mut self, control_events_fn: &mut ControlEventsFn);
+            fn is_finished(&self) -> bool;
+            fn play(&mut self);
+            fn stop(&mut self);
+            fn skip_to_start(&mut self);
+            fn is_performing(&self) -> bool;
+        }
+    }
+}
 
 fn main() -> anyhow::Result<()> {
     let args = Args::parse();
@@ -54,7 +109,7 @@ fn main() -> anyhow::Result<()> {
     // The system needs a working buffer for audio.
     let _buffer = [StereoSample::SILENCE; 64];
 
-    // Project contains all the the instruments, controllers, and effects, and
+    // A project contains all the the instruments, controllers, and effects, and
     // their relationships, and uses them to produce a song.
     let mut project = BasicProject::default();
 
@@ -68,15 +123,20 @@ fn main() -> anyhow::Result<()> {
 
     // TODO: add musical content to be played on the default MIDI channel.
 
-    // Instrument is a MIDI instrument that makes simple sounds. Adding an
-    // entity to a track forms a chain that sends MIDI, control, and audio data
-    // appropriately.
-    let synth = Instrument::default();
+    // Instruments are MIDI-driven entities that emit sounds.
+    let synth = MyInstrument::default();
+    // Adding an entity to a track forms a chain that sends MIDI, control, and
+    // audio data appropriately.
     let _synth_uid = project.add_entity(track_uid, Box::new(synth)).unwrap();
 
-    // An effect takes the edge off the synth.
-    let effect = Effect::default();
+    // Effects process audio.
+    let effect = MyEffect::default();
     let _effect_uid = project.add_entity(track_uid, Box::new(effect)).unwrap();
+
+    // Controllers control other entities by emitting MIDI messages and control
+    // events. They also determine whether a composition is still playing.
+    let controller = MyController::default();
+    let _controller_uid = project.add_entity(track_uid, Box::new(controller)).unwrap();
 
     // Once everything is set up, render an audio stream to disk.
     render_to_disk(&mut project, &output_filename)?;

@@ -52,9 +52,11 @@ float-cmp = "0.9.0"
 more-asserts = "0.3.1"
 
 [features]
-default = ["std", "egui"]
+default = ["std", "egui", "f64"]
 cpal = ["dep:cpal"]
 egui = ["eframe"]
+f32 = []
+f64 = []
 hound = ["dep:hound"]
 std = ["getrandom/std", "anyhow/std"]
 

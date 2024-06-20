@@ -27,7 +27,7 @@ pub struct TimerCoreEphemerals {
 impl Serializable for TimerCore {}
 #[allow(missing_docs)]
 impl TimerCore {
-    fn new_with(duration: MusicalTime) -> Self {
+    pub fn new_with(duration: MusicalTime) -> Self {
         let mut r = TimerCore::default();
         r.set_duration(duration);
         r
