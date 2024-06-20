@@ -4,10 +4,10 @@
 
 /// The most commonly used imports.
 pub mod prelude {
-    pub use super::{ProjectV2, Projects, TrackUid, TrackUidFactory};
+    pub use super::{BasicProject, Projects, TrackUid, TrackUidFactory};
 }
 
-pub use project::ProjectV2;
+pub use project::BasicProject;
 pub use track::{TrackTitle, TrackUid, TrackUidFactory};
 pub use traits::Projects;
 

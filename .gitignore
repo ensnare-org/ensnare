@@ -1,6 +1,7 @@
 **/*.rs.bk
 **/target
 *.pdb
+/*.wav
 debug/
 git-scratch.md
 target/

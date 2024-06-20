@@ -3,22 +3,18 @@
 //! The `hello-world` example shows how to use basic crate functionality.
 
 use clap::Parser;
-use derivative::Derivative;
 use ensnare::{prelude::*, traits::Displays};
 use ensnare_proc_macros::{Control, IsEntity, Metadata};
 use serde::{Deserialize, Serialize};
-use std::path::PathBuf;
 
 /// The program's command-line arguments.
-#[derive(clap::Parser, Debug, Derivative)]
-#[derivative(Default)]
+#[derive(clap::Parser, Debug, Default)]
 #[clap(author, about, long_about = None)]
 struct Args {
     /// Print version and exit
     #[clap(short = 'v', long, value_parser)]
     version: bool,
 
-    #[derivative(Default(value = "Some(\"output.wav\".to_string())"))]
     output_filename: Option<String>,
 }
 
@@ -53,13 +49,14 @@ fn main() -> anyhow::Result<()> {
         eprintln!("{}", ensnare::app_version());
         return Ok(());
     }
+    let output_filename = args.output_filename.unwrap_or("output.wav".to_string());
 
     // The system needs a working buffer for audio.
     let _buffer = [StereoSample::SILENCE; 64];
 
     // Project contains all the the instruments, controllers, and effects, and
     // their relationships, and uses them to produce a song.
-    let mut project = ProjectV2::default();
+    let mut project = BasicProject::default();
 
     // It also owns the sample rate and propagates it to the devices that it
     // controls.
@@ -82,12 +79,12 @@ fn main() -> anyhow::Result<()> {
     let _effect_uid = project.add_entity(track_uid, Box::new(effect)).unwrap();
 
     // Once everything is set up, render an audio stream to disk.
-    render_to_disk(&mut project, &args.output_filename.unwrap())?;
+    render_to_disk(&mut project, &output_filename)?;
 
     Ok(())
 }
 
-fn render_to_disk(project: &mut ProjectV2, output_filename: &str) -> anyhow::Result<()> {
+fn render_to_disk(project: &mut BasicProject, output_filename: &str) -> anyhow::Result<()> {
     let spec = hound::WavSpec {
         channels: 2,
         sample_rate: project.sample_rate().into(),

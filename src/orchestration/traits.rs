@@ -435,6 +435,8 @@ pub(crate) mod tests {
     }
 
     /// [TestProject] is a harness that helps [Projects] trait development.
+    /// TODO: when [BasicProject] is operational, consider deleting this struct
+    /// and moving the tests to its module.
     #[derive(Default)]
     struct TestProject {
         track_uid_factory: TrackUidFactory,
