@@ -2,7 +2,7 @@
 
 use crate::types::{u7, MidiMessage};
 
-/// Provides utility functionality that helps with MIDI
+/// Provides MIDI-related utility functionality.
 pub struct MidiUtils {}
 impl MidiUtils {
     /// Convenience function to make a note-on [MidiMessage].
