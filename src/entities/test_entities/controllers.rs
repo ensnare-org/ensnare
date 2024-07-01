@@ -1,6 +1,9 @@
 // Copyright (c) 2024 Mike Tsao
 
-use crate::{cores::TestControllerAlwaysSendsMidiMessageCore, prelude::*};
+use crate::{
+    cores::{SimpleControllerAlwaysSendsMidiMessageCore, TimerCore},
+    prelude::*,
+};
 use ensnare_proc_macros::{
     InnerConfigurable, InnerControllable, InnerControls, InnerHandlesMidi, InnerSerializable,
     IsEntity, Metadata,
@@ -47,13 +50,41 @@ impl TestController {
 pub struct TestControllerAlwaysSendsMidiMessage {
     uid: Uid,
     #[serde(skip)]
-    inner: TestControllerAlwaysSendsMidiMessageCore,
+    inner: SimpleControllerAlwaysSendsMidiMessageCore,
 }
 impl TestControllerAlwaysSendsMidiMessage {
     pub fn new_with(uid: Uid) -> Self {
         Self {
             uid,
-            inner: TestControllerAlwaysSendsMidiMessageCore::default(),
+            inner: SimpleControllerAlwaysSendsMidiMessageCore::default(),
+        }
+    }
+}
+
+#[derive(
+    Debug,
+    Default,
+    InnerConfigurable,
+    InnerControllable,
+    InnerControls,
+    InnerHandlesMidi,
+    InnerSerializable,
+    IsEntity,
+    Metadata,
+    Serialize,
+    Deserialize,
+)]
+#[entity(Displays, GeneratesStereoSample, SkipInner, TransformsAudio)]
+pub struct TestControllerTimed {
+    uid: Uid,
+    #[serde(skip)]
+    inner: TimerCore,
+}
+impl TestControllerTimed {
+    pub fn new_with(uid: Uid, duration: MusicalTime) -> Self {
+        Self {
+            uid,
+            inner: TimerCore::new_with(duration),
         }
     }
 }

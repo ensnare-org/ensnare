@@ -503,6 +503,11 @@ impl TimeRange {
     pub fn end(&self) -> MusicalTime {
         self.0.end
     }
+
+    #[allow(missing_docs)]
+    pub fn contains(&self, item: &MusicalTime) -> bool {
+        self.0.contains(item)
+    }
 }
 impl HasExtent for TimeRange {
     fn extent(&self) -> TimeRange {

@@ -1,10 +1,9 @@
 // Copyright (c) 2024 Mike Tsao
 
-use std::sync::{Arc, Mutex};
-
-use crate::{cores::TestAudioSourceCore, prelude::*};
+use crate::{cores::SimpleAudioSourceCore, prelude::*};
 use ensnare_proc_macros::{Control, InnerControllable, InnerInstrument, IsEntity, Metadata};
 use serde::{Deserialize, Serialize};
+use std::sync::{Arc, Mutex};
 
 #[derive(
     Debug, Default, InnerControllable, InnerInstrument, IsEntity, Metadata, Serialize, Deserialize,
@@ -21,7 +20,7 @@ use serde::{Deserialize, Serialize};
 #[serde(rename_all = "kebab-case")]
 pub struct TestAudioSource {
     uid: Uid,
-    inner: TestAudioSourceCore,
+    inner: SimpleAudioSourceCore,
 }
 impl TestAudioSource {
     pub const TOO_LOUD: SampleType = 1.1;
@@ -31,7 +30,7 @@ impl TestAudioSource {
     pub const QUIET: SampleType = -1.0;
     pub const TOO_QUIET: SampleType = -1.1;
 
-    pub fn new_with(uid: Uid, inner: TestAudioSourceCore) -> Self {
+    pub fn new_with(uid: Uid, inner: SimpleAudioSourceCore) -> Self {
         Self { uid, inner }
     }
 }

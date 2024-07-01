@@ -11,24 +11,25 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Builder, Debug, Default, Control, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 #[builder(default)]
-pub struct TestAudioSourceCore {
+pub struct SimpleAudioSourceCore {
     /// The value of the constant audio signal.
-    #[control]
     // This should be a Normal, but we use this audio source for testing edge
     // conditions. Thus we need to let it go out of range.
+    #[control]
     level: ParameterType,
 
     #[serde(skip)]
     #[builder(setter(skip))]
     c: Configurables,
 }
-impl Generates<StereoSample> for TestAudioSourceCore {
+impl Generates<StereoSample> for SimpleAudioSourceCore {
     fn generate(&mut self, values: &mut [StereoSample]) -> bool {
-        values.fill(StereoSample::from(self.level));
+        let s = StereoSample::from(self.level);
+        values.fill(s);
         self.level != 0.0
     }
 }
-impl Configurable for TestAudioSourceCore {
+impl Configurable for SimpleAudioSourceCore {
     delegate! {
         to self.c {
             fn sample_rate(&self) -> SampleRate;
@@ -40,7 +41,7 @@ impl Configurable for TestAudioSourceCore {
         }
     }
 }
-impl TestAudioSourceCore {
+impl SimpleAudioSourceCore {
     /// Higher than maximum valid positive value.
     pub const TOO_LOUD: SampleType = 1.1;
     /// Maximum valid positive value.
@@ -62,5 +63,48 @@ impl TestAudioSourceCore {
     /// Sets the device's signal level.
     pub fn set_level(&mut self, level: ParameterType) {
         self.level = level;
+    }
+
+    /// Initializes with the desired audio level.
+    pub fn new_with(level: ParameterType) -> Self {
+        Self {
+            level: level,
+            c: Default::default(),
+        }
+    }
+}
+
+/// Produces a constant audio signal. Used for ensuring that a known signal
+/// value gets all the way through the pipeline.
+#[derive(Builder, Debug, Default, Control, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+#[builder(default)]
+pub struct SimpleNoisyAudioSourceCore {
+    #[serde(skip)]
+    #[builder(setter(skip))]
+    c: Configurables,
+
+    #[serde(skip)]
+    #[builder(setter(skip))]
+    r: Rng,
+}
+impl Generates<StereoSample> for SimpleNoisyAudioSourceCore {
+    fn generate(&mut self, values: &mut [StereoSample]) -> bool {
+        for v in values.iter_mut() {
+            *v = self.r.rand_stereo_sample()
+        }
+        true
+    }
+}
+impl Configurable for SimpleNoisyAudioSourceCore {
+    delegate! {
+        to self.c {
+            fn sample_rate(&self) -> SampleRate;
+            fn update_sample_rate(&mut self, sample_rate: SampleRate);
+            fn tempo(&self) -> Tempo;
+            fn update_tempo(&mut self, tempo: Tempo);
+            fn time_signature(&self) -> TimeSignature;
+            fn update_time_signature(&mut self, time_signature: TimeSignature);
+        }
     }
 }

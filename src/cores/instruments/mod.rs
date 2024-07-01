@@ -1,5 +1,8 @@
 // Copyright (c) 2024 Mike Tsao
 
-pub use test::{TestAudioSourceCore, TestAudioSourceCoreBuilder};
+pub use simple::{
+    SimpleAudioSourceCore, SimpleAudioSourceCoreBuilder, SimpleNoisyAudioSourceCore,
+    SimpleNoisyAudioSourceCoreBuilder,
+};
 
-mod test;
+mod simple;

@@ -3,6 +3,7 @@
 pub use controllers::*;
 pub use effects::*;
 pub use factory::BuiltInEntities;
+pub use instruments::*;
 
 mod controllers;
 mod effects;

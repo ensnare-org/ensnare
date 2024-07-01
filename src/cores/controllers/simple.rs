@@ -6,12 +6,12 @@ use ensnare_proc_macros::Control;
 /// A controller that emits MIDI note-on messages every time [Controls::work()]
 /// is called.
 #[derive(Debug, Default, Control)]
-pub struct TestControllerAlwaysSendsMidiMessageCore {
+pub struct SimpleControllerAlwaysSendsMidiMessageCore {
     midi_note: u8,
     is_performing: bool,
 }
-impl HandlesMidi for TestControllerAlwaysSendsMidiMessageCore {}
-impl Controls for TestControllerAlwaysSendsMidiMessageCore {
+impl HandlesMidi for SimpleControllerAlwaysSendsMidiMessageCore {}
+impl Controls for SimpleControllerAlwaysSendsMidiMessageCore {
     fn work(&mut self, control_events_fn: &mut ControlEventsFn) {
         if self.is_performing {
             control_events_fn(WorkEvent::Midi(
@@ -44,5 +44,5 @@ impl Controls for TestControllerAlwaysSendsMidiMessageCore {
         self.is_performing
     }
 }
-impl Configurable for TestControllerAlwaysSendsMidiMessageCore {}
-impl Serializable for TestControllerAlwaysSendsMidiMessageCore {}
+impl Configurable for SimpleControllerAlwaysSendsMidiMessageCore {}
+impl Serializable for SimpleControllerAlwaysSendsMidiMessageCore {}

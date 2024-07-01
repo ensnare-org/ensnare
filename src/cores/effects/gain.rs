@@ -52,7 +52,7 @@ impl GainCore {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::cores::instruments::{TestAudioSourceCore, TestAudioSourceCoreBuilder};
+    use crate::cores::instruments::{SimpleAudioSourceCore, SimpleAudioSourceCoreBuilder};
 
     #[test]
     fn gain_mainline() {
@@ -61,8 +61,8 @@ mod tests {
             .build()
             .unwrap();
         let mut buffer = [StereoSample::default(); 1];
-        TestAudioSourceCoreBuilder::default()
-            .level(TestAudioSourceCore::LOUD)
+        SimpleAudioSourceCoreBuilder::default()
+            .level(SimpleAudioSourceCore::LOUD)
             .build()
             .unwrap()
             .generate(&mut buffer);

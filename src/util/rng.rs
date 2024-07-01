@@ -2,6 +2,7 @@
 
 //! Provides a random-number generator for debugging and testing.
 
+use crate::prelude::{Sample, StereoSample};
 use byteorder::{BigEndian, ByteOrder};
 use delegate::delegate;
 
@@ -41,6 +42,14 @@ impl Rng {
             pub fn rand_float(&mut self) -> f64;
             pub fn rand_range(&mut self, range: core::ops::Range<u64>) -> u64;
         }
+    }
+
+    pub fn rand_stereo_sample(&mut self) -> StereoSample {
+        StereoSample(self.rand_sample(), self.rand_sample())
+    }
+
+    pub fn rand_sample(&mut self) -> Sample {
+        Sample(self.rand_float())
     }
 }
 
