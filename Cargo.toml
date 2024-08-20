@@ -58,6 +58,8 @@ egui = ["eframe"]
 f32 = []
 f64 = []
 hound = ["dep:hound"]
+not_yet = []
+simple = []
 std = ["getrandom/std", "anyhow/std"]
 
 [workspace]

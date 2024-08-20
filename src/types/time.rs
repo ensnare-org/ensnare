@@ -615,13 +615,13 @@ impl Mul<Seconds> for SampleRate {
         Self((self.0 as f64 * rhs.0) as usize)
     }
 }
-#[cfg(not_yet)]
+#[cfg(feature="not_yet")]
 impl From<cpal::SampleRate> for SampleRate {
     fn from(value: cpal::SampleRate) -> Self {
         Self(value.0 as usize)
     }
 }
-#[cfg(not_yet)]
+#[cfg(feature="not_yet")]
 impl Into<cpal::SampleRate> for SampleRate {
     fn into(self) -> cpal::SampleRate {
         cpal::SampleRate(self.0 as u32)
@@ -950,7 +950,7 @@ mod tests {
         assert_eq!(t.bars(&ts), 1);
     }
 
-    #[cfg(not_yet)]
+    #[cfg(feature="not_yet")]
     #[test]
     fn advances_time_correctly_with_various_sample_rates() {
         let mut transport = Transport::default();
@@ -992,7 +992,7 @@ mod tests {
         assert_eq!(usize::from(sample_rate * seconds), 88200);
     }
 
-    #[cfg(not_yet)]
+    #[cfg(feature="not_yet")]
     #[test]
     fn transport_is_automatable() {
         let mut t = TransportBuilder::default().build().unwrap();
