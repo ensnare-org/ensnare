@@ -22,7 +22,7 @@ pub use test_entities::*;
 
 mod built_in;
 mod infra;
-#[cfg(not(feature="simple"))]
+#[cfg(not(feature = "simple"))]
 mod simple;
 #[cfg(test)]
 mod test_entities;
