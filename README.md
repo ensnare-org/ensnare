@@ -10,11 +10,13 @@ See the examples directory for usage, or visit
 
 ## Development
 
+### First-time setup
+
 To set up your Linux machine for development, see the `apt install` packages in
 [`.github/workflows/build.yml`](./.github/workflows/build.yml). Other platforms
 don't have special dependencies.
 
-Cargo commands that I like:
+### Useful Cargo commands
 
 * `deb`
 * `expand`
@@ -23,7 +25,7 @@ Cargo commands that I like:
 * `release`
 * `tree`
 
-Various Bash commands that I use during Ensnare development:
+### Bash commands that I use during Ensnare development
 
 * `./precheck`: runs formatting and tests that should precede any commit.
 * `./do-release`: Generates a new release and pushes it to
