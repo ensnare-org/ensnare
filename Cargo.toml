@@ -32,7 +32,7 @@ delegate = "0.12.0"
 derivative = { version = "2.2.0", features = ["use_core"] }
 derive_builder = "0.20.0"
 derive_more = "0.99.17"
-eframe = { version = "0.27", optional = true }
+eframe = { version = "0.28.1", optional = true }
 ensnare-proc-macros = { version = "0.0.5", path = "crates/proc-macros" }
 getrandom = { version = "0.2.12", features = [] }
 hound = { version = "3.5", optional = true }
