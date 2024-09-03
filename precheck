@@ -13,7 +13,9 @@ do
 done
 
 cargo fmt --all && \
-    cargo doc --no-deps --workspace --examples --document-private-items && \
+    cargo doc \
+        --no-deps --workspace --document-private-items \
+        --examples --features="std hound" && \
     cargo test --workspace
 
 # cargo build --no-default-features && \
