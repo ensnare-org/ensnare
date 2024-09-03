@@ -49,7 +49,7 @@ impl Rng {
     }
 
     pub fn rand_sample(&mut self) -> Sample {
-        Sample(self.rand_float())
+        Sample(self.rand_float() * 2.0 - 1.0)
     }
 }
 
@@ -77,6 +77,31 @@ mod tests {
         assert!(
             (0..100).all(|_| r1.rand_u64() == r2.rand_u64()),
             "RNGs with same seeds should produce same streams."
+        );
+    }
+
+    #[test]
+    fn rng_rand_sample() {
+        let mut r = Rng::default();
+
+        // In theory either of the next two tests could fail if we're extremely
+        // unlucky. But the chance is 1 in 2^100 (because the sign is equivalent
+        // to a coin flip).
+        assert!(
+            (0..100).any(|_| r.rand_sample().0 < 0.0),
+            "expected at least one sample to be less than zero"
+        );
+        assert!(
+            (0..100).any(|_| r.rand_sample().0 > 0.0),
+            "expected at least one sample to be greater than zero"
+        );
+
+        assert!(
+            (0..100).all(|_| {
+                let s = r.rand_sample();
+                s >= Sample::MIN && s <= Sample::MAX
+            }),
+            "expected each sample to be within defined range"
         );
     }
 }

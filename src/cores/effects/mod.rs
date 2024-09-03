@@ -3,7 +3,7 @@
 pub use delay::{DelayCore, DelayCoreBuilder, DelayLine, Delays};
 pub use gain::{GainCore, GainCoreBuilder};
 pub use reverb::{ReverbCore, ReverbCoreBuilder};
-pub use simple::SimpleEffectNegatesInputCore;
+pub use simple::SimpleEffectHalfCore;
 
 mod delay;
 mod gain;

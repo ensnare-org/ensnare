@@ -78,7 +78,6 @@ pub(crate) fn impl_derive_inner_controls(input: TokenStream) -> TokenStream {
                         fn play(&mut self);
                         fn stop(&mut self);
                         fn skip_to_start(&mut self);
-                        fn is_performing(&self) -> bool;
                     }
                 }
             }

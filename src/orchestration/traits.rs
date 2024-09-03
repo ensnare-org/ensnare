@@ -153,7 +153,9 @@ impl<'a, P: Projects> Iterator for ProjectsRenderer<'a, P> {
             self.project.generate_audio(self.samples.buffer_mut(), None);
 
             // End rendering if performance is over and silence is detected.
-            if !self.project.is_performing() {
+            // TODO: this test should be more sophisticated. See
+            // https://github.com/ensnare-org/ensnare/issues/2.
+            if self.project.is_finished() {
                 if self.samples.buffer().iter().all(|s| s.almost_silent()) {
                     return None;
                 }
@@ -738,10 +740,6 @@ pub(crate) mod tests {
             self.entity_uid_to_entity
                 .values_mut()
                 .for_each(|e| e.skip_to_start());
-        }
-
-        fn is_performing(&self) -> bool {
-            self.transport.is_performing()
         }
     }
 

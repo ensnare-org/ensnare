@@ -1,6 +1,6 @@
 // Copyright (c) 2024 Mike Tsao
 
-use crate::{cores::SimpleEffectNegatesInputCore, prelude::*};
+use crate::{cores::SimpleEffectHalfCore, prelude::*};
 use ensnare_proc_macros::{
     InnerConfigurable, InnerControllable, InnerEffect, InnerSerializable, IsEntity, Metadata,
 };
@@ -22,6 +22,6 @@ use serde::{Deserialize, Serialize};
 #[entity(HandlesMidi, GeneratesStereoSample, Controls)]
 pub struct SimpleEffect {
     uid: Uid,
-    inner: SimpleEffectNegatesInputCore,
+    inner: SimpleEffectHalfCore,
 }
 impl Displays for SimpleEffect {}

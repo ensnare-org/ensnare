@@ -153,10 +153,6 @@ impl Controls for SignalPath {
     fn stop(&mut self) {}
 
     fn skip_to_start(&mut self) {}
-
-    fn is_performing(&self) -> bool {
-        false
-    }
 }
 impl Configurable for SignalPath {
     fn reset(&mut self) {

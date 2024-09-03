@@ -191,29 +191,11 @@ impl Projects for BasicProject {
     fn generate_audio(
         &mut self,
         frames: &mut [StereoSample],
-        mut midi_events_fn: Option<&mut MidiMessagesFn>,
+        midi_events_fn: Option<&mut MidiMessagesFn>,
     ) {
-        let is_finished_at_start = self.is_finished();
-        let time_range = self.transport.advance(frames.len());
-        self.update_time_range(&time_range);
-        self.work(&mut |e| match e {
-            WorkEvent::Midi(channel, message) => {
-                if let Some(midi_events_fn) = midi_events_fn.as_mut() {
-                    midi_events_fn(channel, message);
-                }
-            }
-            WorkEvent::MidiForTrack(_, _, _) => todo!(),
-            WorkEvent::Control(_) => todo!(),
-        });
-        let is_finished_at_end = self.is_finished();
-        if !is_finished_at_start && is_finished_at_end {
-            self.stop();
-        }
-        if is_finished_at_end {
-            frames.fill(StereoSample::SILENCE);
-        } else {
-            frames.fill(StereoSample::MAX);
-        }
+        self.handle_controllers(frames.len(), midi_events_fn);
+        self.handle_instruments(frames);
+        self.handle_effects(frames);
     }
 
     fn generate_and_dispatch_audio(
@@ -313,9 +295,52 @@ impl Controls for BasicProject {
             .values_mut()
             .for_each(|e| e.skip_to_start());
     }
+}
+impl BasicProject {
+    fn handle_controllers(
+        &mut self,
+        frames_len: usize,
+        mut midi_events_fn: Option<&mut MidiMessagesFn>,
+    ) {
+        let is_finished_at_start = self.is_finished();
+        let time_range = self.transport.advance(frames_len);
+        self.update_time_range(&time_range);
+        self.work(&mut |e| match e {
+            WorkEvent::Midi(channel, message) => {
+                if let Some(midi_events_fn) = midi_events_fn.as_mut() {
+                    midi_events_fn(channel, message);
+                }
+            }
+            WorkEvent::MidiForTrack(_, _, _) => todo!(),
+            WorkEvent::Control(_) => todo!(),
+        });
+        let is_finished_at_end = self.is_finished();
+        if !is_finished_at_start && is_finished_at_end {
+            self.stop();
+        }
+    }
 
-    fn is_performing(&self) -> bool {
-        self.transport.is_performing()
+    fn handle_instruments(&mut self, frames: &mut [StereoSample]) {
+        let frame_count = frames.len();
+
+        self.entity_uid_to_entity.values_mut().for_each(|e| {
+            let mut track_buffer = Vec::default();
+            track_buffer.resize(frame_count, StereoSample::SILENCE);
+            e.generate(&mut track_buffer);
+
+            track_buffer
+                .iter()
+                .zip(frames.iter_mut())
+                .for_each(|(src, dst)| {
+                    *dst += *src;
+                });
+        });
+    }
+
+    fn handle_effects(&mut self, frames: &mut [StereoSample]) {
+        self.entity_uid_to_entity.values_mut().for_each(|e| {
+            e.transform(frames);
+        });
     }
 }
 

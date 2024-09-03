@@ -72,7 +72,7 @@ impl Transport {
         // forward (except when the performance starts). It should share the
         // same origin as the real clock, but increases regardless of
         // performance status.
-        if self.is_performing() {
+        if self.e.is_performing {
             self.e.current_frame = new_frames;
             self.e.current_time = new_time;
         }
@@ -157,9 +157,5 @@ impl Controls for Transport {
     fn skip_to_start(&mut self) {
         self.e.current_time = MusicalTime::default();
         self.e.current_frame = Default::default();
-    }
-
-    fn is_performing(&self) -> bool {
-        self.e.is_performing
     }
 }

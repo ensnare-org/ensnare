@@ -39,10 +39,6 @@ impl Controls for SimpleControllerAlwaysSendsMidiMessageCore {
     fn stop(&mut self) {
         self.is_performing = false;
     }
-
-    fn is_performing(&self) -> bool {
-        self.is_performing
-    }
 }
 impl Configurable for SimpleControllerAlwaysSendsMidiMessageCore {}
 impl Serializable for SimpleControllerAlwaysSendsMidiMessageCore {}

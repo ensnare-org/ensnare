@@ -100,10 +100,6 @@ impl Controls for SimpleController {
         self.time_range = TimeRange::default();
         self.is_finished = false;
     }
-
-    fn is_performing(&self) -> bool {
-        self.is_performing
-    }
 }
 
 #[cfg(test)]
@@ -113,8 +109,6 @@ mod tests {
     #[test]
     fn simple_controller() {
         let c = SimpleController::default();
-
-        assert!(!c.is_performing());
         assert!(!c.is_finished());
     }
 }

@@ -58,10 +58,6 @@ impl Controls for TriggerCore {
         self.e.has_triggered = false;
         self.timer.skip_to_start();
     }
-
-    fn is_performing(&self) -> bool {
-        self.e.is_performing
-    }
 }
 impl Configurable for TriggerCore {
     delegate! {

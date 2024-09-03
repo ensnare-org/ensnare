@@ -4,14 +4,14 @@ use crate::prelude::*;
 use ensnare_proc_macros::Control;
 use serde::{Deserialize, Serialize};
 
-/// An effect that negates the input.
+/// An effect that multiplies the input by 0.5, which is basically a gain set to 50%.
 #[derive(Debug, Default, Control, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
-pub struct SimpleEffectNegatesInputCore {}
-impl TransformsAudio for SimpleEffectNegatesInputCore {
+pub struct SimpleEffectHalfCore {}
+impl TransformsAudio for SimpleEffectHalfCore {
     fn transform_channel(&mut self, _channel: usize, input_sample: Sample) -> Sample {
-        -input_sample
+        input_sample * 0.5
     }
 }
-impl Serializable for SimpleEffectNegatesInputCore {}
-impl Configurable for SimpleEffectNegatesInputCore {}
+impl Serializable for SimpleEffectHalfCore {}
+impl Configurable for SimpleEffectHalfCore {}

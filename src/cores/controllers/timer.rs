@@ -92,10 +92,6 @@ impl Controls for TimerCore {
     fn stop(&mut self) {
         self.e.is_performing = false;
     }
-
-    fn is_performing(&self) -> bool {
-        self.e.is_performing
-    }
 }
 
 #[cfg(test)]

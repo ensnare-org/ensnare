@@ -177,30 +177,6 @@ impl<E: Entity + ?Sized> EntityStore<E> {
         self.entities.is_empty()
     }
 
-    // pub fn as_controllable_mut(&mut self, uid: &Uid) -> Option<&mut dyn Controllable> {
-    //     if let Some(e) = self.get_mut(uid) {
-    //         e.as_controllable_mut()
-    //     } else {
-    //         None
-    //     }
-    // }
-
-    // pub fn as_instrument_mut(&mut self, uid: &Uid) -> Option<&mut dyn IsInstrument> {
-    //     if let Some(e) = self.get_mut(uid) {
-    //         e.as_instrument_mut()
-    //     } else {
-    //         None
-    //     }
-    // }
-
-    // pub fn as_effect_mut(&mut self, uid: &Uid) -> Option<&mut dyn IsEffect> {
-    //     if let Some(e) = self.get_mut(uid) {
-    //         e.as_effect_mut()
-    //     } else {
-    //         None
-    //     }
-    // }
-
     pub fn contains(&self, uid: &Uid) -> bool {
         self.entities.contains_key(uid)
     }
@@ -236,7 +212,7 @@ impl<E: Entity + ?Sized> Configurable for EntityStore<E> {
 }
 impl<E: Entity + ?Sized> Controls for EntityStore<E> {
     fn time_range(&self) -> Option<TimeRange> {
-        if self.is_performing() {
+        if !self.is_finished() {
             Some(self.time_range.clone())
         } else {
             None
@@ -246,9 +222,7 @@ impl<E: Entity + ?Sized> Controls for EntityStore<E> {
     fn update_time_range(&mut self, time_range: &TimeRange) {
         self.time_range = time_range.clone();
         self.iter_mut().for_each(|t| {
-            // if let Some(t) = t.as_controller_mut() {
             t.update_time_range(time_range);
-            // }
         });
     }
 
@@ -257,49 +231,27 @@ impl<E: Entity + ?Sized> Controls for EntityStore<E> {
     }
 
     fn is_finished(&self) -> bool {
-        self.iter().all(|t| {
-            // if let Some(t) = t.as_controller() {
-            t.is_finished()
-            // } else {
-            //     true
-            // }
-        })
+        self.iter().all(|t| t.is_finished())
     }
 
     fn play(&mut self) {
         // TODO: measure whether it's faster to speed through everything and
         // check type than to look up each UID in self.controllers
         self.iter_mut().for_each(|t| {
-            // if let Some(t) = t.as_controller_mut() {
             t.play();
-            // }
         });
     }
 
     fn stop(&mut self) {
         self.iter_mut().for_each(|t| {
-            // if let Some(t) = t.as_controller_mut() {
             t.stop();
-            // }
         });
     }
 
     fn skip_to_start(&mut self) {
         self.iter_mut().for_each(|t| {
-            // if let Some(t) = t.as_controller_mut() {
             t.skip_to_start();
-            // }
         });
-    }
-
-    fn is_performing(&self) -> bool {
-        self.iter().any(|t| {
-            // if let Some(t) = t.as_controller() {
-            t.is_performing()
-            // } else {
-            //     true
-            // }
-        })
     }
 }
 impl<E: Entity + ?Sized> ControlsAsProxy for EntityStore<E> {

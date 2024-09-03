@@ -74,8 +74,8 @@ impl SimpleAudioSourceCore {
     }
 }
 
-/// Produces a constant audio signal. Used for ensuring that a known signal
-/// value gets all the way through the pipeline.
+/// Produces a constant audio signal consisting of random samples. Used for
+/// ensuring that a known signal value gets all the way through the pipeline.
 #[derive(Builder, Debug, Default, Control, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 #[builder(default)]

@@ -51,8 +51,8 @@ pub type ControlEventsFn<'a> = dyn FnMut(WorkEvent) + 'a;
 /// the performance.
 #[allow(unused_variables)]
 pub trait Controls: Send {
-    /// Returns the current [MusicalTime] range, or [None] if not performing or
-    /// not applicable.
+    /// Returns the current [MusicalTime] range, or [None] if not applicable, or
+    /// the performance is finished or not started.
     ///
     /// TODO: should this return `Option<&TimeRange>` instead? Since there is a
     /// `Range<>` involved, it's not `Copy`, so it feels like we're doing extra
@@ -100,14 +100,6 @@ pub trait Controls: Send {
 
     /// Resets cursors to the beginning.
     fn skip_to_start(&mut self) {}
-
-    /// Whether the entity is currently playing.
-    //
-    // TODO: This is part of the trait so that implementers don't have to leak
-    // their internal state to unit test code. Consider removing.
-    fn is_performing(&self) -> bool {
-        false
-    }
 }
 
 /// A wrapper for identifiers of ControlLink sources. Both entities and paths
