@@ -5,7 +5,7 @@
 #![allow(dead_code)] // TODO: remove when big migration is complete
 #![allow(rustdoc::private_intra_doc_links)]
 
-//! Ensnare helps create digital audio.
+//! The Ensnare crate helps create digital audio with a focus on music.
 
 #[cfg(feature = "std")]
 pub use version::app_version;
