@@ -265,7 +265,7 @@ pub enum DisplaysAction {
 //
 // Adapted from egui_demo_lib/src/demo/mod.rs
 pub trait Displays {
-    /// Renders this Entity. Returns a [Response](egui::Response).
+    /// Renders this Entity. Returns a [Response](eframe::egui::Response).
     fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
         ui.label("Coming soon!")
     }
