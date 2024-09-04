@@ -355,7 +355,16 @@ mod tests {
     fn project_mainline() {
         let p = BasicProject::default();
 
-        assert_eq!(p.sample_rate(), SampleRate::from(44100))
+        assert_eq!(
+            p.sample_rate(),
+            SampleRate::from(SampleRate::DEFAULT_SAMPLE_RATE)
+        );
+        assert_eq!(p.tempo(), Tempo::from(Tempo::DEFAULT_TEMPO));
+        assert_eq!(
+            p.time_signature(),
+            TimeSignature::new_with(TimeSignature::DEFAULT_TOP, TimeSignature::DEFAULT_BOTTOM)
+                .unwrap()
+        );
     }
 
     #[test]

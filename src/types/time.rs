@@ -20,7 +20,7 @@ use synonym::Synonym;
 #[derivative(Default)]
 #[synonym(skip(Default))]
 #[serde(rename_all = "kebab-case")]
-pub struct Tempo(#[derivative(Default(value = "128.0"))] pub ParameterType);
+pub struct Tempo(#[derivative(Default(value = "Tempo::DEFAULT_TEMPO"))] pub ParameterType);
 impl fmt::Display for Tempo {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.write_fmt(format_args!("{:0.2} BPM", self.0))
@@ -38,6 +38,9 @@ impl Tempo {
     /// The smallest value we'll allow. Note that zero is actually a degenerate
     /// case... maybe we should be picking 0.1 or similar.
     pub const MIN_VALUE: ParameterType = 0.0;
+
+    /// Default tempo.
+    pub const DEFAULT_TEMPO: ParameterType = 128.0;
 
     /// Beats per second.
     pub fn bps(&self) -> ParameterType {
@@ -122,13 +125,13 @@ impl BeatValue {
 pub struct TimeSignature {
     /// The number of beats in a measure.
     #[control]
-    #[derivative(Default(value = "4"))]
+    #[derivative(Default(value = "TimeSignature::DEFAULT_TOP"))]
     pub top: usize,
 
     /// The value of a beat. Expressed as a reciprocal; for example, if it's 4,
     /// then the beat value is 1/4 or a quarter note.
     #[control]
-    #[derivative(Default(value = "4"))]
+    #[derivative(Default(value = "TimeSignature::DEFAULT_BOTTOM"))]
     pub bottom: usize,
 }
 impl Display for TimeSignature {
@@ -145,6 +148,12 @@ impl TimeSignature {
     /// 𝄵 time = cut common time = alla breve = 2/2
     /// <https://en.wikipedia.org/wiki/Time_signature>
     pub const CUT_TIME: Self = TimeSignature { top: 2, bottom: 2 };
+
+    /// Default numerator
+    pub const DEFAULT_TOP: usize = 4;
+
+    /// Default denominator
+    pub const DEFAULT_BOTTOM: usize = 4;
 
     pub fn new_with(top: usize, bottom: usize) -> anyhow::Result<Self, Error> {
         if top == 0 {
@@ -636,12 +645,14 @@ mod tests {
     fn tempo() {
         let t = Tempo::default();
         assert_eq!(t.0, 128.0);
+        assert_eq!(Tempo::DEFAULT_TEMPO, 128.0);
     }
 
     #[test]
     fn sample_rate_default_is_sane() {
         let sr = SampleRate::default();
         assert_eq!(sr.0, 44100);
+        assert_eq!(SampleRate::DEFAULT_SAMPLE_RATE, 44100);
     }
 
     #[test]
@@ -649,6 +660,8 @@ mod tests {
         let ts = TimeSignature::default();
         assert_eq!(ts.top, 4);
         assert_eq!(ts.bottom, 4);
+        assert_eq!(TimeSignature::DEFAULT_TOP, ts.top);
+        assert_eq!(TimeSignature::DEFAULT_BOTTOM, ts.bottom);
 
         let _ts = TimeSignature::new_with(ts.top, ts.bottom).ok().unwrap();
         // assert!(matches!(ts.beat_value(), BeatValue::Quarter));
