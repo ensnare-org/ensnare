@@ -43,7 +43,7 @@ rustc-hash = "1.1.0"
 serde = { version = "1.0.203", features = ["rc", "derive"] }
 strum = "0.26"
 strum_macros = "0.26"
-synonym = { path = "../synonym" }                                        #"0.1.5"
+synonym = { git = "http://github.com/sowbug/synonym" }
 typetag = "0.2.16"
 
 [dev-dependencies]

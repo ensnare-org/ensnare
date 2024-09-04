@@ -3283,6 +3283,7 @@ dependencies = [
 [[package]]
 name = "synonym"
 version = "0.1.5"
+source = "git+http://github.com/sowbug/synonym#b5dc3ca7c13557a3842d9929a5f5d4c3834457de"
 dependencies = [
  "darling",
  "proc-macro2",
