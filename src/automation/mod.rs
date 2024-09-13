@@ -27,10 +27,13 @@ pub mod prelude {
     pub use super::{
         ControlEventsFn, ControlIndex, ControlLink, ControlLinkSource, ControlName,
         ControlProxyEventsFn, ControlRange, ControlValue, Controllable, Controls, ControlsAsProxy,
+        SignalPath, SignalPathBuilder, SignalPoint, SignalPointBuilder,
     };
 }
 
-pub use signal_path::{PathUid, PathUidFactory};
+pub use signal_path::{
+    PathUid, PathUidFactory, SignalPath, SignalPathBuilder, SignalPoint, SignalPointBuilder,
+};
 pub use traits::{
     ControlEventsFn, ControlLinkSource, ControlProxyEventsFn, Controllable, Controls,
     ControlsAsProxy,

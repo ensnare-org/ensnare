@@ -52,7 +52,7 @@ impl GainCore {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::cores::instruments::{SimpleAudioSourceCore, SimpleAudioSourceCoreBuilder};
+    use crate::cores::simple::{SimpleAudioSourceCore, SimpleAudioSourceCoreBuilder};
 
     #[test]
     fn gain_mainline() {

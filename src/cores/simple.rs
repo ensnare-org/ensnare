@@ -6,6 +6,58 @@ use derive_builder::Builder;
 use ensnare_proc_macros::Control;
 use serde::{Deserialize, Serialize};
 
+/// A controller that emits MIDI note-on messages every time [Controls::work()]
+/// is called.
+#[derive(Debug, Default, Control)]
+pub struct SimpleControllerAlwaysSendsMidiMessageCore {
+    midi_note: u8,
+    is_performing: bool,
+}
+impl HandlesMidi for SimpleControllerAlwaysSendsMidiMessageCore {}
+impl Controls for SimpleControllerAlwaysSendsMidiMessageCore {
+    fn work(&mut self, control_events_fn: &mut ControlEventsFn) {
+        if self.is_performing {
+            control_events_fn(WorkEvent::Midi(
+                MidiChannel::default(),
+                MidiMessage::NoteOn {
+                    key: u7::from(self.midi_note),
+                    vel: u7::from(127),
+                },
+            ));
+            self.midi_note += 1;
+            if self.midi_note > 127 {
+                self.midi_note = 1;
+            }
+        }
+    }
+
+    fn is_finished(&self) -> bool {
+        false
+    }
+
+    fn play(&mut self) {
+        self.is_performing = true;
+    }
+
+    fn stop(&mut self) {
+        self.is_performing = false;
+    }
+}
+impl Configurable for SimpleControllerAlwaysSendsMidiMessageCore {}
+impl Serializable for SimpleControllerAlwaysSendsMidiMessageCore {}
+
+/// An effect that multiplies the input by 0.5, which is basically a gain set to 50%.
+#[derive(Debug, Default, Control, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub struct SimpleEffectHalfCore {}
+impl TransformsAudio for SimpleEffectHalfCore {
+    fn transform_channel(&mut self, _channel: usize, input_sample: Sample) -> Sample {
+        input_sample * 0.5
+    }
+}
+impl Serializable for SimpleEffectHalfCore {}
+impl Configurable for SimpleEffectHalfCore {}
+
 /// Produces a constant audio signal. Used for ensuring that a known signal
 /// value gets all the way through the pipeline.
 #[derive(Clone, Builder, Debug, Default, Control, Serialize, Deserialize)]

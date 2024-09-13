@@ -21,6 +21,8 @@ pub mod prelude {
 
 pub mod automation;
 pub mod cores;
+#[cfg(feature = "egui")]
+pub mod egui;
 pub mod elements;
 pub mod entities;
 pub mod orchestration;

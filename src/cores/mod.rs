@@ -8,7 +8,9 @@
 pub use controllers::*;
 pub use effects::*;
 pub use instruments::*;
+pub use simple::*;
 
 mod controllers;
 mod effects;
 mod instruments;
+mod simple;

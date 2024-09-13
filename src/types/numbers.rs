@@ -413,6 +413,7 @@ pub enum FrequencyRange {
     Processing,
 }
 impl FrequencyRange {
+    /// Returns this variant as a RangeInclusive<float>.
     pub fn as_range(&self) -> RangeInclusive<ParameterType> {
         match self {
             FrequencyRange::Subaudible => 0.01..=64.0,
@@ -421,6 +422,7 @@ impl FrequencyRange {
         }
     }
 
+    /// Returns this variant as a RangeInclusive<FrequencyHz>.
     pub fn as_range_frequency_hz(&self) -> RangeInclusive<FrequencyHz> {
         let range = self.as_range();
         FrequencyHz(*range.start())..=FrequencyHz(*range.end())

@@ -16,6 +16,17 @@ impl BuiltInEntities {
         let include_internals = true;
 
         // Controllers
+        factory.register_entity_with_str_key(SignalPassthroughController::ENTITY_KEY, |uid| {
+            Box::new(SignalPassthroughController::new_with(uid))
+        });
+        factory.register_entity_with_str_key("signal-amplitude-passthrough", |uid| {
+            Box::new(SignalPassthroughController::new_amplitude_passthrough_type(
+                uid,
+            ))
+        });
+        factory.register_entity_with_str_key("signal-amplitude-inverted-passthrough", |uid| {
+            Box::new(SignalPassthroughController::new_amplitude_inverted_passthrough_type(uid))
+        });
         if include_internals {
             factory.register_entity_with_str_key(Timer::ENTITY_KEY, |uid| {
                 Box::new(Timer::new_with(uid, MusicalTime::DURATION_QUARTER))

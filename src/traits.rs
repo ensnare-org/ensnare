@@ -11,7 +11,7 @@ use strum_macros::Display;
 /// Quick import of all important traits.
 pub mod prelude {
     pub use super::{
-        //CanPrototype,
+        CanPrototype,
         Configurable,
         Configurables,
         ControlEventsFn,
@@ -21,22 +21,22 @@ pub mod prelude {
         ControlsAsProxy,
         Entity,
         Generates,
-        // GeneratesEnvelope,
+        GeneratesEnvelope,
         GenerationBuffer,
         HandlesMidi,
         HasExtent,
         HasMetadata,
         HasSettings,
-        // IsStereoSampleVoice,
-        // IsVoice,
+        IsStereoSampleVoice,
+        IsVoice,
         MidiMessagesFn,
         MidiNoteLabelMetadata,
+        PlaysNotes,
         ProvidesService,
-        // PlaysNotes,
         // Sequences,
         // SequencesMidi,
         Serializable,
-        // StoresVoices,
+        StoresVoices,
         TransformsAudio,
         WorkEvent,
     };
@@ -125,6 +125,82 @@ pub trait Configurable {
     /// should reset phase, etc.
     fn reset(&mut self) {}
 }
+
+/// Describes the public interface of an envelope generator, which provides a
+/// normalized amplitude (0.0..=1.0) that changes over time according to its
+/// internal parameters, external triggers, and the progression of time.
+pub trait GeneratesEnvelope: Generates<Normal> + Send + core::fmt::Debug {
+    /// Triggers the envelope's active stage.
+    fn trigger_attack(&mut self);
+
+    /// Triggers the end of the envelope's active stage.
+    fn trigger_release(&mut self);
+
+    /// Requests a fast decrease to zero amplitude. Upon reaching zero, switches
+    /// to idle. If the EG is already idle, then does nothing. For normal EGs,
+    /// the EG's settings (ADSR, etc.) don't affect the rate of shutdown decay.
+    ///
+    /// See DSSPC, 4.5 Voice Stealing, for an understanding of how the shutdown
+    /// state helps. TL;DR: if we have to steal one voice to play a different
+    /// note, it sounds better if the voice very briefly stops and restarts.
+    fn trigger_shutdown(&mut self);
+
+    /// Whether the envelope generator is in the idle state, which usually means
+    /// quiescent and zero amplitude.
+    fn is_idle(&self) -> bool;
+}
+
+/// A [PlaysNotes] turns note events into sound. It seems to overlap with
+/// [HandlesMidi]; the reason it exists is to allow the two interfaces to evolve
+/// independently, because MIDI is unlikely to be perfect for all our needs.
+pub trait PlaysNotes {
+    /// Whether the entity is currently making sound.
+    fn is_playing(&self) -> bool;
+
+    /// Initiates a note-on event. Depending on implementation, might initiate a
+    /// steal (tell envelope to go to shutdown state, then do note-on when
+    /// that's done).
+    fn note_on(&mut self, key: u7, velocity: u7);
+
+    /// Initiates an aftertouch event.
+    fn aftertouch(&mut self, velocity: u7);
+
+    /// Initiates a note-off event, which can take a long time to complete,
+    /// depending on how long the envelope's release is.
+    fn note_off(&mut self, velocity: u7);
+}
+
+/// A [StoresVoices] provides access to a collection of voices for a polyphonic
+/// synthesizer. Different implementers provide different policies for how to
+/// handle voice-stealing.
+pub trait StoresVoices: Generates<StereoSample> + Send + Sync + core::fmt::Debug {
+    /// The associated type of sample generator for this voice store.
+    type Voice;
+
+    /// Generally, this value won't change after initialization, because we try
+    /// not to dynamically allocate new voices.
+    fn voice_count(&self) -> usize;
+
+    /// The number of voices reporting is_playing() true.
+    fn active_voice_count(&self) -> usize;
+
+    /// Fails if we run out of idle voices and can't steal any active ones.
+    fn get_voice(&mut self, key: &u7) -> anyhow::Result<&mut Box<Self::Voice>>;
+
+    /// All the voices.
+    // Thanks to https://stackoverflow.com/a/58612273/344467 for the lifetime
+    // magic
+    fn voices<'a>(&'a self) -> Box<dyn Iterator<Item = &Box<Self::Voice>> + 'a>;
+
+    /// All the voices as a mutable iterator.
+    fn voices_mut<'a>(&'a mut self) -> Box<dyn Iterator<Item = &mut Box<Self::Voice>> + 'a>;
+}
+
+/// A synthesizer is composed of Voices. Ideally, a synth will know how to
+/// construct Voices, and then handle all the MIDI events properly for them.
+pub trait IsVoice<V: Default + Clone>: Generates<V> + PlaysNotes + Send + Sync {}
+/// Same as IsVoice, but stereo.
+pub trait IsStereoSampleVoice: IsVoice<StereoSample> {}
 
 /// A convenience trait that helps describe the lifetime, in MusicalTime, of
 /// something.
@@ -248,6 +324,26 @@ pub trait HasMetadata {
     fn name(&self) -> &'static str;
     /// A kebab-case string that identifies this class of [Entity].
     fn key(&self) -> &'static str;
+}
+
+/// Something that [CanPrototype] can make another of its kind, but it's a
+/// little smarter than [Clone]. Not every one of its fields should be cloned --
+/// for example, a cache -- and this trait's methods know which is which.
+///
+/// TODO: this trait overlaps with Serde's functionality. Most fields that are
+/// #[serde(skip)] would also be excluded here. Is there a way to hook into
+/// Serde and derive the make_another() functionality from it?
+pub trait CanPrototype: core::fmt::Debug + Default {
+    /// Treats self as a prototype and makes another.
+    fn make_another(&self) -> Self {
+        let mut r = Self::default();
+        r.update_from_prototype(self);
+        r
+    }
+
+    /// Given another of this kind, updates its fields using self as a
+    /// prototype.
+    fn update_from_prototype(&mut self, prototype: &Self) -> &Self;
 }
 
 /// The actions that might result from [Displays::ui()].

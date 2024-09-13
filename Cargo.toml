@@ -26,6 +26,7 @@ version.workspace = true
 [dependencies]
 anyhow = { version = "1.0.86", default-features = false }
 byteorder = "1.5.0"
+convert_case = { version = "0.6.0", optional = true }
 cpal = { version = "0.15.3", optional = true }
 crossbeam = "0.8.4"
 delegate = "0.12.0"
@@ -36,11 +37,16 @@ eframe = { version = "0.28", optional = true }
 ensnare-proc-macros = { version = "0.0.5", path = "crates/proc-macros" }
 getrandom = { version = "0.2.12", features = [] }
 hound = { version = "3.5", optional = true }
+include_dir = "0.7.3"
+kahan = "0.1.4"                                                          # for Oscillator
 midly = "0.5.3"
+nalgebra = "0.32.3"                                                      # for Envelope
 nonoverlapping_interval_tree = "0.1.5"
 oorandom = "11.1.3"
 rustc-hash = "1.1.0"
-serde = { version = "1.0.203", features = ["rc", "derive"] }
+serde = { version = "1.0", features = ["rc", "derive"] }
+serde_json = "1.0"
+spectrum-analyzer = { version = "1.5.0", optional = true }
 strum = "0.26"
 strum_macros = "0.26"
 synonym = { git = "http://github.com/sowbug/synonym" }
@@ -54,7 +60,7 @@ more-asserts = "0.3.1"
 [features]
 default = ["std", "egui", "f64"]
 cpal = ["dep:cpal"]
-egui = ["eframe"]
+egui = ["convert_case", "eframe", "spectrum-analyzer"]
 f32 = []
 f64 = []
 hound = ["dep:hound"]
