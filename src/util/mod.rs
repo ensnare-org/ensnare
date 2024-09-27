@@ -4,16 +4,25 @@
 
 /// Commonly used imports.
 pub mod prelude {
-    pub use super::rng::Rng;
+    pub use super::{init_sample_libraries, rng::Rng, Paths};
 }
-
-pub use midi::MidiUtils;
-pub use rng::Rng;
-
-mod midi;
-mod rng;
 
 #[cfg(feature = "std")]
 pub use mod_serial::ModSerial;
+pub use {
+    library::{
+        init_sample_libraries, Kit, KitIndex, KitItem, KitLibrary, SampleIndex, SampleLibrary,
+        SampleSource,
+    },
+    midi::{MidiNoteMinder, MidiUtils},
+    paths::{FileType, PathType, Paths},
+    rng::Rng,
+};
+
+mod library;
+mod midi;
+mod paths;
+mod rng;
+
 #[cfg(feature = "std")]
 mod mod_serial;

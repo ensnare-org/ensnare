@@ -4,23 +4,32 @@
 //! [TransformsAudio](crate::traits::TransformsAudio) trait. Examples are
 //! [Reverb] and filters.
 
-pub use bitcrusher::{BitcrusherCore, BitcrusherCoreBuilder};
-pub use delay::{DelayCore, DelayCoreBuilder, DelayLine, Delays};
-pub use filter::{
-    BiQuadFilterAllPassCore, BiQuadFilterAllPassCoreBuilder, BiQuadFilterBandPassCore,
-    BiQuadFilterBandPassCoreBuilder, BiQuadFilterBandStopCore, BiQuadFilterBandStopCoreBuilder,
-    BiQuadFilterHighPassCore, BiQuadFilterHighPassCoreBuilder, BiQuadFilterHighShelfCoreBuilder,
-    BiQuadFilterLowPass24dbCore, BiQuadFilterLowPass24dbCoreBuilder, BiQuadFilterLowShelfCore,
-    BiQuadFilterLowShelfCoreBuilder, BiQuadFilterNoneCoreBuilder, BiQuadFilterPeakingEqCore,
-    BiQuadFilterPeakingEqCoreBuilder,
+pub use {
+    bitcrusher::{BitcrusherCore, BitcrusherCoreBuilder},
+    chorus::{ChorusCore, ChorusCoreBuilder},
+    compressor::{CompressorCore, CompressorCoreBuilder},
+    delay::{DelayCore, DelayCoreBuilder, DelayLine, Delays},
+    filter::{
+        BiQuadFilterAllPassCore, BiQuadFilterAllPassCoreBuilder, BiQuadFilterBandPassCore,
+        BiQuadFilterBandPassCoreBuilder, BiQuadFilterBandStopCore, BiQuadFilterBandStopCoreBuilder,
+        BiQuadFilterHighPassCore, BiQuadFilterHighPassCoreBuilder,
+        BiQuadFilterHighShelfCoreBuilder, BiQuadFilterLowPass24dbCore,
+        BiQuadFilterLowPass24dbCoreBuilder, BiQuadFilterLowShelfCore,
+        BiQuadFilterLowShelfCoreBuilder, BiQuadFilterNoneCoreBuilder, BiQuadFilterPeakingEqCore,
+        BiQuadFilterPeakingEqCoreBuilder,
+    },
+    gain::{GainCore, GainCoreBuilder},
+    limiter::{LimiterCore, LimiterCoreBuilder},
+    reverb::{ReverbCore, ReverbCoreBuilder},
+    test::TestEffectNegatesInputCore,
 };
-pub use gain::{GainCore, GainCoreBuilder};
-pub use limiter::{LimiterCore, LimiterCoreBuilder};
-pub use reverb::{ReverbCore, ReverbCoreBuilder};
 
 mod bitcrusher;
+mod chorus;
+mod compressor;
 mod delay;
 mod filter;
 mod gain;
 mod limiter;
 mod reverb;
+mod test;
