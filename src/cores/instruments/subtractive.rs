@@ -603,7 +603,7 @@ mod tests {
     //     }
     // }
 
-    #[cfg(obsolete)]
+    #[cfg(feature = "not_yet")]
     // TODO: refactor out to common test utilities
     #[allow(dead_code)]
     fn write_voice(voice: &mut SubtractiveSynthVoice, duration: f64, basename: &str) {

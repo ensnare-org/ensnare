@@ -14,12 +14,18 @@ pub use version::app_version;
 /// ensnare::prelude::*;` for easier onboarding.
 pub mod prelude {
     pub use super::{
-        automation::prelude::*, elements::prelude::*, entities::prelude::*,
-        orchestration::prelude::*, traits::prelude::*, types::prelude::*, util::prelude::*,
+        automation::prelude::*, composition::prelude::*, elements::prelude::*,
+        entities::prelude::*, orchestration::prelude::*, traits::prelude::*, types::prelude::*,
+        util::prelude::*,
     };
 }
 
+// Fundamental structures that are important enough to re-export at top level.
+pub use composition::Composer;
+pub use orchestration::BasicProject;
+
 pub mod automation;
+pub mod composition;
 pub mod cores;
 #[cfg(feature = "egui")]
 pub mod egui;

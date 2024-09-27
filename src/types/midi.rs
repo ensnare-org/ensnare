@@ -6,6 +6,8 @@ use synonym::Synonym;
 pub use midly::num::{u4, u7};
 pub use midly::MidiMessage;
 
+use super::MusicalTime;
+
 /// Newtype for MIDI channel.
 #[derive(Synonym, Serialize, Deserialize)]
 pub struct MidiChannel(pub u8);
@@ -51,4 +53,13 @@ impl MidiPortDescriptor {
             name: name.unwrap_or(Self::INVALID_PORT_NAME.to_string()),
         }
     }
+}
+
+/// Represents a timed [MidiMessage].
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub struct MidiEvent {
+    #[allow(missing_docs)]
+    pub message: MidiMessage,
+    #[allow(missing_docs)]
+    pub time: MusicalTime,
 }

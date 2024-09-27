@@ -14,8 +14,9 @@ pub mod prelude {
 
 pub use {
     channels::{BoundedCrossbeamChannel, CrossbeamChannel},
+    colors::ColorScheme,
     general_midi::{GeneralMidiPercussionCode, GeneralMidiProgram},
-    midi::{u4, u7, MidiChannel, MidiMessage, MidiPortDescriptor},
+    midi::{u4, u7, MidiChannel, MidiEvent, MidiMessage, MidiPortDescriptor},
     note::MidiNote,
     numbers::{
         usize_to_sample_type, FrequencyHz, FrequencyRange, ParameterType, Ratio, Sample,
@@ -27,6 +28,7 @@ pub use {
 };
 
 mod channels;
+mod colors;
 mod general_midi;
 mod midi;
 mod note;

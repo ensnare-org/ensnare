@@ -3,7 +3,10 @@
 //! The traits that define many characteristics and relationships among parts of
 //! the system.
 
-use crate::{prelude::*, types::MidiNote};
+use crate::{
+    prelude::*,
+    types::{MidiEvent, MidiNote},
+};
 use crossbeam::channel::{Receiver, Sender};
 #[cfg(feature = "egui")]
 use strum_macros::Display;
@@ -11,34 +14,11 @@ use strum_macros::Display;
 /// Quick import of all important traits.
 pub mod prelude {
     pub use super::{
-        CanPrototype,
-        Configurable,
-        Configurables,
-        ControlEventsFn,
-        ControlProxyEventsFn,
-        Controllable,
-        Controls,
-        ControlsAsProxy,
-        Entity,
-        Generates,
-        GeneratesEnvelope,
-        GenerationBuffer,
-        HandlesMidi,
-        HasExtent,
-        HasMetadata,
-        HasSettings,
-        IsStereoSampleVoice,
-        IsVoice,
-        MidiMessagesFn,
-        MidiNoteLabelMetadata,
-        PlaysNotes,
-        ProvidesService,
-        // Sequences,
-        // SequencesMidi,
-        Serializable,
-        StoresVoices,
-        TransformsAudio,
-        WorkEvent,
+        CanPrototype, Configurable, Configurables, ControlEventsFn, ControlProxyEventsFn,
+        Controllable, Controls, ControlsAsProxy, Entity, Generates, GeneratesEnvelope,
+        GenerationBuffer, HandlesMidi, HasExtent, HasMetadata, HasSettings, IsStereoSampleVoice,
+        IsVoice, MidiMessagesFn, MidiNoteLabelMetadata, PlaysNotes, ProvidesService, Sequences,
+        SequencesMidi, Serializable, StoresVoices, TransformsAudio, WorkEvent,
     };
     #[cfg(feature = "egui")]
     pub use super::{Displays, DisplaysAction};
@@ -545,6 +525,82 @@ pub trait Entity:
     + Send
     + Sync
 {
+}
+
+/// Records and replays MIDI events.
+///
+/// This trait does not specify behavior in case of duplicate events, which
+/// allows simple implementations to use plain vectors rather than sets.
+pub trait SequencesMidi: Controls + Configurable + HandlesMidi {
+    /// Records a [MidiMessage] at the given [MusicalTime] on the given
+    /// [MidiChannel].
+    fn record_midi_message(
+        &mut self,
+        channel: MidiChannel,
+        message: MidiMessage,
+        time: MusicalTime,
+    ) -> anyhow::Result<()> {
+        self.record_midi_event(channel, MidiEvent { message, time })
+    }
+
+    /// Records a [MidiEvent] on the given [MidiChannel].
+    fn record_midi_event(&mut self, channel: MidiChannel, event: MidiEvent) -> anyhow::Result<()>;
+
+    /// Removes all recorded messages.
+    fn clear(&mut self);
+
+    /// Deletes all recorded [MidiMessage]s matching the provided paramaters.
+    fn remove_midi_message(
+        &mut self,
+        channel: MidiChannel,
+        message: MidiMessage,
+        time: MusicalTime,
+    ) -> anyhow::Result<()> {
+        self.remove_midi_event(channel, MidiEvent { message, time })
+    }
+
+    /// Deletes all recorded [MidiEvent]s matching the provided paramaters.
+    fn remove_midi_event(&mut self, channel: MidiChannel, event: MidiEvent) -> anyhow::Result<()>;
+
+    /// Starts recording. Messages received through
+    /// [HandlesMidi::handle_midi_message()] will be recorded as of the start of
+    /// the time slice provided by [Controls::update_time()].
+    ///
+    /// [Controls::stop()] stops recording.
+    fn start_recording(&mut self);
+    /// Returns whether the sequencer is recording.
+    fn is_recording(&self) -> bool;
+}
+
+/// Records and replays the given musical unit. This is another convenience
+/// trait that helps rationalize sequencer interfaces while the concept of a
+/// sequencer itself is under development. TODO: delete this trait when
+/// sequencing is better developed.
+pub trait Sequences: Controls + core::fmt::Debug {
+    /// "Musical Unit"
+    type MU;
+
+    /// Records an MU to the given [MidiChannel] as of the given [MusicalTime].
+    /// An MU normally lasts longer than a single point in [MusicalTime]. In
+    /// such a case, `position` indicates the start of the MU, and any durations
+    /// or time offsets in the MU are interpreted relative to `position`.
+    fn record(
+        &mut self,
+        channel: MidiChannel,
+        unit: &Self::MU,
+        position: MusicalTime,
+    ) -> anyhow::Result<()>;
+
+    /// Deletes all recorded MUs matching the provided paramaters.
+    fn remove(
+        &mut self,
+        channel: MidiChannel,
+        unit: &Self::MU,
+        position: MusicalTime,
+    ) -> anyhow::Result<()>;
+
+    /// Removes all recorded MUs.
+    fn clear(&mut self);
 }
 
 #[cfg(test)]

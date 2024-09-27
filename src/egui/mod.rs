@@ -2,6 +2,11 @@
 
 //! egui widgets and components
 
+/// A collection of imports that are useful for users of this crate who are also using egui.
+pub mod prelude {
+    pub use super::util::fill_remaining_ui_space;
+}
+
 pub use audio::*;
 pub use automation::*;
 pub use effects::*;
