@@ -48,7 +48,7 @@ impl<'a> eframe::egui::Widget for SubtractiveSynthWidget<'a> {
         let response = ComboBox::from_label("Preset")
             .selected_text(self.inner.preset_name().unwrap_or(&"None".to_string()))
             .show_ui(ui, |ui| {
-                ui.style_mut().wrap = Some(false);
+                ui.style_mut().wrap_mode = Some(eframe::egui::TextWrapMode::Truncate);
                 ui.set_min_width(60.0);
                 let mut current_value = self
                     .inner

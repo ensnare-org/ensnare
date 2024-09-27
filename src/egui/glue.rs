@@ -33,9 +33,7 @@ impl<'a> DragNormalWidget<'a> {
 
     fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
         let mut value = self.normal.0 * 100.0;
-        let mut dv = DragValue::new(&mut value)
-            .clamp_range(0.0..=100.0)
-            .suffix("%");
+        let mut dv = DragValue::new(&mut value).range(0.0..=100.0).suffix("%");
         if let Some(prefix) = &self.prefix {
             dv = dv.prefix(prefix);
         }
