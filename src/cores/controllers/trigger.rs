@@ -73,7 +73,8 @@ impl Configurable for TriggerCore {
 }
 impl HandlesMidi for TriggerCore {}
 impl TriggerCore {
-    fn new_with(timer: TimerCore, value: ControlValue) -> Self {
+    /// Creates a new [TriggerCore].
+    pub fn new_with(timer: TimerCore, value: ControlValue) -> Self {
         Self {
             timer,
             value,
