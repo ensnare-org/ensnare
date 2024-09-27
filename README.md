@@ -32,6 +32,41 @@ don't have special dependencies.
   [GitHub](https://github.com/ensnare-org/ensnare) and
   [crates.io](https://crates.io/crates/ensnare).
 
+### How to release to crates.io
+
+```bash
+# start at the root of the project
+cd ~/src/ensnare
+
+# run our checks and make sure everything is clean and tidy
+./precheck 
+
+# release ensnare-proc-macros if necessary
+#
+pushd crates/proc-macros
+# dry run; make sure everything works and that a new version is needed
+cargo release patch
+# actually do it
+cargo release patch --sign -x
+popd
+
+# release main ensnare crate if necessary
+#
+# dry run; make sure everything works and that a new version is needed
+cargo release alpha
+# actually do it
+cargo release alpha --sign -x
+
+# release ensnare-services if necessary
+#
+pushd crates/services
+# dry run; make sure everything works and that a new version is needed
+cargo release patch
+# actually do it
+cargo release patch --sign -x
+popd
+```
+
 ## Crates in the Ensnare family
 
 * [ensnare-proc-macros](https://crates.io/crates/ensnare-proc-macros): proc macros ([docs](https://docs.rs/ensnare-proc-macros/) [src](https://github.com/ensnare-org/ensnare/tree/main/crates/proc-macros))
