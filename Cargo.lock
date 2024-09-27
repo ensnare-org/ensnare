@@ -1449,7 +1449,7 @@ dependencies = [
 
 [[package]]
 name = "ensnare-proc-macros"
-version = "0.0.5"
+version = "0.0.6"
 dependencies = [
  "convert_case 0.6.0",
  "proc-macro-crate 3.2.0",
