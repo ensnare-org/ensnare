@@ -1,11 +1,12 @@
 // Copyright (c) 2024 Mike Tsao
 
-use crate::{cores::GainCore, prelude::*};
+use crate::{cores::BitcrusherCore, prelude::*};
 use ensnare_proc_macros::{
     InnerConfigurable, InnerControllable, InnerEffect, InnerSerializable, IsEntity, Metadata,
 };
 use serde::{Deserialize, Serialize};
 
+/// Entity wrapper for [BitcrusherCore]
 #[derive(
     Debug,
     Default,
@@ -19,36 +20,30 @@ use serde::{Deserialize, Serialize};
     Deserialize,
 )]
 #[entity(Controls, GeneratesStereoSample, HandlesMidi, SkipInner)]
-
-/// Entity wrapper for [GainCore].
-pub struct Gain {
+pub struct Bitcrusher {
     uid: Uid,
-    inner: GainCore,
+    inner: BitcrusherCore,
 }
-impl Gain {
+impl Bitcrusher {
     #[allow(missing_docs)]
-    pub fn new_with(uid: Uid, inner: GainCore) -> Self {
+    pub fn new_with(uid: Uid, inner: BitcrusherCore) -> Self {
         Self { uid, inner }
     }
 }
 
 #[cfg(feature = "egui")]
 mod egui {
-    use super::Gain;
-    use crate::prelude::*;
+    use super::*;
+    use crate::cores::BitcrusherCore;
     use eframe::egui::Slider;
 
-    impl Displays for Gain {
+    impl Displays for Bitcrusher {
         fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
-            let mut ceiling = self.inner.ceiling().to_percentage();
-            let response = ui.add(
-                Slider::new(&mut ceiling, 0.0..=100.0)
-                    .fixed_decimals(2)
-                    .suffix(" %")
-                    .text("Ceiling"),
-            );
+            let mut bits = self.inner.bits();
+            let response =
+                ui.add(Slider::new(&mut bits, BitcrusherCore::bits_range()).suffix(" bits"));
             if response.changed() {
-                self.inner.set_ceiling(Normal::from_percentage(ceiling));
+                self.inner.set_bits(bits);
             };
             response
         }

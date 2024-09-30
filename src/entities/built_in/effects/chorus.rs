@@ -1,12 +1,12 @@
 // Copyright (c) 2024 Mike Tsao
 
-use crate::{cores::ReverbCore, prelude::*};
+use crate::{cores::ChorusCore, prelude::*};
 use ensnare_proc_macros::{
     InnerConfigurable, InnerControllable, InnerEffect, InnerSerializable, IsEntity, Metadata,
 };
 use serde::{Deserialize, Serialize};
 
-/// Wraps [ReverbCore] and makes it an [Entity].
+/// Entity wrapper for [ChorusCore]
 #[derive(
     Debug,
     Default,
@@ -21,22 +21,24 @@ use serde::{Deserialize, Serialize};
 )]
 #[entity(Controls, GeneratesStereoSample, HandlesMidi, SkipInner)]
 
-/// Entity wrapper for [ReverbCore]
-pub struct Reverb {
+pub struct Chorus {
     uid: Uid,
-    inner: ReverbCore,
+    inner: ChorusCore,
 }
-impl Reverb {
+impl Chorus {
     #[allow(missing_docs)]
-    pub fn new_with(uid: Uid, inner: ReverbCore) -> Self {
+    pub fn new_with(uid: Uid, inner: ChorusCore) -> Self {
         Self { uid, inner }
     }
 }
 
 #[cfg(feature = "egui")]
 mod egui {
-    use super::Reverb;
-    use crate::prelude::Displays;
+    use super::*;
 
-    impl Displays for Reverb {}
+    impl Displays for Chorus {
+        fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
+            ui.label("Coming soon!")
+        }
+    }
 }
