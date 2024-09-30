@@ -200,7 +200,7 @@ impl BuiltInEntities {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::util::init_sample_libraries;
+    use crate::util::{init_sample_libraries, Paths};
     use rustc_hash::FxHashSet;
 
     // TODO: if we want to re-enable this, then we need to change

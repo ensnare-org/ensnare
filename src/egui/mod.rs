@@ -15,6 +15,7 @@ pub use generators::*;
 pub use glue::*;
 pub use instruments::*;
 pub use modulators::*;
+pub use settings::*;
 pub use util::*;
 
 mod audio;
@@ -25,4 +26,5 @@ mod generators;
 mod glue;
 mod instruments;
 mod modulators;
+mod settings;
 mod util;

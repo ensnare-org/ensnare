@@ -1,6 +1,6 @@
 // Copyright (c) 2024 Mike Tsao
 
-use crate::prelude::*;
+use crate::{prelude::*, util::Rng};
 use delegate::delegate;
 use derive_builder::Builder;
 use ensnare_proc_macros::Control;

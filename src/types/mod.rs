@@ -22,6 +22,7 @@ pub use {
         usize_to_sample_type, FrequencyHz, FrequencyRange, ParameterType, Ratio, Sample,
         SampleType, SignalType, StereoSample,
     },
+    queues::VisualizationQueue,
     ranges::{BipolarNormal, Normal},
     time::{MusicalTime, SampleRate, Seconds, Tempo, TimeRange, TimeSignature, ViewRange},
     uid::{IsUid, Uid, UidFactory},
@@ -33,6 +34,7 @@ mod general_midi;
 mod midi;
 mod note;
 mod numbers;
+mod queues;
 mod ranges;
 mod time;
 mod uid;

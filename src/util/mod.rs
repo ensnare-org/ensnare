@@ -17,12 +17,16 @@ pub use {
     midi::{MidiNoteMinder, MidiUtils},
     paths::{FileType, PathType, Paths},
     rng::Rng,
+    selection_set::SelectionSet,
+    settings::{AudioSettings, MidiSettings},
 };
 
 mod library;
 mod midi;
 mod paths;
 mod rng;
+mod selection_set;
+mod settings;
 
 #[cfg(feature = "std")]
 mod mod_serial;
