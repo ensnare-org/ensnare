@@ -28,11 +28,13 @@ pub struct TestController {
     uid: Uid,
 }
 impl TestController {
+    #[allow(missing_docs)]
     pub fn new_with(uid: Uid) -> Self {
         Self { uid }
     }
 }
 
+/// Wraps [SimpleControllerAlwaysSendsMidiMessageCore]
 #[derive(
     Debug,
     Default,
@@ -53,6 +55,7 @@ pub struct TestControllerAlwaysSendsMidiMessage {
     inner: SimpleControllerAlwaysSendsMidiMessageCore,
 }
 impl TestControllerAlwaysSendsMidiMessage {
+    #[allow(missing_docs)]
     pub fn new_with(uid: Uid) -> Self {
         Self {
             uid,
@@ -61,6 +64,7 @@ impl TestControllerAlwaysSendsMidiMessage {
     }
 }
 
+/// Wraps [Timer]
 #[derive(
     Debug,
     Default,
@@ -81,6 +85,7 @@ pub struct TestControllerTimed {
     inner: TimerCore,
 }
 impl TestControllerTimed {
+    #[allow(missing_docs)]
     pub fn new_with(uid: Uid, duration: MusicalTime) -> Self {
         Self {
             uid,

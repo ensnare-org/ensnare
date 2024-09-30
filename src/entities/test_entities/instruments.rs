@@ -5,6 +5,7 @@ use ensnare_proc_macros::{Control, InnerControllable, InnerInstrument, IsEntity,
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
 
+/// Emits a constant audio value
 #[derive(
     Debug, Default, InnerControllable, InnerInstrument, IsEntity, Metadata, Serialize, Deserialize,
 )]
@@ -22,6 +23,7 @@ pub struct TestAudioSource {
     uid: Uid,
     inner: SimpleAudioSourceCore,
 }
+#[allow(missing_docs)]
 impl TestAudioSource {
     pub const TOO_LOUD: SampleType = 1.1;
     pub const LOUD: SampleType = 1.0;
@@ -49,10 +51,13 @@ impl TestAudioSource {
 )]
 
 pub struct TestInstrument {
+    #[allow(missing_docs)]
     pub uid: Uid,
+    #[allow(missing_docs)]
     pub sample_rate: SampleRate,
 }
 impl TestInstrument {
+    #[allow(missing_docs)]
     pub fn new_with(uid: Uid) -> Self {
         Self {
             uid,
@@ -84,6 +89,8 @@ impl Generates<StereoSample> for TestInstrument {}
 #[serde(rename_all = "kebab-case")]
 pub struct TestInstrumentCountsMidiMessages {
     uid: Uid,
+
+    #[allow(missing_docs)]
     #[serde(skip)]
     pub received_midi_message_count: Arc<Mutex<usize>>,
 }
@@ -101,6 +108,7 @@ impl HandlesMidi for TestInstrumentCountsMidiMessages {
     }
 }
 impl TestInstrumentCountsMidiMessages {
+    #[allow(missing_docs)]
     pub fn received_midi_message_count_mutex(&self) -> &Arc<Mutex<usize>> {
         &self.received_midi_message_count
     }

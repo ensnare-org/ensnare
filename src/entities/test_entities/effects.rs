@@ -22,6 +22,7 @@ pub struct TestEffect {
     uid: Uid,
 }
 impl TestEffect {
+    #[allow(missing_docs)]
     pub fn new_with(uid: Uid) -> Self {
         Self { uid }
     }
@@ -53,6 +54,7 @@ pub struct TestEffectNegatesInput {
     inner: SimpleEffectHalfCore,
 }
 impl TestEffectNegatesInput {
+    #[allow(missing_docs)]
     pub fn new_with(uid: Uid) -> Self {
         Self {
             uid,
