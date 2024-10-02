@@ -82,7 +82,7 @@ impl<'a> eframe::egui::Widget for TitleBarWidget<'a> {
                                     .add(
                                         ImageButton::new(
                                             Image::new(eframe::egui::include_image!(
-                                                "../../res/images/md-symbols/menu.png"
+                                                "../../res-dist/images/md-symbols/menu.png"
                                             ))
                                             .fit_to_original_size(0.7),
                                         )
@@ -97,7 +97,7 @@ impl<'a> eframe::egui::Widget for TitleBarWidget<'a> {
                                     .add(
                                         ImageButton::new(
                                             Image::new(eframe::egui::include_image!(
-                                                "../../res/images/md-symbols/add.png"
+                                                "../../res-dist/images/md-symbols/add.png"
                                             ))
                                             .fit_to_original_size(0.7),
                                         )

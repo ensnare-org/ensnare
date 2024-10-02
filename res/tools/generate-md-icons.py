@@ -30,12 +30,12 @@ md_dir = sys.argv[1]
 print(
     "Reading material design icons/symbols from base directory {md_dir}".format(md_dir=md_dir))
 
-subprocess.run(["mkdir", "-p", "res/images/md-icons"])
-subprocess.run(["mkdir", "-p", "res/images/md-symbols"])
+subprocess.run(["mkdir", "-p", "res-dist/images/md-icons"])
+subprocess.run(["mkdir", "-p", "res-dist/images/md-symbols"])
 
 for (group, icons) in ICONS.items():
     for name in icons:
-        outfile = "res/images/md-icons/{name}.png".format(name=name)
+        outfile = "res-dist/images/md-icons/{name}.png".format(name=name)
         args = ["convert",
                 "{md_dir}/src/{group}/{name}/materialicons/24px.svg".format(md_dir=md_dir,
                                                                             group=str(
@@ -63,7 +63,7 @@ SYMBOLS = [
     'stop',
 ]
 for (symbol) in SYMBOLS:
-    outfile = "res/images/md-symbols/{symbol}.png".format(symbol=symbol)
+    outfile = "res-dist/images/md-symbols/{symbol}.png".format(symbol=symbol)
     args = ["convert",
             "{md_dir}/symbols/web/{symbol}/materialsymbolssharp/{symbol}_wght100_24px.svg".format(md_dir=md_dir,
                                                                                                   symbol=symbol),

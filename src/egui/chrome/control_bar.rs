@@ -97,7 +97,7 @@ impl<'a> eframe::egui::Widget for ControlBarWidget<'a> {
             if ui
                 .add(ImageButton::new(
                     Image::new(eframe::egui::include_image!(
-                        "../../../res/images/md-symbols/play_arrow.png"
+                        "../../../res-dist/images/md-symbols/play_arrow.png"
                     ))
                     .fit_to_original_size(1.0),
                 ))
@@ -109,7 +109,7 @@ impl<'a> eframe::egui::Widget for ControlBarWidget<'a> {
             if ui
                 .add(ImageButton::new(
                     Image::new(eframe::egui::include_image!(
-                        "../../../res/images/md-symbols/stop.png"
+                        "../../../res-dist/images/md-symbols/stop.png"
                     ))
                     .fit_to_original_size(1.0),
                 ))
@@ -122,7 +122,7 @@ impl<'a> eframe::egui::Widget for ControlBarWidget<'a> {
             if ui
                 .add(ImageButton::new(
                     Image::new(eframe::egui::include_image!(
-                        "../../../res/images/md-symbols/new_window.png"
+                        "../../../res-dist/images/md-symbols/new_window.png"
                     ))
                     .fit_to_original_size(1.0),
                 ))
@@ -134,7 +134,7 @@ impl<'a> eframe::egui::Widget for ControlBarWidget<'a> {
             if ui
                 .add(ImageButton::new(
                     Image::new(eframe::egui::include_image!(
-                        "../../../res/images/md-symbols/file_open.png"
+                        "../../../res-dist/images/md-symbols/file_open.png"
                     ))
                     .fit_to_original_size(1.0),
                 ))
@@ -146,7 +146,7 @@ impl<'a> eframe::egui::Widget for ControlBarWidget<'a> {
             if ui
                 .add(ImageButton::new(
                     Image::new(eframe::egui::include_image!(
-                        "../../../res/images/md-symbols/file_save.png"
+                        "../../../res-dist/images/md-symbols/file_save.png"
                     ))
                     .fit_to_original_size(1.0),
                 ))
@@ -158,7 +158,7 @@ impl<'a> eframe::egui::Widget for ControlBarWidget<'a> {
             if ui
                 .add(ImageButton::new(
                     Image::new(eframe::egui::include_image!(
-                        "../../../res/images/md-symbols/audio_file.png"
+                        "../../../res-dist/images/md-symbols/audio_file.png"
                     ))
                     .fit_to_original_size(1.0),
                 ))
@@ -208,7 +208,7 @@ impl<'a> eframe::egui::Widget for ControlBarWidget<'a> {
             if ui
                 .add(ImageButton::new(
                     Image::new(eframe::egui::include_image!(
-                        "../../../res/images/md-symbols/settings.png"
+                        "../../../res-dist/images/md-symbols/settings.png"
                     ))
                     .fit_to_original_size(1.0),
                 ))
