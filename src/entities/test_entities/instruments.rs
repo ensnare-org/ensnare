@@ -38,10 +38,9 @@ impl TestAudioSource {
 }
 
 /// The smallest possible [IsEntity] that acts like an instrument.
-#[derive(Debug, Default, IsEntity, Metadata, Serialize, Deserialize)]
+#[derive(Debug, Default, Control, IsEntity, Metadata, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 #[entity(
-    Controllable,
     Controls,
     Displays,
     HandlesMidi,
@@ -49,12 +48,15 @@ impl TestAudioSource {
     SkipInner,
     TransformsAudio
 )]
-
 pub struct TestInstrument {
     #[allow(missing_docs)]
     pub uid: Uid,
     #[allow(missing_docs)]
     pub sample_rate: SampleRate,
+
+    #[allow(missing_docs)]
+    #[control]
+    pub dca: Dca,
 }
 impl TestInstrument {
     #[allow(missing_docs)]
@@ -64,6 +66,8 @@ impl TestInstrument {
             ..Default::default()
         }
     }
+
+    fn notify_change_dca(&mut self) {}
 }
 impl Configurable for TestInstrument {
     fn sample_rate(&self) -> SampleRate {

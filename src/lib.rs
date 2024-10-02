@@ -7,6 +7,8 @@
 
 //! The Ensnare crate helps create digital audio with a focus on music.
 
+pub use orchestration::{Orchestrator, Project};
+
 #[cfg(feature = "std")]
 pub use version::app_version;
 

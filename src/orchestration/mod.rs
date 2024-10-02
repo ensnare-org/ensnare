@@ -4,13 +4,27 @@
 
 /// The most commonly used imports.
 pub mod prelude {
-    pub use super::{BasicProject, Projects, TrackUid, TrackUidFactory};
+    pub use super::{BasicProject, Project, ProjectTitle, Projects, TrackUid, TrackUidFactory};
 }
 
-pub use project::BasicProject;
-pub use track::{TrackTitle, TrackUid, TrackUidFactory};
-pub use traits::Projects;
+pub use {
+    basic_project::{BasicProject, SignalChainItem, TrackInfo, TrackViewMode},
+    humidity::Humidifier,
+    orchestrator::Orchestrator,
+    project::{AudioSenderFn, Project, ProjectTitle, ProjectViewState},
+    repositories::{EntityRepository, TrackRepository},
+    track::{TrackTitle, TrackUid, TrackUidFactory},
+    traits::Projects,
+};
 
+use {bus::BusStation, midi_router::MidiRouter};
+
+mod basic_project;
+mod bus;
+mod humidity;
+mod midi_router;
+mod orchestrator;
 mod project;
+mod repositories;
 mod track;
 mod traits;

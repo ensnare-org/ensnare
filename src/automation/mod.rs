@@ -25,21 +25,26 @@
 /// The most commonly used imports.
 pub mod prelude {
     pub use super::{
-        ControlEventsFn, ControlIndex, ControlLink, ControlLinkSource, ControlName,
+        Automator, ControlEventsFn, ControlIndex, ControlLink, ControlLinkSource, ControlName,
         ControlProxyEventsFn, ControlRange, ControlValue, Controllable, Controls, ControlsAsProxy,
-        SignalPath, SignalPathBuilder, SignalPoint, SignalPointBuilder,
+        PathUid, SignalPath, SignalPathBuilder, SignalPoint, SignalPointBuilder,
     };
 }
 
-pub use signal_path::{
-    PathUid, PathUidFactory, SignalPath, SignalPathBuilder, SignalPoint, SignalPointBuilder,
+pub use {
+    automator::Automator,
+    signal_path::{
+        PathUid, PathUidFactory, SignalPath, SignalPathBuilder, SignalPoint, SignalPointBuilder,
+    },
+    traits::{
+        ControlEventsFn, ControlLinkSource, ControlProxyEventsFn, Controllable, Controls,
+        ControlsAsProxy,
+    },
+    types::{ControlIndex, ControlLink, ControlName, ControlRange, ControlValue},
 };
-pub use traits::{
-    ControlEventsFn, ControlLinkSource, ControlProxyEventsFn, Controllable, Controls,
-    ControlsAsProxy,
-};
-pub use types::{ControlIndex, ControlLink, ControlName, ControlRange, ControlValue};
 
+mod automator;
+mod controllers;
 mod signal_path;
 mod traits;
 mod types;
