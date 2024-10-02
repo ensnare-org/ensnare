@@ -80,12 +80,11 @@ regex = "1.7"
 
 # TODO: hound should be only an example dependency; refactor sampler
 [features]
-default = ["std", "egui", "f64", "hound"]
+default = ["std", "egui", "hound"]
 cpal = ["dep:cpal"]
 egui = ["convert_case", "eframe", "spectrum-analyzer"]
 egui_extras = ["dep:egui_extras"]
 f32 = []
-f64 = []
 hound = ["dep:hound"]
 not_yet = []
 simple = []

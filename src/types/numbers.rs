@@ -17,7 +17,7 @@ use synonym::Synonym;
 #[cfg(feature = "f32")]
 pub type SampleType = f32;
 /// [SampleType] is the underlying primitive that makes up [StereoSample].
-#[cfg(feature = "f64")]
+#[cfg(not(feature = "f32"))]
 pub type SampleType = f64;
 
 #[allow(missing_docs)]
@@ -26,7 +26,7 @@ pub fn usize_to_sample_type(num: usize) -> SampleType {
     num as f32
 }
 #[allow(missing_docs)]
-#[cfg(feature = "f64")]
+#[cfg(not(feature = "f32"))]
 pub fn usize_to_sample_type(num: usize) -> SampleType {
     num as f64
 }
