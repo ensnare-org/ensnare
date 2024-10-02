@@ -3,7 +3,7 @@
 [package]
 name = "ensnare-toys"
 description = "Demonstrates how to package Ensnare entities in a separate crate."
-version = "0.0.2"
+version = "0.0.3"
 publish = false
 authors.workspace = true
 documentation.workspace = true
