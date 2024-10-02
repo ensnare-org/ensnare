@@ -1,6 +1,6 @@
 // Copyright (c) 2024 Mike Tsao
 
-use crate::cores::ToyControllerCore;
+use crate::cores::{ToyControllerCore, ToySequencerCore};
 use eframe::egui::Slider;
 use ensnare::prelude::*;
 use ensnare_proc_macros::{
@@ -49,9 +49,44 @@ impl ToyController {
     }
 }
 
+#[derive(
+    Debug,
+    Default,
+    InnerConfigurable,
+    InnerControls,
+    InnerControllable,
+    InnerHandlesMidi,
+    InnerSerializable,
+    IsEntity,
+    Metadata,
+    Serialize,
+    Deserialize,
+)]
+pub struct ToySequencer {
+    uid: Uid,
+    #[serde(skip)]
+    inner: ToySequencerCore,
+}
+impl Generates<StereoSample> for ToySequencer {}
+impl TransformsAudio for ToySequencer {}
+impl Displays for ToySequencer {}
+impl ToySequencer {
+    pub fn new_with(uid: Uid) -> Self {
+        Self {
+            uid,
+            inner: ToySequencerCore::default(),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
-    // use crate::cores::controllers::sequencers::tests::{validate_sequences_midi_trait, validate_sequences_notes_trait};
+    // use super::*;
+
+    // TODO: I wasn't able to figure out a clean way for the main crate to
+    // provide test-only functionality for other crates to use. This is
+    // desirable because authors of external crates will want to know whether
+    // their entities conform to our expectations of crate behavior.
 
     // #[test]
     // fn toy_passes_sequences_trait_validation() {

@@ -1,6 +1,6 @@
 // Copyright (c) 2024 Mike Tsao
 
-pub(crate) use controllers::ToyControllerCore;
+pub(crate) use controllers::{ToyControllerCore, ToySequencerCore};
 pub(crate) use effects::ToyEffectCore;
 pub(crate) use instruments::ToyInstrumentCore;
 pub(crate) use synth::ToySynthCore;

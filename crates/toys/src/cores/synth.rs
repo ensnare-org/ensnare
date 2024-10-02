@@ -145,14 +145,17 @@ impl ToySynthCore {
         }
     }
 
+    #[allow(dead_code)]
     pub fn voice_count(&self) -> VoiceCount {
         self.voice_count
     }
 
+    #[allow(dead_code)]
     pub fn set_voice_count(&mut self, voice_count: VoiceCount) {
         self.voice_count = voice_count;
     }
 
+    #[allow(dead_code)]
     pub fn oscillator(&self) -> &Oscillator {
         &self.oscillator
     }
@@ -163,6 +166,7 @@ impl ToySynthCore {
         });
     }
 
+    #[allow(dead_code)]
     pub fn envelope(&self) -> &Envelope {
         &self.envelope
     }
@@ -173,6 +177,7 @@ impl ToySynthCore {
         });
     }
 
+    #[allow(dead_code)]
     pub fn dca(&self) -> &Dca {
         &self.dca
     }

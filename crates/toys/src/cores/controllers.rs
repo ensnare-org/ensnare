@@ -111,8 +111,8 @@ impl ToyControllerCore {
     }
 }
 
-#[derive(Debug, Default)]
-struct ToySequencer {
+#[derive(Debug, Default, Control)]
+pub struct ToySequencerCore {
     events: Vec<MidiEvent>,
     notes: Vec<Note>,
     time_range: TimeRange,
@@ -120,7 +120,8 @@ struct ToySequencer {
     is_performing: bool,
     extent: TimeRange,
 }
-impl SequencesMidi for ToySequencer {
+impl Serializable for ToySequencerCore {}
+impl SequencesMidi for ToySequencerCore {
     fn clear(&mut self) {
         self.events.clear();
         self.extent = Default::default();
@@ -146,7 +147,7 @@ impl SequencesMidi for ToySequencer {
         self.is_recording
     }
 }
-impl Sequences for ToySequencer {
+impl Sequences for ToySequencerCore {
     type MU = Note;
 
     fn record(
@@ -208,7 +209,7 @@ impl Sequences for ToySequencer {
         SequencesMidi::clear(self);
     }
 }
-impl HasExtent for ToySequencer {
+impl HasExtent for ToySequencerCore {
     fn extent(&self) -> TimeRange {
         self.extent.clone()
     }
@@ -217,8 +218,8 @@ impl HasExtent for ToySequencer {
         self.extent = extent;
     }
 }
-impl Configurable for ToySequencer {}
-impl Controls for ToySequencer {
+impl Configurable for ToySequencerCore {}
+impl Controls for ToySequencerCore {
     fn update_time_range(&mut self, range: &TimeRange) {
         self.time_range = range.clone();
     }
@@ -249,7 +250,7 @@ impl Controls for ToySequencer {
         self.time_range = TimeRange(MusicalTime::default()..MusicalTime::default())
     }
 }
-impl HandlesMidi for ToySequencer {
+impl HandlesMidi for ToySequencerCore {
     fn handle_midi_message(
         &mut self,
         channel: MidiChannel,
@@ -261,7 +262,7 @@ impl HandlesMidi for ToySequencer {
         }
     }
 }
-impl ToySequencer {
+impl ToySequencerCore {
     fn recalculate_extent(&mut self) {
         if let Some(max_event_time) = self.events.iter().map(|e| e.time).max() {
             self.extent.expand_with_time(max_event_time);
