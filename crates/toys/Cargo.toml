@@ -2,7 +2,7 @@
 
 [package]
 name = "ensnare-toys"
-description = "A crate of Ensnare instruments/effects that shows how to make and bundle more things."
+description = "Demonstrates how to package Ensnare entities in a separate crate."
 version = "0.0.2"
 publish = false
 authors.workspace = true

@@ -50,7 +50,7 @@
                     "build",
                     "--example=hello-world",
                     "--package=ensnare",
-                    "--features=std,hound"
+                    "--features=std,hound,egui_extras"
                 ],
                 "filter": {
                     "name": "hello-world",

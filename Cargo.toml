@@ -112,11 +112,6 @@ required-features = ["std", "egui"]
 name = "hello-world"
 required-features = ["std", "hound", "egui_extras"]
 
-# TODO: migrate features, then delete
-[[example]]
-name = "hello-world-v1"
-required-features = ["std", "hound", "egui_extras"]
-
 [[example]]
 name = "pocket-calculator"
 required-features = ["std", "egui", "ensnare-services/audio"]
