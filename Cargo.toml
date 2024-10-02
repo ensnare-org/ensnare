@@ -25,6 +25,7 @@ homepage.workspace = true
 license.workspace = true
 repository.workspace = true
 version.workspace = true
+exclude = ["test-data/*", "assets-nodist/*", "res/*"]
 
 [dependencies]
 anyhow = { version = "1.0.86", default-features = false }
