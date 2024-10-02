@@ -33,12 +33,10 @@ impl Chorus {
 }
 
 #[cfg(feature = "egui")]
-mod egui {
-    use super::*;
-
-    impl Displays for Chorus {
-        fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
-            ui.label("Coming soon!")
-        }
+impl crate::traits::Displays for Chorus {
+    fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
+        ui.label("Coming soon!")
     }
 }
+#[cfg(not(feature = "egui"))]
+impl crate::traits::Displays for Chorus {}

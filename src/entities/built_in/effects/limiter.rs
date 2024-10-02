@@ -32,33 +32,30 @@ impl Limiter {
 }
 
 #[cfg(feature = "egui")]
-mod egui {
-    use super::*;
-    use eframe::egui::Slider;
-
-    impl Displays for Limiter {
-        fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
-            let mut min = self.inner.minimum().to_percentage();
-            let mut max = self.inner.maximum().to_percentage();
-            let min_response = ui.add(
-                Slider::new(&mut min, 0.0..=max)
-                    .suffix(" %")
-                    .text("min")
-                    .fixed_decimals(2),
-            );
-            if min_response.changed() {
-                self.inner.set_minimum(min.into());
-            };
-            let max_response = ui.add(
-                Slider::new(&mut max, min..=1.0)
-                    .suffix(" %")
-                    .text("max")
-                    .fixed_decimals(2),
-            );
-            if max_response.changed() {
-                self.inner.set_maximum(Normal::from_percentage(max));
-            };
-            min_response | max_response
-        }
+impl crate::traits::Displays for Limiter {
+    fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
+        let mut min = self.inner.minimum().to_percentage();
+        let mut max = self.inner.maximum().to_percentage();
+        let min_response = ui.add(
+            eframe::egui::Slider::new(&mut min, 0.0..=max)
+                .suffix(" %")
+                .text("min")
+                .fixed_decimals(2),
+        );
+        if min_response.changed() {
+            self.inner.set_minimum(min.into());
+        };
+        let max_response = ui.add(
+            eframe::egui::Slider::new(&mut max, min..=1.0)
+                .suffix(" %")
+                .text("max")
+                .fixed_decimals(2),
+        );
+        if max_response.changed() {
+            self.inner.set_maximum(Normal::from_percentage(max));
+        };
+        min_response | max_response
     }
 }
+#[cfg(not(feature = "egui"))]
+impl crate::traits::Displays for Limiter {}

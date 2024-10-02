@@ -34,20 +34,17 @@ impl LfoController {
 }
 
 #[cfg(feature = "egui")]
-mod egui {
-    use super::*;
-    use crate::egui::LfoControllerWidget;
-
-    impl Displays for LfoController {
-        fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
-            let response = ui.add(LfoControllerWidget::widget(
-                &mut self.inner.oscillator.waveform,
-                &mut self.inner.oscillator.frequency,
-            ));
-            if response.changed() {
-                self.inner.notify_change_oscillator();
-            }
-            response
+impl crate::traits::Displays for LfoController {
+    fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
+        let response = ui.add(crate::egui::LfoControllerWidget::widget(
+            &mut self.inner.oscillator.waveform,
+            &mut self.inner.oscillator.frequency,
+        ));
+        if response.changed() {
+            self.inner.notify_change_oscillator();
         }
+        response
     }
 }
+#[cfg(not(feature = "egui"))]
+impl crate::traits::Displays for LfoController {}

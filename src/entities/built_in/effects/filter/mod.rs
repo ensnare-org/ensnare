@@ -5,7 +5,6 @@ use crate::{
         BiQuadFilterAllPassCore, BiQuadFilterBandPassCore, BiQuadFilterBandStopCore,
         BiQuadFilterHighPassCore, BiQuadFilterLowPass24dbCore,
     },
-    egui::BiQuadFilterWidgetAction,
     prelude::*,
 };
 use ensnare_proc_macros::{
@@ -33,7 +32,7 @@ pub struct BiQuadFilterBandPass {
 
     #[cfg(feature = "egui")]
     #[serde(skip)]
-    widget_action: Option<BiQuadFilterWidgetAction>,
+    widget_action: Option<crate::egui::BiQuadFilterWidgetAction>,
 
     #[cfg(feature = "egui")]
     #[serde(skip)]
@@ -45,7 +44,9 @@ impl BiQuadFilterBandPass {
         Self {
             uid,
             inner,
+            #[cfg(feature = "egui")]
             widget_action: Default::default(),
+            #[cfg(feature = "egui")]
             action: Default::default(),
         }
     }
@@ -71,7 +72,7 @@ pub struct BiQuadFilterBandStop {
 
     #[cfg(feature = "egui")]
     #[serde(skip)]
-    widget_action: Option<BiQuadFilterWidgetAction>,
+    widget_action: Option<crate::egui::BiQuadFilterWidgetAction>,
 
     #[cfg(feature = "egui")]
     #[serde(skip)]
@@ -83,7 +84,9 @@ impl BiQuadFilterBandStop {
         Self {
             uid,
             inner,
+            #[cfg(feature = "egui")]
             widget_action: Default::default(),
+            #[cfg(feature = "egui")]
             action: Default::default(),
         }
     }
@@ -109,7 +112,7 @@ pub struct BiQuadFilterLowPass24db {
 
     #[cfg(feature = "egui")]
     #[serde(skip)]
-    widget_action: Option<BiQuadFilterWidgetAction>,
+    widget_action: Option<crate::egui::BiQuadFilterWidgetAction>,
 
     #[cfg(feature = "egui")]
     #[serde(skip)]
@@ -121,7 +124,9 @@ impl BiQuadFilterLowPass24db {
         Self {
             uid,
             inner,
+            #[cfg(feature = "egui")]
             widget_action: Default::default(),
+            #[cfg(feature = "egui")]
             action: Default::default(),
         }
     }
@@ -147,7 +152,7 @@ pub struct BiQuadFilterHighPass {
 
     #[cfg(feature = "egui")]
     #[serde(skip)]
-    widget_action: Option<BiQuadFilterWidgetAction>,
+    widget_action: Option<crate::egui::BiQuadFilterWidgetAction>,
 
     #[cfg(feature = "egui")]
     #[serde(skip)]
@@ -159,7 +164,9 @@ impl BiQuadFilterHighPass {
         Self {
             uid,
             inner,
+            #[cfg(feature = "egui")]
             widget_action: Default::default(),
+            #[cfg(feature = "egui")]
             action: Default::default(),
         }
     }
@@ -185,7 +192,7 @@ pub struct BiQuadFilterAllPass {
 
     #[cfg(feature = "egui")]
     #[serde(skip)]
-    widget_action: Option<BiQuadFilterWidgetAction>,
+    widget_action: Option<crate::egui::BiQuadFilterWidgetAction>,
 
     #[cfg(feature = "egui")]
     #[serde(skip)]
@@ -197,119 +204,127 @@ impl BiQuadFilterAllPass {
         Self {
             uid,
             inner,
+            #[cfg(feature = "egui")]
             widget_action: Default::default(),
+            #[cfg(feature = "egui")]
             action: Default::default(),
         }
     }
 }
 
 #[cfg(feature = "egui")]
-mod egui {
-    use super::*;
-    use crate::egui::{
-        BiQuadFilterAllPassWidget, BiQuadFilterBandPassWidget, BiQuadFilterBandStopWidget,
-        BiQuadFilterHighPassWidget, BiQuadFilterLowPass24dbWidget,
-    };
-
-    impl Displays for BiQuadFilterBandPass {
-        fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
-            let mut action = None;
-            let response = ui.add(BiQuadFilterBandPassWidget::widget(
-                &mut self.inner,
-                &mut action,
-            ));
-            response
-        }
-
-        fn set_action(&mut self, action: DisplaysAction) {
-            self.action = Some(action);
-        }
-
-        fn take_action(&mut self) -> Option<DisplaysAction> {
-            self.action.take()
-        }
+impl crate::traits::Displays for BiQuadFilterBandPass {
+    fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
+        let mut action = None;
+        let response = ui.add(crate::egui::BiQuadFilterBandPassWidget::widget(
+            &mut self.inner,
+            &mut action,
+        ));
+        response
     }
 
-    impl Displays for BiQuadFilterBandStop {
-        fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
-            let mut action = None;
-            let response = ui.add(BiQuadFilterBandStopWidget::widget(
-                &mut self.inner,
-                &mut action,
-            ));
-            response
-        }
-
-        fn set_action(&mut self, action: DisplaysAction) {
-            self.action = Some(action);
-        }
-
-        fn take_action(&mut self) -> Option<DisplaysAction> {
-            self.action.take()
-        }
+    fn set_action(&mut self, action: DisplaysAction) {
+        self.action = Some(action);
     }
 
-    impl Displays for BiQuadFilterHighPass {
-        fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
-            let mut action = None;
-            let response = ui.add(BiQuadFilterHighPassWidget::widget(
-                &mut self.inner,
-                &mut action,
-            ));
-            response
-        }
-
-        fn set_action(&mut self, action: DisplaysAction) {
-            self.action = Some(action);
-        }
-
-        fn take_action(&mut self) -> Option<DisplaysAction> {
-            self.action.take()
-        }
-    }
-
-    impl Displays for BiQuadFilterLowPass24db {
-        fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
-            let mut action = None;
-            let response = ui.add(BiQuadFilterLowPass24dbWidget::widget(
-                &mut self.inner,
-                &mut action,
-            ));
-            if let Some(action) = self.widget_action.take() {
-                match action {
-                    BiQuadFilterWidgetAction::Link(uid, index) => {
-                        self.set_action(DisplaysAction::Link(uid, index));
-                    }
-                }
-            }
-            response
-        }
-
-        fn set_action(&mut self, action: DisplaysAction) {
-            self.action = Some(action);
-        }
-
-        fn take_action(&mut self) -> Option<DisplaysAction> {
-            self.action.take()
-        }
-    }
-
-    impl Displays for BiQuadFilterAllPass {
-        fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
-            let mut action = None;
-            let response = ui.add(BiQuadFilterAllPassWidget::widget(
-                &mut self.inner,
-                &mut action,
-            ));
-            response
-        }
-
-        fn set_action(&mut self, action: DisplaysAction) {
-            self.action = Some(action);
-        }
-
-        fn take_action(&mut self) -> Option<DisplaysAction> {
-            self.action.take()
-        }
+    fn take_action(&mut self) -> Option<DisplaysAction> {
+        self.action.take()
     }
 }
+
+#[cfg(feature = "egui")]
+impl crate::traits::Displays for BiQuadFilterBandStop {
+    fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
+        let mut action = None;
+        let response = ui.add(crate::egui::BiQuadFilterBandStopWidget::widget(
+            &mut self.inner,
+            &mut action,
+        ));
+        response
+    }
+
+    fn set_action(&mut self, action: DisplaysAction) {
+        self.action = Some(action);
+    }
+
+    fn take_action(&mut self) -> Option<DisplaysAction> {
+        self.action.take()
+    }
+}
+
+#[cfg(feature = "egui")]
+impl crate::traits::Displays for BiQuadFilterHighPass {
+    fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
+        let mut action = None;
+        let response = ui.add(crate::egui::BiQuadFilterHighPassWidget::widget(
+            &mut self.inner,
+            &mut action,
+        ));
+        response
+    }
+
+    fn set_action(&mut self, action: DisplaysAction) {
+        self.action = Some(action);
+    }
+
+    fn take_action(&mut self) -> Option<DisplaysAction> {
+        self.action.take()
+    }
+}
+
+#[cfg(feature = "egui")]
+impl crate::traits::Displays for BiQuadFilterLowPass24db {
+    fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
+        let mut action = None;
+        let response = ui.add(crate::egui::BiQuadFilterLowPass24dbWidget::widget(
+            &mut self.inner,
+            &mut action,
+        ));
+        if let Some(action) = self.widget_action.take() {
+            match action {
+                crate::egui::BiQuadFilterWidgetAction::Link(uid, index) => {
+                    self.set_action(DisplaysAction::Link(uid, index));
+                }
+            }
+        }
+        response
+    }
+
+    fn set_action(&mut self, action: DisplaysAction) {
+        self.action = Some(action);
+    }
+
+    fn take_action(&mut self) -> Option<DisplaysAction> {
+        self.action.take()
+    }
+}
+
+#[cfg(feature = "egui")]
+impl crate::traits::Displays for BiQuadFilterAllPass {
+    fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
+        let mut action = None;
+        let response = ui.add(crate::egui::BiQuadFilterAllPassWidget::widget(
+            &mut self.inner,
+            &mut action,
+        ));
+        response
+    }
+
+    fn set_action(&mut self, action: DisplaysAction) {
+        self.action = Some(action);
+    }
+
+    fn take_action(&mut self) -> Option<DisplaysAction> {
+        self.action.take()
+    }
+}
+#[cfg(not(feature = "egui"))]
+impl crate::traits::Displays for BiQuadFilterBandPass {}
+#[cfg(not(feature = "egui"))]
+impl crate::traits::Displays for BiQuadFilterBandStop {}
+#[cfg(not(feature = "egui"))]
+impl crate::traits::Displays for BiQuadFilterHighPass {}
+#[cfg(not(feature = "egui"))]
+impl crate::traits::Displays for BiQuadFilterLowPass24db {}
+#[cfg(not(feature = "egui"))]
+impl crate::traits::Displays for BiQuadFilterAllPass {}

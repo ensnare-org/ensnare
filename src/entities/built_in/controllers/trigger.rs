@@ -43,14 +43,4 @@ impl Trigger {
     }
 }
 
-#[cfg(feature = "egui")]
-mod egui {
-    use super::*;
-    impl Displays for Trigger {}
-}
-#[cfg(not(feature = "egui"))]
-mod egui {
-    use super::*;
-    use crate::traits::Displays;
-    impl Displays for Trigger {}
-}
+impl crate::traits::Displays for Trigger {}

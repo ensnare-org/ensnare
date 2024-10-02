@@ -64,7 +64,6 @@ typetag = "0.2.16"
 
 [dev-dependencies]
 clap = { version = "4.5.4", features = ["derive"] }
-crossbeam-channel = "0.5.13"
 egui_dock = "0.13.0"
 egui_extras_xt = { git = "https://github.com/xTibor/egui_extras_xt/", features = [
     "knobs",

@@ -7,7 +7,6 @@ use super::MidiRouter;
 use crate::orchestration::{Orchestrator, TrackTitle};
 use crate::{
     composition::Composer,
-    egui::TargetInstrument,
     prelude::*,
     types::{ColorScheme, VisualizationQueue},
     util::SelectionSet,
@@ -417,6 +416,7 @@ impl Project {
     }
 
     /// Renders the project as a WAV file to the specified path.
+    #[cfg(feature = "hound")]
     pub fn export_to_wav(&mut self, path: PathBuf) -> anyhow::Result<()> {
         let spec = hound::WavSpec {
             channels: 2,
@@ -575,6 +575,7 @@ impl Project {
     }
 
     /// A convenience method for automated tests to spit out their work product.
+    #[cfg(feature = "hound")]
     pub fn save_and_export(&mut self, path_prefix: PathBuf) -> anyhow::Result<()> {
         let mut path = path_prefix.clone();
         path.set_extension("json");
@@ -602,6 +603,9 @@ impl Project {
     /// called.
     pub(crate) fn regenerate_signal_chain(&mut self, track_uid: TrackUid) {
         let track_info = self.e.track_info.entry(track_uid).or_default();
+
+        // TODO: this is awful
+        #[cfg(feature = "egui")]
         let mut targets = Vec::default();
 
         // If the current view mode is to show a SignalPath, then we need to
@@ -642,8 +646,9 @@ impl Project {
                                 is_linked,
                             ));
                         }
+                        #[cfg(feature = "egui")]
                         if !controllables.is_empty() {
-                            targets.push(TargetInstrument {
+                            targets.push(crate::egui::TargetInstrument {
                                 uid: *uid,
                                 name: entity.name().to_string(),
                                 controllables,
@@ -657,8 +662,12 @@ impl Project {
                 Vec::default()
             }
         };
+
+        #[cfg(feature = "egui")]
+        {
+            track_info.targets = targets;
+        }
         track_info.signal_chain = signal_chain;
-        track_info.targets = targets;
     }
 
     /// We have just switched to this track in the UI, so we want to update

@@ -4,10 +4,13 @@
 /// an emphasis on instrumentation and introspection, rather than useful audio
 /// functionality.
 ///
-pub use controllers::{TestController, TestControllerAlwaysSendsMidiMessage, TestControllerTimed};
-pub use effects::{TestEffect, TestEffectNegatesInput};
-pub use factory::register_test_entities;
-pub use instruments::{TestAudioSource, TestInstrument, TestInstrumentCountsMidiMessages};
+#[cfg(test)]
+pub use {
+    controllers::{TestController, TestControllerAlwaysSendsMidiMessage, TestControllerTimed},
+    effects::{TestEffect, TestEffectNegatesInput},
+    factory::register_test_entities,
+    instruments::{TestAudioSource, TestInstrument, TestInstrumentCountsMidiMessages},
+};
 
 mod controllers;
 mod effects;

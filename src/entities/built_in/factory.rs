@@ -1,5 +1,11 @@
 // Copyright (c) 2024 Mike Tsao
 
+use super::{
+    Arpeggiator, BiQuadFilterAllPass, BiQuadFilterBandPass, BiQuadFilterBandStop,
+    BiQuadFilterHighPass, BiQuadFilterLowPass24db, Bitcrusher, Chorus, Compressor, Delay, FmSynth,
+    Gain, LfoController, Limiter, Reverb, SignalPassthroughController, SubtractiveSynth, Timer,
+    Trigger,
+};
 use crate::{
     cores::{
         ArpeggiatorCoreBuilder, BiQuadFilterAllPassCoreBuilder, BiQuadFilterBandPassCoreBuilder,
@@ -8,16 +14,13 @@ use crate::{
         GainCoreBuilder, LfoControllerCoreBuilder, LimiterCoreBuilder, ReverbCoreBuilder,
         TimerCore,
     },
-    entities::{
-        Arpeggiator, BiQuadFilterAllPass, BiQuadFilterBandPass, BiQuadFilterBandStop,
-        BiQuadFilterHighPass, BiQuadFilterLowPass24db, Bitcrusher, Chorus, Compressor, Delay,
-        Drumkit, FmSynth, Gain, LfoController, Limiter, Sampler, SubtractiveSynth, Timer, Trigger,
-    },
     prelude::*,
+};
+#[cfg(feature = "hound")]
+use crate::{
+    entities::{Drumkit, Sampler},
     util::{KitIndex, SampleIndex, SampleSource},
 };
-
-use super::{Reverb, SignalPassthroughController};
 
 /// A collection of all entities that are suitable for normal use. Allows the
 /// creation of an [EntityFactory] that lets apps refer to entities by
@@ -172,14 +175,16 @@ impl BuiltInEntities {
         }
 
         // Instruments
+        factory.register_entity_with_str_key(FmSynth::ENTITY_KEY, |uid| {
+            Box::new(FmSynth::new_with_factory_patch(uid))
+        });
+        #[cfg(feature = "hound")]
         factory.register_entity_with_str_key(Drumkit::ENTITY_KEY, |uid| {
             let mut drumkit = Box::new(Drumkit::new_with(uid, KitIndex::KIT_707));
             let _ = drumkit.load();
             drumkit
         });
-        factory.register_entity_with_str_key(FmSynth::ENTITY_KEY, |uid| {
-            Box::new(FmSynth::new_with_factory_patch(uid))
-        });
+        #[cfg(feature = "hound")]
         factory.register_entity_with_str_key(Sampler::ENTITY_KEY, |uid| {
             let mut sampler = Sampler::new_with(
                 uid,

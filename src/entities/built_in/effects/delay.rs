@@ -32,11 +32,4 @@ impl Delay {
         Self { uid, inner }
     }
 }
-
-#[cfg(feature = "egui")]
-mod egui {
-    use super::Delay;
-    use crate::prelude::Displays;
-
-    impl Displays for Delay {}
-}
+impl crate::traits::Displays for Delay {}

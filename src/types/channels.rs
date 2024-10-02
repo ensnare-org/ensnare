@@ -17,7 +17,8 @@ impl<T> Default for CrossbeamChannel<T> {
     }
 }
 
-/// Same idea but only for bounded of bounds 1.
+/// Similar to [CrossbeamChannel] but only for
+/// [bounded](crossbeam::channel::bounded) of bounds 1.
 #[derive(Debug)]
 pub struct BoundedCrossbeamChannel<T> {
     #[allow(missing_docs)]

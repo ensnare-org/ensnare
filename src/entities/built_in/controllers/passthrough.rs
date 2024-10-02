@@ -61,13 +61,11 @@ impl SignalPassthroughController {
     }
 }
 #[cfg(feature = "egui")]
-mod egui {
-    use super::*;
-    impl Displays for SignalPassthroughController {}
+impl crate::traits::Displays for SignalPassthroughController {
+    fn take_action(&mut self) -> Option<DisplaysAction> {
+        None
+    }
 }
+
 #[cfg(not(feature = "egui"))]
-mod egui {
-    use super::*;
-    use crate::traits::Displays;
-    impl Displays for SignalPassthroughController {}
-}
+impl crate::traits::Displays for SignalPassthroughController {}

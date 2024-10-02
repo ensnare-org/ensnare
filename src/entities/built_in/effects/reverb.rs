@@ -32,11 +32,4 @@ impl Reverb {
         Self { uid, inner }
     }
 }
-
-#[cfg(feature = "egui")]
-mod egui {
-    use super::Reverb;
-    use crate::prelude::Displays;
-
-    impl Displays for Reverb {}
-}
+impl crate::traits::Displays for Reverb {}

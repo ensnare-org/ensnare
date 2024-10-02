@@ -30,13 +30,10 @@ impl Arpeggiator {
 }
 
 #[cfg(feature = "egui")]
-mod egui {
-    use super::*;
-    use crate::egui::ArpeggiatorWidget;
-
-    impl Displays for Arpeggiator {
-        fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
-            ui.add(ArpeggiatorWidget::widget(&mut self.inner))
-        }
+impl crate::traits::Displays for Arpeggiator {
+    fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
+        ui.add(crate::egui::ArpeggiatorWidget::widget(&mut self.inner))
     }
 }
+#[cfg(not(feature = "egui"))]
+impl crate::traits::Displays for Arpeggiator {}

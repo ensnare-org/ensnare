@@ -32,20 +32,17 @@ impl Bitcrusher {
 }
 
 #[cfg(feature = "egui")]
-mod egui {
-    use super::*;
-    use crate::cores::BitcrusherCore;
-    use eframe::egui::Slider;
-
-    impl Displays for Bitcrusher {
-        fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
-            let mut bits = self.inner.bits();
-            let response =
-                ui.add(Slider::new(&mut bits, BitcrusherCore::bits_range()).suffix(" bits"));
-            if response.changed() {
-                self.inner.set_bits(bits);
-            };
-            response
-        }
+impl crate::traits::Displays for Bitcrusher {
+    fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
+        let mut bits = self.inner.bits();
+        let response = ui.add(
+            eframe::egui::Slider::new(&mut bits, BitcrusherCore::bits_range()).suffix(" bits"),
+        );
+        if response.changed() {
+            self.inner.set_bits(bits);
+        };
+        response
     }
 }
+#[cfg(not(feature = "egui"))]
+impl crate::traits::Displays for Bitcrusher {}

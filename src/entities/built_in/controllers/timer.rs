@@ -43,13 +43,6 @@ impl Timer {
 }
 
 #[cfg(feature = "egui")]
-mod egui {
-    use super::*;
-    impl Displays for Timer {}
-}
+impl crate::traits::Displays for Timer {}
 #[cfg(not(feature = "egui"))]
-mod egui {
-    use super::*;
-    use crate::traits::Displays;
-    impl Displays for Timer {}
-}
+impl crate::traits::Displays for Timer {}

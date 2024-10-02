@@ -31,7 +31,6 @@ use ensnare::{
     prelude::*,
     types::VisualizationQueue,
 };
-use ensnare_toys::prelude::*;
 use std::sync::Arc;
 
 #[derive(Debug, Derivative)]
@@ -323,7 +322,7 @@ struct NoteSequencerSettings {
     sequencer: NoteSequencer,
     view_range: ViewRange,
 }
-impl Displays for NoteSequencerSettings {
+impl DisplayscerSettings {
     fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
         ui.checkbox(&mut self.hide, "Hide")
     }
@@ -408,7 +407,7 @@ struct ToyEffectSettings {
     hide: bool,
     toy: ToyEffect,
 }
-impl Displays for ToyEffectSettings {
+impl Displaysettings {
     fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
         ui.checkbox(&mut self.hide, "Hide")
     }
@@ -492,7 +491,7 @@ impl Default for ComposerSettings {
         }
     }
 }
-impl Displays for ComposerSettings {
+impl Displaysttings {
     fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
         ui.checkbox(&mut self.hide, "Hide")
     }

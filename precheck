@@ -20,6 +20,9 @@ cargo doc \
     --no-deps --workspace --document-private-items \
     --examples --features="std hound"
 
+# build. `cargo test` should do this, but it will fail
+cargo build --examples
+
 # build and test
 cargo test --workspace --examples
 

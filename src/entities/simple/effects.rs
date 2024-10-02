@@ -19,9 +19,8 @@ use serde::{Deserialize, Serialize};
     Serialize,
     Deserialize,
 )]
-#[entity(HandlesMidi, GeneratesStereoSample, Controls)]
+#[entity(Controls, Displays, GeneratesStereoSample, HandlesMidi)]
 pub struct SimpleEffect {
     uid: Uid,
     inner: SimpleEffectHalfCore,
 }
-impl Displays for SimpleEffect {}

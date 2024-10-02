@@ -21,12 +21,11 @@ use serde::{Deserialize, Serialize};
     Metadata,
     Serialize,
 )]
-#[entity(Controls, TransformsAudio)]
+#[entity(Controls, Displays, TransformsAudio)]
 pub struct SimpleInstrument {
     uid: Uid,
     inner: SimpleNoisyAudioSourceCore,
 }
-impl Displays for SimpleInstrument {}
 impl SimpleInstrument {
     #[allow(missing_docs)]
     pub fn new_with(uid: Uid) -> Self {

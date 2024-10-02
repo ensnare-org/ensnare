@@ -3,7 +3,7 @@
 //! Representation of a whole music project, including support for
 //! serialization.
 
-use crate::{egui::TargetInstrument, prelude::*};
+use crate::prelude::*;
 use anyhow::anyhow;
 use delegate::delegate;
 use serde::{Deserialize, Serialize};
@@ -34,7 +34,8 @@ pub struct SignalChainItem {
 #[derive(Debug, Default)]
 pub struct TrackInfo {
     pub signal_chain: Vec<SignalChainItem>,
-    pub targets: Vec<TargetInstrument>,
+    #[cfg(feature = "egui")]
+    pub targets: Vec<crate::egui::TargetInstrument>,
 }
 
 /// A musical piece. Also knows how to render the piece to digital audio.
