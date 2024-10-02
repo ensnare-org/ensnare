@@ -1560,7 +1560,7 @@ dependencies = [
 
 [[package]]
 name = "ensnare"
-version = "0.0.2-alpha.21"
+version = "0.0.2-alpha.22"
 dependencies = [
  "anyhow",
  "app_dirs2",
