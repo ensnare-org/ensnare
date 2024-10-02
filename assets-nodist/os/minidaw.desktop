@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Ensnare MiniDAW
+Comment=Make music
+Exec=/usr/bin/minidaw
+Icon=audio-speakers
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=GNOME;GTK;AudioVideo;Education;

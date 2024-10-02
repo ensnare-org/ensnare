@@ -1,0 +1,142 @@
+name: Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  release-native:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-22.04
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+          - target: x86_64-apple-darwin
+            os: macos-latest
+          - target: aarch64-apple-darwin
+            os: macos-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+        # Set up the build machine
+      - name: Install Linux x86_64 build dependencies
+        run: |
+          sudo apt -qq update
+          sudo apt -y install gcc clang mold libclang-dev libgtk-3-dev libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev librust-alsa-sys-dev libssl-dev 
+        if: startsWith(matrix.os, 'ubuntu')
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          targets: ${{matrix.target}}
+      - name: Install cargo components for .deb
+        run: cargo install cargo-deb
+        if: startsWith(matrix.os, 'ubuntu')
+      - name: Install cargo components for .msi
+        run: cargo install cargo-wix
+        if: startsWith(matrix.os, 'windows')
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+
+        # Get the source
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set version environment variables
+        # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#environment-files
+        # https://stackoverflow.com/a/65972328/344467
+        run: |
+          echo 'GIT_DESCRIBE<<QQEOFQQ' >> $GITHUB_ENV
+          git describe --tags          >> $GITHUB_ENV
+          echo 'QQEOFQQ'               >> $GITHUB_ENV
+      - name: Test release (if target is x86_64)
+        run: cargo test  --workspace --release --target ${{ matrix.target }}
+        if: startsWith(matrix.target, 'x86_64')
+      - name: Build .deb
+        run: cargo deb --target ${{ matrix.target }} --no-build
+        if: startsWith(matrix.os, 'ubuntu')
+      # - name: Build .msi
+      #   run: cargo wix -p ensnare -v --nocapture
+      #   if: startsWith(matrix.os, 'windows')
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ensnare-minidaw-${{ matrix.target }}
+          path: |
+            target/${{ matrix.target }}/release/minidaw*
+      - name: Build and upload binaries
+        uses: taiki-e/upload-rust-binary-action@v1
+        with:
+          bin: minidaw
+          target: ${{ matrix.target }}
+          include: README.md,LICENSE.md,assets,projects
+          leading_dir: true
+          archive: ensnare-minidaw-$tag-$target
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload installer
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            # target/wix/**/*.msi
+            target/**/*.deb
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  release-cross:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - aarch64-unknown-linux-gnu     # ARM Chromebooks & 64-bit RPi
+          - armv7-unknown-linux-gnueabihf # Raspberry Pi 3/4 32-bit
+          # - riscv64gc-unknown-linux-gnu # The future!
+    steps:
+      # Set up the build machine
+      - name: Install Linux x86_64 build dependencies
+        run: |
+          sudo apt -qq update
+          sudo apt -y install gcc clang mold libclang-dev libgtk-3-dev libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev librust-alsa-sys-dev libssl-dev 
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          targets: ${{matrix.target}}
+      - name: Install cargo components for .deb
+        run: cargo install cargo-deb
+      - name: Set version environment variables
+        # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#environment-files
+        # https://stackoverflow.com/a/65972328/344467
+        run: |
+          echo 'GIT_DESCRIBE<<QQEOFQQ' >> $GITHUB_ENV
+          git describe --tags          >> $GITHUB_ENV
+          echo 'QQEOFQQ'               >> $GITHUB_ENV
+      - name: Build release
+        uses: houseabsolute/actions-rust-cross@v0
+        with:
+            target: ${{matrix.target}}
+            args: "--locked --release"
+      - name: Build installer
+        run: cargo deb --target ${{ matrix.target }} --no-build --no-strip
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ensnare-minidaw-${{ matrix.target }}
+          path: |
+            target/${{ matrix.target }}/release/minidaw*
+      - uses: taiki-e/upload-rust-binary-action@v1
+        with:
+          bin: minidaw
+          include: README.md,LICENSE.md,assets,projects
+          target: ${{ matrix.target }}
+          leading_dir: true
+          archive: ensnare-minidaw-$tag-$target
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload installer
+        uses: softprops/action-gh-release@v1
+        with:
+          files: target/**/*.deb
+          token: ${{ secrets.GITHUB_TOKEN }}

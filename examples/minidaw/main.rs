@@ -39,9 +39,7 @@ fn initialize_fonts(ctx: &Context) {
     );
     fonts.font_data.insert(
         MiniDawVisuals::FONT_BOLD.to_owned(),
-        FontData::from_static(include_bytes!(
-            "../../res/fonts/jost/static/Jost-Bold.ttf"
-        )),
+        FontData::from_static(include_bytes!("../../res/fonts/jost/static/Jost-Bold.ttf")),
     );
     fonts.font_data.insert(
         MiniDawVisuals::FONT_MONO.to_owned(),
