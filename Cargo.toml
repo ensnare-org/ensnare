@@ -37,13 +37,14 @@ derivative = { version = "2.2.0", features = ["use_core"] }
 derive_builder = "0.20.0"
 derive_more = "0.99.17"
 eframe = { version = "0.28", optional = true }
+egui_extras = { version = "0.28", features = ["image"], optional = true }
 ensnare-proc-macros = { version = "0.0.6", path = "crates/proc-macros" }
 getrandom = { version = "0.2.12", features = [] }
 hound = { version = "3.5", optional = true }
 include_dir = "0.7.3"
-kahan = "0.1.4"                                                          # for Oscillator
+kahan = "0.1.4"                                                           # for Oscillator
 midly = "0.5.3"
-nalgebra = "0.32.3"                                                      # for Envelope
+nalgebra = "0.32.3"                                                       # for Envelope
 nonoverlapping_interval_tree = "0.1.5"
 once_cell = "1.19.0"
 oorandom = "11.1.3"
@@ -58,14 +59,23 @@ typetag = "0.2.16"
 
 [dev-dependencies]
 clap = { version = "4.5.4", features = ["derive"] }
+egui_extras_xt = { git = "https://github.com/xTibor/egui_extras_xt/", features = [
+    "knobs",
+    "displays",
+] }
+ensnare-services = { version = "0.0", path = "crates/services" }
+ensnare-toys = { version = "0.0.1", path = "crates/toys" }
+env_logger = "0.10"
 float-cmp = "0.9.0"
 more-asserts = "0.3.1"
+regex = "1.7"
 
 # TODO: hound should be only an example dependency; refactor sampler
 [features]
 default = ["std", "egui", "f64", "hound"]
 cpal = ["dep:cpal"]
 egui = ["convert_case", "eframe", "spectrum-analyzer"]
+egui_extras = ["dep:egui_extras"]
 f32 = []
 f64 = []
 hound = ["dep:hound"]
@@ -74,8 +84,29 @@ simple = []
 std = ["getrandom/std", "anyhow/std"]
 
 [workspace]
-members = ["crates/proc-macros", "crates/services"]
+members = ["crates/proc-macros", "crates/services", "crates/toys"]
+
+[[example]]
+name = "entity-gui-explorer"
+required-features = ["std", "egui"]
 
 [[example]]
 name = "hello-world"
-required-features = ["std", "hound"]
+required-features = ["std", "hound", "egui_extras"]
+
+# TODO: migrate features, then delete
+[[example]]
+name = "hello-world-v1"
+required-features = ["std", "hound", "egui_extras"]
+
+[[example]]
+name = "pocket-calculator"
+required-features = ["std", "egui", "ensnare-services/audio"]
+
+[[example]]
+name = "render"
+required-features = ["std"]
+
+[[example]]
+name = "widget-explorer"
+required-features = ["std", "hound", "egui_extras"]

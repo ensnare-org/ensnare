@@ -1,0 +1,21 @@
+# Copyright (c) 2024 Mike Tsao
+
+[package]
+name = "ensnare-toys"
+description = "A crate of Ensnare instruments/effects that shows how to make and bundle more things."
+version = "0.0.1"
+publish = false
+authors.workspace = true
+documentation.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+anyhow = "1.0.79"
+delegate = "0.12"
+eframe = "0.28"
+ensnare = { version = "0.0.2-alpha.21", path = "../..", features = ["egui"] }
+ensnare-proc-macros = { path = "../proc-macros" }
+serde = { version = "1.0.193", features = ["derive"] }
+typetag = "0.2.14"
