@@ -11,7 +11,7 @@ use ensnare::{
 fn aux_bus() {
     init_sample_libraries();
     let factory =
-        register_test_entities(BuiltInEntities::register(EntityFactory::default())).finalize();
+        register_simple_entities(BuiltInEntities::register(EntityFactory::default())).finalize();
 
     let mut project = Project::default();
 
@@ -70,7 +70,10 @@ fn aux_bus() {
             .add_entity(
                 track_uid_1,
                 factory
-                    .new_entity(&EntityKey::from(TestInstrument::ENTITY_KEY), Uid::default())
+                    .new_entity(
+                        &EntityKey::from(SimpleInstrument::ENTITY_KEY),
+                        Uid::default(),
+                    )
                     .unwrap(),
             )
             .unwrap()
@@ -92,7 +95,10 @@ fn aux_bus() {
             .add_entity(
                 track_uid_2,
                 factory
-                    .new_entity(&EntityKey::from(TestInstrument::ENTITY_KEY), Uid::default())
+                    .new_entity(
+                        &EntityKey::from(SimpleInstrument::ENTITY_KEY),
+                        Uid::default(),
+                    )
                     .unwrap(),
             )
             .unwrap()

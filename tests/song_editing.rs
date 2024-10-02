@@ -11,7 +11,7 @@ fn edit_song() {
     Paths::set_instance(Paths::default());
     init_sample_libraries();
     let factory =
-        register_test_entities(BuiltInEntities::register(EntityFactory::default())).finalize();
+        register_simple_entities(BuiltInEntities::register(EntityFactory::default())).finalize();
 
     let mut project = Project::default();
 
@@ -99,7 +99,10 @@ fn edit_song() {
         .add_entity(
             lead_track_uid,
             factory
-                .new_entity(&EntityKey::from(TestInstrument::ENTITY_KEY), Uid::default())
+                .new_entity(
+                    &EntityKey::from(SimpleInstrument::ENTITY_KEY),
+                    Uid::default(),
+                )
                 .unwrap(),
         )
         .unwrap();
@@ -110,7 +113,10 @@ fn edit_song() {
         .add_entity(
             lead_track_uid,
             factory
-                .new_entity(&EntityKey::from(TestInstrument::ENTITY_KEY), Uid::default())
+                .new_entity(
+                    &EntityKey::from(SimpleInstrument::ENTITY_KEY),
+                    Uid::default(),
+                )
                 .unwrap(),
         )
         .unwrap();

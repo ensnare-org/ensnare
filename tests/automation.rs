@@ -10,7 +10,7 @@ use ensnare::{
 fn demo_automation() {
     init_sample_libraries();
     let factory =
-        register_test_entities(BuiltInEntities::register(EntityFactory::default())).finalize();
+        register_simple_entities(BuiltInEntities::register(EntityFactory::default())).finalize();
 
     let mut project = Project::default();
 
@@ -45,7 +45,10 @@ fn demo_automation() {
         .add_entity(
             track_uid,
             factory
-                .new_entity(&EntityKey::from(TestInstrument::ENTITY_KEY), Uid::default())
+                .new_entity(
+                    &EntityKey::from(SimpleInstrument::ENTITY_KEY),
+                    Uid::default(),
+                )
                 .unwrap(),
         )
         .unwrap();
@@ -68,7 +71,10 @@ fn demo_automation() {
         // way to query param names, but I'm not sure how often that will
         // happen.
         factory
-            .new_entity(&EntityKey::from(TestInstrument::ENTITY_KEY), Uid::default())
+            .new_entity(
+                &EntityKey::from(SimpleInstrument::ENTITY_KEY),
+                Uid::default(),
+            )
             .unwrap()
             .control_index_for_name("dca-pan")
             .unwrap()
@@ -86,7 +92,7 @@ fn demo_automation() {
 fn demo_signal_path_automation() {
     init_sample_libraries();
     let factory =
-        register_test_entities(BuiltInEntities::register(EntityFactory::default())).finalize();
+        register_simple_entities(BuiltInEntities::register(EntityFactory::default())).finalize();
 
     let mut project = Project::default();
 
@@ -117,7 +123,10 @@ fn demo_signal_path_automation() {
     // Add a synth to play the pattern. Figure how out to identify the
     // parameter we want to control.
     let entity = factory
-        .new_entity(&EntityKey::from(TestInstrument::ENTITY_KEY), Uid::default())
+        .new_entity(
+            &EntityKey::from(SimpleInstrument::ENTITY_KEY),
+            Uid::default(),
+        )
         .unwrap();
     let pan_param_index = entity.control_index_for_name("dca-pan").unwrap();
     let synth_uid = project.add_entity(track_uid, entity).unwrap();

@@ -27,7 +27,7 @@ fn demo_sidechaining() {
     Paths::set_instance(Paths::default());
     init_sample_libraries();
     let factory =
-        register_test_entities(BuiltInEntities::register(EntityFactory::default())).finalize();
+        register_simple_entities(BuiltInEntities::register(EntityFactory::default())).finalize();
 
     let mut project = Project::default();
 
@@ -69,7 +69,10 @@ fn demo_sidechaining() {
         .add_entity(
             sidechain_track_uid,
             factory
-                .new_entity(&EntityKey::from(TestInstrument::ENTITY_KEY), Uid::default())
+                .new_entity(
+                    &EntityKey::from(SimpleInstrument::ENTITY_KEY),
+                    Uid::default(),
+                )
                 .unwrap(),
         )
         .unwrap();
@@ -112,7 +115,10 @@ fn demo_sidechaining() {
         .add_entity(
             lead_track_uid,
             factory
-                .new_entity(&EntityKey::from(TestInstrument::ENTITY_KEY), Uid::default())
+                .new_entity(
+                    &EntityKey::from(SimpleInstrument::ENTITY_KEY),
+                    Uid::default(),
+                )
                 .unwrap(),
         )
         .unwrap();

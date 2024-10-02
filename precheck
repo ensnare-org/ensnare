@@ -12,11 +12,16 @@ do
     fi
 done
 
-cargo fmt --all && \
-    cargo doc \
-        --no-deps --workspace --document-private-items \
-        --examples --features="std hound" && \
-    cargo test --workspace
+# fix style
+cargo fmt --all
+
+# generate documentation
+cargo doc \
+    --no-deps --workspace --document-private-items \
+    --examples --features="std hound"
+
+# build and test
+cargo test --workspace --examples
 
 # cargo build --no-default-features && \
 # this is disabled - see https://github.com/ensnare-org/ensnare/issues/1

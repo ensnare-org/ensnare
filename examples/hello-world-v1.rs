@@ -40,14 +40,14 @@ fn main() -> anyhow::Result<()> {
 
     // TODO: add musical content to be played on the default MIDI channel.
 
-    // ToyInstrument is a MIDI instrument that makes simple sounds. Adding an
+    // SimpleInstrument is a MIDI instrument that makes simple sounds. Adding an
     // entity to a track forms a chain that sends MIDI, control, and audio data
     // appropriately.
-    let synth = ToyInstrument::default();
+    let synth = SimpleInstrument::default();
     let _synth_uid = project.add_entity(track_uid, Box::new(synth)).unwrap();
 
     // An effect takes the edge off the synth.
-    let effect = ToyEffect::default();
+    let effect = SimpleEffect::default();
     let _effect_uid = project.add_entity(track_uid, Box::new(effect)).unwrap();
 
     // Once everything is set up, export_to_wav() renders an audio stream to disk.

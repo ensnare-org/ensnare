@@ -1344,6 +1344,10 @@ mod tests {
         fn chain_active_pattern(&mut self) {
             self.chain_pattern(self.active_pattern());
         }
+
+        fn is_performing(&self) -> bool {
+            matches!(self.state, EngineState::Playing)
+        }
     }
 
     #[test]

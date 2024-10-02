@@ -139,6 +139,10 @@ pub struct SimpleNoisyAudioSourceCore {
     #[serde(skip)]
     #[builder(setter(skip))]
     r: Rng,
+
+    /// DCA
+    #[control]
+    dca: Dca,
 }
 impl Generates<StereoSample> for SimpleNoisyAudioSourceCore {
     fn generate(&mut self, values: &mut [StereoSample]) -> bool {
@@ -159,4 +163,8 @@ impl Configurable for SimpleNoisyAudioSourceCore {
             fn update_time_signature(&mut self, time_signature: TimeSignature);
         }
     }
+}
+impl SimpleNoisyAudioSourceCore {
+    #[allow(missing_docs)]
+    pub fn notify_change_dca(&mut self) {}
 }
