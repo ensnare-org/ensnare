@@ -102,7 +102,7 @@ pub struct Oscillator {
     pub frequency: FrequencyHz,
 
     /// if not zero, then ignores the `frequency` field and uses this one
-    /// instead. TODO: Option<>
+    /// instead. TODO: `Option<>`
     #[control]
     fixed_frequency: Option<FrequencyHz>,
 

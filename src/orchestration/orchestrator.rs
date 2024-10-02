@@ -12,8 +12,8 @@ use rustc_hash::FxHashMap;
 use serde::{Deserialize, Serialize};
 
 /// [Orchestrator] brings together all a project's musical instruments and
-/// effects. Working mainly with [Composer] and [Automator](crate::Automator),
-/// it converts abstract musical notes into actual digital audio.
+/// effects. Working mainly with [Composer] and [Automator], it converts
+/// abstract musical notes into actual digital audio.
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 #[allow(missing_docs)]

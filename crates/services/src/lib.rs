@@ -12,7 +12,12 @@ pub mod prelude {
     pub use super::{CpalAudioService, CpalAudioServiceEvent, CpalAudioServiceInput};
     #[cfg(feature = "midi")]
     pub use super::{MidiService, MidiServiceEvent, MidiServiceInput};
+    #[cfg(feature = "project")]
+    pub use super::{ProjectService, ProjectServiceEvent, ProjectServiceInput};
 }
+
+#[cfg(feature = "project")]
+pub use project::{ProjectService, ProjectServiceEvent, ProjectServiceInput};
 
 #[cfg(feature = "audio")]
 pub use audio::{
@@ -26,3 +31,5 @@ pub use midi::{MidiService, MidiServiceEvent, MidiServiceInput};
 mod audio;
 #[cfg(feature = "midi")]
 mod midi;
+#[cfg(feature = "project")]
+mod project;

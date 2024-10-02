@@ -315,7 +315,7 @@ impl PatternSequencerBuilder {
 /// meant to refer to the old pattern.
 ///
 /// This sequencer is nice for certain test cases, but I don't think it's useful
-/// in a production environment. [LivePatternSequencer] is better.
+/// in a production environment.
 #[derive(Debug, Default, Builder, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "kebab-case")]
 #[builder(build_fn(private, name = "build_from_builder"))]

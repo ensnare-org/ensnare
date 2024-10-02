@@ -5,11 +5,9 @@ use delegate::delegate;
 use serde::{Deserialize, Serialize};
 
 /// [Synthesizer] provides the smallest possible functional core of a
-/// synthesizer built around [StoresVoices]. A full
-/// [IsInstrument](crate::traits::IsInstrument) will typically compose itself
-/// from a concrete [Synthesizer], providing implementations of
-/// [HasUid](crate::traits::HasUid) and
-/// [Controllable](crate::traits::Controllable) as needed.
+/// synthesizer built around [StoresVoices]. A full instrument will typically
+/// compose itself from a concrete [Synthesizer], providing implementations of
+/// [Controllable](crate::traits::Controllable) and other traits as needed.
 ///
 /// [Synthesizer] exists so that this crate's synthesizer voices can be used in
 /// other projects without needing all the other crates.

@@ -1496,11 +1496,14 @@ dependencies = [
  "clap",
  "cpal",
  "crossbeam",
+ "crossbeam-channel",
  "delegate",
  "derivative",
+ "eframe",
  "ensnare",
  "midir",
  "midly",
+ "synonym",
 ]
 
 [[package]]

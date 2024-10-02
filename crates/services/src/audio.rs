@@ -50,7 +50,7 @@ pub enum CpalAudioServiceInput {
     Quit,
     /// Provides audio frames for the audio interface. They will be added to the
     /// service's internal ring buffer and consumed as needed. TODO: I'm unsure
-    /// whether Arc<Vec<>> is an efficient way to send this data over a channel.
+    /// whether `Arc<Vec<>>` is an efficient way to send this data over a channel.
     Frames(Arc<Vec<AudioStereoSampleType>>),
     /// Starts the underlying audio interface. It's unnecessary to send this for
     /// every new service, because a new service plays automatically upon

@@ -2,7 +2,7 @@
 
 use crate::{elements::Transport, prelude::*};
 use anyhow::{anyhow, Error};
-use eframe::egui::{ComboBox, DragValue, Label, RichText, Ui, Widget};
+use eframe::egui::{ComboBox, DragValue, Label, RichText, TextWrapMode, Ui, Widget};
 use strum::IntoEnumIterator;
 use strum_macros::{AsRefStr, EnumIter, IntoStaticStr};
 
@@ -26,7 +26,7 @@ impl<'a> Widget for TransportWidget<'a> {
         ui.horizontal_centered(|ui| {
             ui.add(
                 DragValue::new(&mut self.transport.tempo.0)
-                    .clamp_range(Tempo::range())
+                    .range(Tempo::range())
                     .min_decimals(1)
                     .speed(0.1)
                     .suffix(" BPM"),
@@ -121,7 +121,7 @@ impl<'a> Widget for TimeSignatureWidget<'a> {
         let mut response = ComboBox::from_label("")
             .selected_text(s)
             .show_ui(ui, |ui| {
-                ui.style_mut().wrap = Some(false);
+                ui.style_mut().wrap_mode = Some(TextWrapMode::Truncate);
                 ui.set_min_width(60.0);
                 for ts in TimeSignatureTempValues::iter() {
                     let s: &str = ts.into();

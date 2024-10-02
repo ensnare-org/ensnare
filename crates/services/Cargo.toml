@@ -14,10 +14,14 @@ repository.workspace = true
 anyhow = "1.0.86"
 cpal = { version = "0.15.3", optional = true }
 crossbeam = "0.8.4"
+crossbeam-channel = { version = "0.5.13", optional = true }
 delegate = "0.12.0"
+derivative = { version = "2.2.0", optional = true }
+eframe = { version = "0.28", optional = true }
 ensnare = { version = "0.0.2-alpha.21", path = "../.." }
 midir = { version = "0.10.0", optional = true }
 midly = { version = "0.5.3", optional = true }
+synonym = { version = "0.1.6", optional = true }
 
 [dev-dependencies]
 anyhow = "1.0.86"
@@ -25,10 +29,15 @@ clap = { version = "4.5.4", features = ["derive"] }
 derivative = "2.2.0"
 
 [features]
-default = ["audio", "midi", "std"]
+default = ["audio", "midi", "project", "egui", "std"]
 audio = ["dep:cpal"]
+egui = ["eframe", "derivative", "synonym"]
 midi = ["dep:midir", "dep:midly"]
+project = ["crossbeam-channel"]
 std = []
+derivative = ["dep:derivative"]
+eframe = ["dep:eframe"]
+synonym = ["dep:synonym"]
 
 [[example]]
 name = "audio"

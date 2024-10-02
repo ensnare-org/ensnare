@@ -96,7 +96,7 @@ impl EntityRepository {
     delegate! {
         to self.uid_factory.0 {
             #[call(mint_next)]
-            /// Creates a new [EntityUid].
+            /// Creates a new [Uid].
             pub fn mint_entity_uid(&self) -> Uid;
         }
     }

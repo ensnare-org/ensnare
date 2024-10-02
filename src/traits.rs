@@ -564,7 +564,7 @@ pub trait SequencesMidi: Controls + Configurable + HandlesMidi {
 
     /// Starts recording. Messages received through
     /// [HandlesMidi::handle_midi_message()] will be recorded as of the start of
-    /// the time slice provided by [Controls::update_time()].
+    /// the time slice provided by [Controls::update_time_range()].
     ///
     /// [Controls::stop()] stops recording.
     fn start_recording(&mut self);

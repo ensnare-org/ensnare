@@ -38,7 +38,7 @@ impl ControlBar {
         self.saw_midi_in_activity = true;
     }
 
-    /// Tell [ControlPanel] that the system just produced an outgoing MIDI message.
+    /// Tell [ControlBar] that the system just produced an outgoing MIDI message.
     pub fn tickle_midi_out(&mut self) {
         self.saw_midi_out_activity = true;
     }

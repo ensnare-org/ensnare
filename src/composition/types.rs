@@ -3,7 +3,7 @@
 use crate::types::MidiNote;
 use core::ops::RangeInclusive;
 
-/// A wrapper around RangeInclusive<MidiNote>.
+/// A wrapper around `RangeInclusive<MidiNote>`.
 #[derive(Clone)]
 pub struct MidiNoteRange(pub RangeInclusive<MidiNote>);
 impl Default for MidiNoteRange {
