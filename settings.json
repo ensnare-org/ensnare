@@ -1,0 +1,14 @@
+{
+  "audio-settings": {
+    "sample-rate": 44100,
+    "channel-count": 2
+  },
+  "midi-settings": {
+    "selected_input": {
+      "index": 2,
+      "name": "Launchkey Mini MK4 37:Launchkey Mini MK4 37 Launchkey 20:0"
+    },
+    "selected_output": null,
+    "should_route_externally": true
+  }
+}

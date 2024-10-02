@@ -55,19 +55,24 @@ spectrum-analyzer = { version = "1.5.0", optional = true }
 strum = "0.26"
 strum_macros = "0.26"
 synonym = "0.1.6"
+thiserror = "1.0.50"
 typetag = "0.2.16"
 
 [dev-dependencies]
 clap = { version = "4.5.4", features = ["derive"] }
+crossbeam-channel = "0.5.13"
+egui_dock = "0.13.0"
 egui_extras_xt = { git = "https://github.com/xTibor/egui_extras_xt/", features = [
     "knobs",
     "displays",
 ] }
+egui-notify = "0.15.0"
 ensnare-services = { version = "0.0", path = "crates/services" }
 ensnare-toys = { version = "0.0.1", path = "crates/toys" }
 env_logger = "0.10"
 float-cmp = "0.9.0"
 more-asserts = "0.3.1"
+native-dialog = "0.7.0"
 regex = "1.7"
 
 # TODO: hound should be only an example dependency; refactor sampler
@@ -85,6 +90,19 @@ std = ["getrandom/std", "anyhow/std"]
 
 [workspace]
 members = ["crates/proc-macros", "crates/services", "crates/toys"]
+
+[lib]
+name = "ensnare"
+path = "src/lib.rs"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
+panic = "abort"
 
 [[example]]
 name = "entity-gui-explorer"
@@ -110,3 +128,13 @@ required-features = ["std"]
 [[example]]
 name = "widget-explorer"
 required-features = ["std", "hound", "egui_extras"]
+
+[[example]]
+name = "minidaw"
+required-features = [
+    "std",
+    "egui",
+    "egui_extras",
+    "ensnare-services/audio",
+    "ensnare-services/midi",
+]
