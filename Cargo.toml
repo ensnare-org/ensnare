@@ -42,7 +42,7 @@ derive_builder = "0.20.0"
 derive_more = "0.99.17"
 eframe = { version = "0.28", optional = true }
 egui_extras = { version = "0.28", features = ["image"], optional = true }
-ensnare-proc-macros = { version = "0.0.7", path = "crates/proc-macros" }
+ensnare-proc-macros = { version = "0.0.8", path = "crates/proc-macros" }
 getrandom = { version = "0.2.12", features = [] }
 hound = { version = "3.5", optional = true }
 include_dir = "0.7.3"
