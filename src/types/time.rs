@@ -149,6 +149,10 @@ impl TimeSignature {
     /// <https://en.wikipedia.org/wiki/Time_signature>
     pub const CUT_TIME: Self = TimeSignature { top: 2, bottom: 2 };
 
+    /// waltz time = 3/4
+    /// <https://en.wikipedia.org/wiki/Waltz_(music)>
+    pub const WALTZ_TIME: Self = TimeSignature { top: 3, bottom: 4 };
+
     /// Default numerator
     pub const DEFAULT_TOP: usize = 4;
 

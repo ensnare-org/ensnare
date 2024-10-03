@@ -105,6 +105,9 @@ impl PatternBuilder {
         self
     }
 
+    /// Use this constant to represent an empty note, or a rest.
+    pub const REST: u8 = 255;
+
     /// Given a sequence of MIDI note numbers and an optional grid value that
     /// overrides the one implied by the time signature, adds [Note]s one after
     /// another into the pattern. The value 255 is reserved for rest (no note,
@@ -129,7 +132,7 @@ impl PatternBuilder {
         let mut position = MusicalTime::START;
         let position_delta = MusicalTime::new_with_fractional_beats(1.0 / grid_value as f64);
         for note in midi_note_numbers {
-            if note != 255 {
+            if note != Self::REST {
                 self.note(Note::new_with(note, position, position_delta));
             }
             position += position_delta;

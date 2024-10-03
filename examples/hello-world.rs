@@ -25,9 +25,6 @@ fn main() -> anyhow::Result<()> {
         return Ok(());
     }
 
-    // The system needs a working buffer for audio.
-    let _buffer = [StereoSample::SILENCE; 64];
-
     // A project contains all the the instruments, controllers, and effects, and
     // their relationships, and uses them to produce a song.
     let mut project = BasicProject::default();

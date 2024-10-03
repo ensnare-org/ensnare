@@ -1,7 +1,7 @@
 // Copyright (c) 2024 Mike Tsao
 
 use ensnare::{
-    entities::{BiQuadFilterLowPass24db, Drumkit, Reverb},
+    entities::{BiQuadFilterLowPass24db, Drumkit, Reverb, SubtractiveSynth},
     prelude::*,
     util::{init_sample_libraries, Paths},
 };
@@ -111,7 +111,7 @@ fn set_up_lead_track(project: &mut Project, factory: &EntityFactory<dyn Entity>)
             track_uid,
             factory
                 .new_entity(
-                    &EntityKey::from(SimpleInstrument::ENTITY_KEY),
+                    &EntityKey::from(SubtractiveSynth::ENTITY_KEY),
                     Uid::default(),
                 )
                 .unwrap(),

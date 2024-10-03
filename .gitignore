@@ -2,6 +2,7 @@
 **/target
 *.pdb
 /*.wav
+/*.json
 debug/
 git-scratch.md
 target/

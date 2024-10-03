@@ -39,6 +39,11 @@ pub struct SubtractiveSynth {
     #[serde(skip)]
     action: Option<DisplaysAction>,
 }
+impl Default for SubtractiveSynth {
+    fn default() -> Self {
+        Self::new_with_factory_patch(Uid::default())
+    }
+}
 impl SubtractiveSynth {
     #[allow(missing_docs)]
     pub fn new_with(uid: Uid, inner: SubtractiveSynthCore) -> Self {

@@ -181,7 +181,7 @@ impl KitLibrary {
     const TOM_MEDIUM: &'static str = "Med Tom";
 
     /// Where drumkits usually begin on the MIDI note scale.
-    const MIDI_NOTE_BASE: usize = MidiNote::C2 as usize;
+    const MIDI_NOTE_BASE: usize = MidiNote::B1 as usize;
 
     pub fn new_with(sample_library: &mut SampleLibrary) -> Self {
         let mut r: Self = Self {

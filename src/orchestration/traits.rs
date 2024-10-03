@@ -148,6 +148,7 @@ impl<'a, P: Projects> Iterator for ProjectsRenderer<'a, P> {
             return None;
         }
 
+        // Do we need to generate another buffer of audio?
         if self.sample_pointer >= self.samples.buffer_size() {
             self.samples.clear();
             self.project.generate_audio(self.samples.buffer_mut(), None);

@@ -114,7 +114,7 @@ name = "pocket-calculator"
 required-features = ["std", "egui", "ensnare-services/audio"]
 
 [[example]]
-name = "render"
+name = "render-project"
 required-features = ["std"]
 
 [[example]]

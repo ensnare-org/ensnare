@@ -33,6 +33,11 @@ pub struct Drumkit {
     #[serde(skip)]
     action: Option<DisplaysAction>,
 }
+impl Default for Drumkit {
+    fn default() -> Self {
+        Self::new_with(Uid::default(), KitIndex::KIT_707)
+    }
+}
 impl Drumkit {
     #[allow(missing_docs)]
     pub fn new_with(uid: Uid, kit_index: KitIndex) -> Self {

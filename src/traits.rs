@@ -468,7 +468,6 @@ pub trait Generates<V: Default + Clone>: Send + core::fmt::Debug + Configurable 
     /// non-default; for example, in the case of a [StereoSample] signal,
     /// returns true if any part of the generated signal was non-silent.
     fn generate(&mut self, values: &mut [V]) -> bool {
-        values.fill(V::default());
         false
     }
 }
