@@ -24,7 +24,8 @@ cargo doc \
 cargo build --examples
 
 # build and test
-cargo test --workspace --examples
+cargo test --workspace 
+cargo test --examples
 
 # cargo build --no-default-features && \
 # this is disabled - see https://github.com/ensnare-org/ensnare/issues/1
