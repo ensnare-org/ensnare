@@ -2,4 +2,4 @@
 #
 # Copyright (c) 2024 Mike Tsao
 
-cargo release --workspace -x alpha
+cargo release --workspace -x patch
