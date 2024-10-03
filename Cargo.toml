@@ -77,15 +77,14 @@ more-asserts = "0.3.1"
 native-dialog = "0.7.0"
 regex = "1.7"
 
-# TODO: hound should be only an example dependency; refactor sampler
+# TODO: hound should be only an example dependency; refactor sampler and drumkit
 [features]
-default = ["std", "egui", "hound"]
+default = ["std", "egui", "hound", "simple"]
 cpal = ["dep:cpal"]
 egui = ["convert_case", "eframe", "spectrum-analyzer"]
 egui_extras = ["dep:egui_extras"]
 f32 = []
 hound = ["dep:hound"]
-not_yet = []
 simple = []
 std = ["getrandom/std", "anyhow/std"]
 

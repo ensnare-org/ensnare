@@ -32,7 +32,7 @@ pub fn metadata_derive(input: TokenStream) -> TokenStream {
 ///
 /// - `"skip_inner"`: Do not delegate trait methods to a field named "inner".
 /// - `(various)`: implements an empty trait. For example, `HandlesMidi`
-///   implements an empty [HandlesMidi] trait.
+///   implements an empty `ensnare::traits::HandlesMidi` trait.
 #[proc_macro_derive(IsEntity, attributes(entity))]
 pub fn entity_derive(input: TokenStream) -> TokenStream {
     parse_and_generate_entity(input)
@@ -86,57 +86,57 @@ pub fn derive_control(input: TokenStream) -> TokenStream {
     control::impl_derive_control(input, &make_primitives())
 }
 
-/// Derives code that delegates the implementation of the [Configurable] trait
+/// Derives code that delegates the implementation of the `Configurable` trait
 /// to an inner struct.
 #[proc_macro_derive(InnerConfigurable)]
 pub fn derive_inner_configurable(input: TokenStream) -> TokenStream {
     inner::impl_inner_configurable_derive(input)
 }
 
-/// Derives code that delegates the implementation of the [Controllable] trait
+/// Derives code that delegates the implementation of the `Controllable` trait
 /// to an inner struct.
 #[proc_macro_derive(InnerControllable)]
 pub fn derive_inner_controllable(input: TokenStream) -> TokenStream {
     inner::impl_derive_inner_controllable(input)
 }
 
-/// Derives the code that delegates the implementation of the [Controls] trait
+/// Derives the code that delegates the implementation of the `Controls` trait
 /// to an inner struct.
 #[proc_macro_derive(InnerControls)]
 pub fn derive_inner_controls(input: TokenStream) -> TokenStream {
     inner::impl_derive_inner_controls(input)
 }
 
-/// Derives the code that delegates the implementation of the [HandlesMidi]
+/// Derives the code that delegates the implementation of the `HandlesMidi`
 /// trait to an inner struct.
 #[proc_macro_derive(InnerHandlesMidi)]
 pub fn derive_inner_handles_midi(input: TokenStream) -> TokenStream {
     inner::impl_derive_inner_handles_midi(input)
 }
 
-/// Derives the code that delegates the implementation of traits unique to
-/// [IsEffect] to an inner struct.
+/// Derives the code that delegates the implementation of effect traits to an
+/// inner struct.
 #[proc_macro_derive(InnerEffect)]
 pub fn derive_inner_effect(input: TokenStream) -> TokenStream {
     inner::impl_derive_inner_effect(input)
 }
 
-/// Derives the code that delegates the implementation of traits unique to
-/// [IsInstrument] to an inner struct.
+/// Derives the code that delegates the implementation of instrument traits to
+/// an inner struct.
 #[proc_macro_derive(InnerInstrument)]
 pub fn derive_inner_instrument(input: TokenStream) -> TokenStream {
     inner::impl_derive_inner_instrument(input)
 }
 
-/// Derives code that delegates the implementation of the [Serializable] trait
+/// Derives code that delegates the implementation of the `Serializable` trait
 /// to an inner struct.
 #[proc_macro_derive(InnerSerializable)]
 pub fn derive_inner_serializable(input: TokenStream) -> TokenStream {
     inner::impl_inner_serializable_derive(input)
 }
 
-/// Derives code that delegates the implementation of the [TransformsAudio] trait
-/// to an inner struct.
+/// Derives code that delegates the implementation of the `TransformsAudio`
+/// trait to an inner struct.
 #[proc_macro_derive(InnerTransformsAudio)]
 pub fn derive_inner_transforms_audio(input: TokenStream) -> TokenStream {
     inner::impl_inner_transforms_audio_derive(input)

@@ -145,6 +145,8 @@ impl Mul<Normal> for Sample {
         Self(self.0 * rhs.0 as f64)
     }
 }
+
+#[cfg(not(feature = "f32"))]
 impl From<f32> for Sample {
     fn from(value: f32) -> Self {
         Sample(value as f64)

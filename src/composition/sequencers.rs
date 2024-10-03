@@ -453,7 +453,7 @@ mod tests {
     /// BEGIN tests taken from the old sequencer. These are here to scavenge
     /// good testing ideas.
 
-    #[cfg(feature = "not_yet")]
+    #[cfg(any())]
     impl MidiTickSequencer {
         #[allow(dead_code)]
         pub(crate) fn debug_events(&self) -> &MidiTickEventsMap {
@@ -461,7 +461,7 @@ mod tests {
         }
     }
 
-    #[cfg(feature = "not_yet")]
+    #[cfg(any())]
     impl MidiTickSequencer {
         pub(crate) fn tick_for_beat(&self, clock: &Clock, beat: usize) -> MidiTicks {
             //            let tpb = self.midi_ticks_per_second.0 as f32 /
@@ -503,7 +503,7 @@ mod tests {
     #[test]
     fn sequencer_mainline() {
         const DEVICE_MIDI_CHANNEL: MidiChannel = MidiChannel(7);
-        #[cfg(feature = "not_yet")]
+        #[cfg(any())]
         let clock = Clock::new_with(
             DEFAULT_BPM,
             DEFAULT_MIDI_TICKS_PER_SECOND,
@@ -699,7 +699,7 @@ mod tests {
         );
     }
 
-    #[cfg(feature = "not_yet")]
+    #[cfg(any())]
     mod obsolete {
         use super::*;
         use crate::core::{
@@ -1054,7 +1054,7 @@ mod tests {
     }
 }
 
-#[cfg(feature = "not_yet")]
+#[cfg(any())]
 mod obsolete {
     #[derive(Clone, Debug, Default, PartialEq)]
     pub struct LivePatternArrangement {

@@ -1,9 +1,9 @@
 // Copyright (c) 2024 Mike Tsao
 
-// use ensnare::prelude::*;
+// use ensnare::{prelude::*, util::PathType};
 // use std::{fs::File, io::prelude::*, path::Path, time::Instant};
 
-#[cfg(feature = "not_yet")]
+#[cfg(any())]
 #[test]
 fn project_loads_and_parses() {
     let mut paths = Paths::default();
@@ -37,7 +37,7 @@ fn project_loads_and_parses() {
     }
 }
 
-#[cfg(feature = "not_yet")]
+#[cfg(any())]
 #[test]
 #[ignore = "orchestrator - control_message_for_index is incomplete. re-enable when macroized"]
 fn spit_out_perf_data() {
@@ -55,7 +55,7 @@ fn spit_out_perf_data() {
         .unwrap_or_else(|err| panic!("instantiation failed: {:?}", err));
 
     let start_instant = Instant::now();
-    let mut samples = [StereoSample::SILENCE; SAMPLE_BUFFER_SIZE];
+    let mut samples = [StereoSample::SILENCE; 64];
     let performance = orchestrator
         .run_performance(&mut samples, false)
         .unwrap_or_else(|err| panic!("performance failed: {:?}", err));
@@ -84,7 +84,7 @@ usec/frame : {:.2?} (goal <{:.2?})",
     assert!(IOHelper::send_performance_to_file(&performance, &path).is_ok());
 }
 
-#[cfg(feature = "not_yet")]
+#[cfg(any())]
 #[test]
 fn patching_to_device_with_no_input_fails_with_proper_error() {
     let mut paths = Paths::default();

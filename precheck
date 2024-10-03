@@ -15,6 +15,11 @@ done
 # fix style
 cargo fmt --all
 
+# generate documentation similarly to how docs.rs does. We don't want this
+# version of the documentation, but it's good to catch errors that will happen
+# after a release to crates.io.
+cargo doc --no-default-features --all-features --no-deps
+
 # generate documentation
 cargo doc \
     --no-deps --workspace --document-private-items \
