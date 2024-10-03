@@ -5,12 +5,7 @@
 #![allow(dead_code)] // TODO: remove when big migration is complete
 #![allow(rustdoc::private_intra_doc_links)]
 
-//! The Ensnare crate helps create digital audio with a focus on music.
-
-pub use orchestration::{Orchestrator, Project};
-
-#[cfg(feature = "std")]
-pub use version::app_version;
+//! Ensnare creates digital audio, with a focus on music.
 
 /// A collection of imports that are useful to users of this crate. `use
 /// ensnare::prelude::*;` for easier onboarding.
@@ -23,8 +18,12 @@ pub mod prelude {
 }
 
 // Fundamental structures that are important enough to re-export at top level.
-pub use composition::Composer;
-pub use orchestration::BasicProject;
+#[cfg(feature = "std")]
+pub use version::app_version;
+pub use {
+    composition::Composer,
+    orchestration::{BasicProject, Orchestrator, Project},
+};
 
 pub mod automation;
 pub mod composition;

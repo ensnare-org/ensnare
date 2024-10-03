@@ -911,6 +911,8 @@ mod tests {
     };
     use ensnare_proc_macros::{Control, IsEntity, Metadata};
     use std::sync::Arc;
+
+    #[allow(unused)]
     trait TestEntity: Entity {}
 
     /// An [IsEntity] that sends one Control event each time work() is called.
