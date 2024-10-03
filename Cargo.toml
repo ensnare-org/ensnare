@@ -15,7 +15,7 @@ members = ["crates/proc-macros", "crates/services", "crates/toys"]
 
 [package]
 name = "ensnare"
-description = "A library for generating digital audio"
+description = "Create digital audio"
 keywords = ["audio", "music"]
 readme.workspace = true
 authors.workspace = true
