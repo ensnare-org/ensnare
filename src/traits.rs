@@ -14,11 +14,12 @@ use strum_macros::Display;
 /// Quick import of all important traits.
 pub mod prelude {
     pub use super::{
-        CanPrototype, Configurable, Configurables, ControlEventsFn, ControlProxyEventsFn,
-        Controllable, Controls, ControlsAsProxy, Entity, Generates, GeneratesEnvelope,
-        GenerationBuffer, HandlesMidi, HasExtent, HasMetadata, HasSettings, IsStereoSampleVoice,
-        IsVoice, MidiMessagesFn, MidiNoteLabelMetadata, PlaysNotes, ProvidesService, Sequences,
-        SequencesMidi, Serializable, StoresVoices, TransformsAudio, WorkEvent,
+        CanPrototype, CollectsEntities, Configurable, Configurables, ControlEventsFn,
+        ControlProxyEventsFn, Controllable, Controls, ControlsAsProxy, Entity, Generates,
+        GeneratesEnvelope, GenerationBuffer, HandlesMidi, HasExtent, HasMetadata, HasSettings,
+        IsStereoSampleVoice, IsVoice, MidiMessagesFn, MidiNoteLabelMetadata, PlaysNotes,
+        ProvidesService, Sequences, SequencesMidi, Serializable, StoresVoices, TransformsAudio,
+        WorkEvent,
     };
     #[cfg(feature = "egui")]
     pub use super::{Displays, DisplaysAction};
@@ -601,6 +602,19 @@ pub trait Sequences: Controls + core::fmt::Debug {
 
     /// Removes all recorded MUs.
     fn clear(&mut self);
+}
+
+/// Entity collections implement this trait and interact with [EntityFactory]
+/// through it.
+pub trait CollectsEntities {
+    /// Populates the given [EntityFactory] with the entity collection. Returns
+    /// the same factory to allow chaining of collections.
+    ///
+    /// An application should start with a default [EntityFactory], register
+    /// desired collections, and then call [EntityFactory::finalize()].
+    fn register(
+        factory: EntityFactory<dyn crate::traits::Entity>,
+    ) -> EntityFactory<dyn crate::traits::Entity>;
 }
 
 #[cfg(test)]

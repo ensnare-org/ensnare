@@ -39,13 +39,12 @@
 /// The most commonly used imports.
 pub mod prelude {
     #[cfg(feature = "simple")]
-    pub use super::{register_simple_entities, SimpleController, SimpleEffect, SimpleInstrument};
+    pub use super::{SimpleController, SimpleEffect, SimpleEntities, SimpleInstrument};
 
     #[cfg(test)]
     pub use super::{
-        register_test_entities, TestAudioSource, TestController,
-        TestControllerAlwaysSendsMidiMessage, TestControllerTimed, TestEffectNegatesInput,
-        TestInstrument, TestInstrumentCountsMidiMessages,
+        TestAudioSource, TestController, TestControllerAlwaysSendsMidiMessage, TestControllerTimed,
+        TestEffectNegatesInput, TestEntities, TestInstrument, TestInstrumentCountsMidiMessages,
     };
 
     pub use super::{BuiltInEntities, EntityFactory, EntityKey, EntityUidFactory, Timer};

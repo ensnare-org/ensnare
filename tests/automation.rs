@@ -1,7 +1,9 @@
 // Copyright (c) 2024 Mike Tsao
 
 use ensnare::{
-    cores::LfoControllerCoreBuilder, entities::LfoController, prelude::*,
+    cores::LfoControllerCoreBuilder,
+    entities::{LfoController, SimpleEntities},
+    prelude::*,
     util::init_sample_libraries,
 };
 
@@ -10,7 +12,7 @@ use ensnare::{
 fn demo_automation() {
     init_sample_libraries();
     let factory =
-        register_simple_entities(BuiltInEntities::register(EntityFactory::default())).finalize();
+        SimpleEntities::register(BuiltInEntities::register(EntityFactory::default())).finalize();
 
     let mut project = Project::default();
 
@@ -92,7 +94,7 @@ fn demo_automation() {
 fn demo_signal_path_automation() {
     init_sample_libraries();
     let factory =
-        register_simple_entities(BuiltInEntities::register(EntityFactory::default())).finalize();
+        SimpleEntities::register(BuiltInEntities::register(EntityFactory::default())).finalize();
 
     let mut project = Project::default();
 

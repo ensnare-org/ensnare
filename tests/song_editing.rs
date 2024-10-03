@@ -11,7 +11,7 @@ fn edit_song() {
     Paths::set_instance(Paths::default());
     init_sample_libraries();
     let factory =
-        register_simple_entities(BuiltInEntities::register(EntityFactory::default())).finalize();
+        SimpleEntities::register(BuiltInEntities::register(EntityFactory::default())).finalize();
 
     let mut project = Project::default();
 

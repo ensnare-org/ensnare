@@ -520,6 +520,7 @@ impl FrequencyDomainSettings {
     }
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Derivative)]
 #[derivative(Default)]
 struct SampleClip(#[derivative(Default(value = "Self::init_random_samples()"))] [Sample; 256]);

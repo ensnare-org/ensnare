@@ -5,7 +5,7 @@
 
 pub use controllers::SimpleController;
 pub use effects::SimpleEffect;
-pub use factory::register_simple_entities;
+pub use factory::SimpleEntities;
 pub use instruments::SimpleInstrument;
 
 mod controllers;

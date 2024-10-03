@@ -26,9 +26,8 @@ use crate::{
 /// creation of an [EntityFactory] that lets apps refer to entities by
 /// [EntityKey] rather than having to import and instantiate each one
 pub struct BuiltInEntities {}
-impl BuiltInEntities {
-    /// Associates each entity type with a key. Call once at initialization.
-    pub fn register(mut factory: EntityFactory<dyn Entity>) -> EntityFactory<dyn Entity> {
+impl CollectsEntities for BuiltInEntities {
+    fn register(mut factory: EntityFactory<dyn Entity>) -> EntityFactory<dyn Entity> {
         let include_internals = false;
 
         // Controllers
