@@ -3,7 +3,7 @@
 //! The `settings` module contains [Settings], which are all the user's
 //! persistent global preferences. It also contains [SettingsPanel].
 
-use crossbeam_channel::{Receiver, Sender};
+use crossbeam::channel::{Receiver, Sender};
 use eframe::egui::Frame;
 use ensnare::{
     egui::{AudioSettingsWidget, MidiSettingsWidget},

@@ -223,7 +223,7 @@ struct NoteSequencerSettings {
     sequencer: NoteSequencer,
     view_range: ViewRange,
 }
-impl DisplayscerSettings {
+impl Displays for NoteSequencerSettings {
     fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
         ui.checkbox(&mut self.hide, "Hide")
     }
@@ -258,87 +258,62 @@ impl NoteSequencerSettings {
 
 #[derive(Debug, Derivative)]
 #[derivative(Default)]
-struct ToySynthSettings {
+struct SimpleInstrumentSettings {
     hide: bool,
-    #[derivative(Default(value = "ToySynth::new_with(
-        Uid::default(),
-        OscillatorBuilder::default().build().unwrap(),
-        EnvelopeBuilder::safe_default().build().unwrap(),
-        Dca::default(),
-    )"))]
-    toy_synth: ToySynth,
+    #[derivative(Default(value = "SimpleInstrument::default()"))]
+    entity: SimpleInstrument,
 }
-impl Displays for ToySynthSettings {
+impl Displays for SimpleInstrumentSettings {
     fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
         ui.checkbox(&mut self.hide, "Hide")
     }
 }
-impl ToySynthSettings {
-    const NAME: &'static str = "Toy Synth";
+impl SimpleInstrumentSettings {
+    const NAME: &'static str = "SimpleInstrument";
 
     fn show(&mut self, ui: &mut eframe::egui::Ui) {
         if !self.hide {
-            self.toy_synth.ui(ui);
+            self.entity.ui(ui);
         }
     }
 }
 
 #[derive(Debug, Default)]
-struct ToyControllerSettings {
+struct SimpleControllerSettings {
     hide: bool,
-    toy: ToyController,
+    entity: SimpleController,
 }
-impl Displays for ToyControllerSettings {
+impl Displays for SimpleControllerSettings {
     fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
         ui.checkbox(&mut self.hide, "Hide")
     }
 }
-impl ToyControllerSettings {
-    const NAME: &'static str = "Toy Controller";
+impl SimpleControllerSettings {
+    const NAME: &'static str = "SimpleController";
 
     fn show(&mut self, ui: &mut eframe::egui::Ui) {
         if !self.hide {
-            self.toy.ui(ui);
+            self.entity.ui(ui);
         }
     }
 }
 
 #[derive(Debug, Default)]
-struct ToyEffectSettings {
+struct SimpleEffectSettings {
     hide: bool,
-    toy: ToyEffect,
+    entity: SimpleEffect,
 }
-impl Displaysettings {
+impl Displays for SimpleEffectSettings {
     fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
         ui.checkbox(&mut self.hide, "Hide")
     }
 }
-impl ToyEffectSettings {
-    const NAME: &'static str = "Toy Effect";
+impl SimpleEffectSettings {
+    const NAME: &'static str = "SimpleEffect";
 
     fn show(&mut self, ui: &mut eframe::egui::Ui) {
         if !self.hide {
-            self.toy.ui(ui);
-        }
-    }
-}
-
-#[derive(Debug, Default)]
-struct ToyInstrumentSettings {
-    hide: bool,
-    toy: ToyInstrument,
-}
-impl Displays for ToyInstrumentSettings {
-    fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
-        ui.checkbox(&mut self.hide, "Hide")
-    }
-}
-impl ToyInstrumentSettings {
-    const NAME: &'static str = "Toy Instrument";
-
-    fn show(&mut self, ui: &mut eframe::egui::Ui) {
-        if !self.hide {
-            self.toy.ui(ui);
+            self.entity.ui(ui);
         }
     }
 }
@@ -392,7 +367,7 @@ impl Default for ComposerSettings {
         }
     }
 }
-impl Displaysttings {
+impl Displays for ComposerSettings {
     fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
         ui.checkbox(&mut self.hide, "Hide")
     }
@@ -574,10 +549,9 @@ struct WidgetExplorer {
     wiggler: WigglerSettings,
     time_domain: TimeDomainSettings,
     frequency_domain: FrequencyDomainSettings,
-    toy_synth: ToySynthSettings,
-    toy_controller: ToyControllerSettings,
-    toy_effect: ToyEffectSettings,
-    toy_instrument: ToyInstrumentSettings,
+    simple_instrument: SimpleInstrumentSettings,
+    simple_controller: SimpleControllerSettings,
+    simple_effect: SimpleEffectSettings,
 }
 impl WidgetExplorer {
     pub const NAME: &'static str = "Widget Explorer";
@@ -594,10 +568,9 @@ impl WidgetExplorer {
             wiggler: Default::default(),
             time_domain: Default::default(),
             frequency_domain: Default::default(),
-            toy_synth: Default::default(),
-            toy_controller: Default::default(),
-            toy_effect: Default::default(),
-            toy_instrument: Default::default(),
+            simple_instrument: Default::default(),
+            simple_controller: Default::default(),
+            simple_effect: Default::default(),
         }
     }
 
@@ -629,13 +602,14 @@ impl WidgetExplorer {
                 self.note_sequencer.ui(ui)
             });
 
-            Self::wrap_settings(ToySynthSettings::NAME, ui, |ui| self.toy_synth.ui(ui));
-            Self::wrap_settings(ToyControllerSettings::NAME, ui, |ui| {
-                self.toy_controller.ui(ui)
+            Self::wrap_settings(SimpleInstrumentSettings::NAME, ui, |ui| {
+                self.simple_instrument.ui(ui)
             });
-            Self::wrap_settings(ToyEffectSettings::NAME, ui, |ui| self.toy_effect.ui(ui));
-            Self::wrap_settings(ToyInstrumentSettings::NAME, ui, |ui| {
-                self.toy_instrument.ui(ui)
+            Self::wrap_settings(SimpleControllerSettings::NAME, ui, |ui| {
+                self.simple_controller.ui(ui)
+            });
+            Self::wrap_settings(SimpleEffectSettings::NAME, ui, |ui| {
+                self.simple_effect.ui(ui)
             });
 
             Self::wrap_settings(TitleBarSettings::NAME, ui, |ui| self.title_bar.ui(ui));
@@ -708,13 +682,14 @@ impl WidgetExplorer {
                 self.note_sequencer.show(ui)
             });
 
-            Self::wrap_item(ToySynthSettings::NAME, ui, |ui| self.toy_synth.show(ui));
-            Self::wrap_item(ToyControllerSettings::NAME, ui, |ui| {
-                self.toy_controller.show(ui)
+            Self::wrap_item(SimpleInstrumentSettings::NAME, ui, |ui| {
+                self.simple_instrument.show(ui)
             });
-            Self::wrap_item(ToyEffectSettings::NAME, ui, |ui| self.toy_effect.show(ui));
-            Self::wrap_item(ToyInstrumentSettings::NAME, ui, |ui| {
-                self.toy_instrument.show(ui)
+            Self::wrap_item(SimpleControllerSettings::NAME, ui, |ui| {
+                self.simple_controller.show(ui)
+            });
+            Self::wrap_item(SimpleEffectSettings::NAME, ui, |ui| {
+                self.simple_effect.show(ui)
             });
 
             Self::wrap_item(TitleBarSettings::NAME, ui, |ui| self.title_bar.show(ui));

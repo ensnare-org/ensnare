@@ -1,7 +1,7 @@
 // Copyright (c) 2024 Mike Tsao
 
 use crate::settings::SettingsEvent;
-use crossbeam_channel::{Receiver, Select, Sender};
+use crossbeam::channel::{Receiver, Select, Sender};
 use ensnare::prelude::*;
 use ensnare_services::{prelude::*, ProjectService, ProjectServiceEvent, ProjectServiceInput};
 use thiserror::Error;

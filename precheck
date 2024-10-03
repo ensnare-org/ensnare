@@ -25,8 +25,13 @@ cargo doc \
     --no-deps --workspace --document-private-items \
     --examples --features="std hound"
 
-# build. `cargo test` should do this, but it will fail
-cargo build --examples
+# build examples. `cargo test` should do this, but it will fail
+cargo build --example minidaw --features="std egui egui_extras ensnare-services/audio ensnare-services/midi" || exit
+cargo build --example hello-world --features="std hound egui_extras" || exit
+cargo build --example widget-explorer --features="std hound egui_extras" || exit
+for e in pocket-calculator entity-gui-explorer render subtractive-patch-converter; do
+    cargo build --example $e || exit
+done
 
 # build and test
 cargo test --workspace 

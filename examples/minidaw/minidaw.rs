@@ -7,7 +7,7 @@ use crate::{
     menu::{MenuBar, MenuBarAction},
     settings::Settings,
 };
-use crossbeam_channel::{Select, Sender};
+use crossbeam::channel::{Select, Sender};
 use eframe::{
     egui::{CentralPanel, Context, Layout, Modifiers, TopBottomPanel, Ui, WidgetText},
     emath::{Align, Align2},

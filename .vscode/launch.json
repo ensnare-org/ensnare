@@ -78,6 +78,25 @@
             },
             "args": [],
             "cwd": "${workspaceFolder}"
-        }
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug MiniDAW",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--example=minidaw",
+                    "--package=ensnare",
+                    "--features=std,egui,egui_extras,ensnare-services/audio,ensnare-services/midi"
+                ],
+                "filter": {
+                    "name": "minidaw",
+                    "kind": "example"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
     ]
 }
