@@ -1,9 +1,7 @@
 // Copyright (c) 2024 Mike Tsao
 
 use ensnare::{
-    cores::LfoControllerCoreBuilder,
-    entities::{LfoController, SimpleEntities},
-    prelude::*,
+    cores::LfoControllerCoreBuilder, entities::LfoController, prelude::*,
     util::init_sample_libraries,
 };
 

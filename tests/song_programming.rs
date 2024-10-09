@@ -3,7 +3,7 @@
 use ensnare::{
     entities::{BiQuadFilterLowPass24db, Drumkit, Reverb, SubtractiveSynth},
     prelude::*,
-    util::{init_sample_libraries, Paths},
+    util::init_sample_libraries,
 };
 
 fn set_up_drum_track(project: &mut Project, factory: &EntityFactory<dyn Entity>) {

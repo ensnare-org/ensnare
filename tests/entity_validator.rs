@@ -1,9 +1,6 @@
 // Copyright (c) 2024 Mike Tsao
 
-use ensnare::{
-    prelude::*,
-    util::{init_sample_libraries, Paths},
-};
+use ensnare::{prelude::*, util::init_sample_libraries};
 
 #[test]
 fn entity_validator_production_entities() {

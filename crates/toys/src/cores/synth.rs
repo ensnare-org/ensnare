@@ -193,7 +193,6 @@ impl ToySynthCore {
 mod tests {
     use super::*;
     use crate::cores::tests::{check_instrument, GeneratesStereoSampleAndHandlesMidi};
-    use ensnare::elements::OscillatorBuilder;
 
     #[test]
     fn toy_synth_control() {

@@ -1,10 +1,6 @@
 // Copyright (c) 2024 Mike Tsao
 
-use ensnare::{
-    entities::Gain,
-    prelude::*,
-    util::{init_sample_libraries, Paths},
-};
+use ensnare::{entities::Gain, prelude::*, util::init_sample_libraries};
 
 // Demonstrates sidechaining (which could be considered a kind of automation,
 // but it's important enough to put top-level and make sure it's a good

@@ -8,7 +8,7 @@ use eframe::egui::Frame;
 use ensnare::{
     egui::{AudioSettingsWidget, MidiSettingsWidget},
     prelude::*,
-    types::{CrossbeamChannel, MidiPortDescriptor},
+    types::MidiPortDescriptor,
     util::{AudioSettings, MidiSettings},
 };
 use ensnare_services::prelude::*;

@@ -3,7 +3,7 @@
 use ensnare::{
     entities::{Drumkit, Gain, Reverb},
     prelude::*,
-    util::{init_sample_libraries, Paths},
+    util::init_sample_libraries,
 };
 
 #[test]

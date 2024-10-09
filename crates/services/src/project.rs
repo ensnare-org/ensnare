@@ -6,12 +6,7 @@ use crossbeam_channel::{Receiver, Sender};
 use eframe::egui::Key;
 #[cfg(feature = "egui")]
 use egui::KeyHandler;
-use ensnare::{
-    orchestration::{AudioSenderFn, ProjectTitle},
-    prelude::*,
-    types::VisualizationQueue,
-    Project,
-};
+use ensnare::{orchestration::AudioSenderFn, prelude::*, types::VisualizationQueue};
 use std::{
     path::PathBuf,
     sync::{Arc, RwLock},

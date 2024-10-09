@@ -24,7 +24,6 @@ use ensnare::{
     },
     orchestration::AudioSenderFn,
     prelude::*,
-    traits::DisplaysAction,
     types::BoundedCrossbeamChannel,
 };
 use ensnare_services::{prelude::*, AudioStereoSampleType};
