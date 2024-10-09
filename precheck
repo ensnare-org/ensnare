@@ -29,7 +29,7 @@ cargo doc \
 cargo build --example minidaw --features="std egui egui_extras ensnare-services/audio ensnare-services/midi" || exit
 cargo build --example hello-world --features="std hound egui_extras" || exit
 cargo build --example widget-explorer --features="std hound egui_extras" || exit
-for e in pocket-calculator entity-gui-explorer render subtractive-patch-converter; do
+for e in pocket-calculator entity-gui-explorer render-project subtractive-patch-converter; do
     cargo build --example $e || exit
 done
 
