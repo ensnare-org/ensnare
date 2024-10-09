@@ -4,7 +4,7 @@
 
 use core::fmt::Debug;
 use crossbeam::channel::Select;
-use ensnare::{prelude::*, types::MidiPortDescriptor};
+use ensnare::{prelude::*, types::MidiPortDescriptor, util::MidiUtils};
 use midir::{
     MidiInput, MidiInputConnection, MidiInputPort, MidiOutput, MidiOutputConnection, MidiOutputPort,
 };
@@ -177,6 +177,10 @@ impl MidiService {
                                         sender.try_send(MidiServiceEvent::InputPortSelected(None));
                                 }
                                 MidiInServiceEvent::Midi(channel, message) => {
+                                    let message =
+                                        MidiUtils::substitute_note_off_for_note_on_vel_zero(
+                                            message,
+                                        );
                                     let _ =
                                         sender.try_send(MidiServiceEvent::Midi(channel, message));
                                 }

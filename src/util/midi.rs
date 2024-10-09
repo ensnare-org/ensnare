@@ -25,6 +25,25 @@ impl MidiUtils {
             vel: u7::from(vel),
         }
     }
+
+    /// If the given message is a note-on velocity-zero MIDI message, translates
+    /// it to a plain note-off message. Otherwise passes through the given
+    /// message.
+    ///
+    /// Some MIDI controllers never send a MIDI note-off message (9c nn 00),
+    /// instead sending a MIDI note-on message (8c nn vv channel/note/velocity)
+    /// with velocity zero. This requires MIDI message handlers to handle two
+    /// paths for the same note-off case. This code unites both paths, so
+    /// handlers can be simpler.
+    pub fn substitute_note_off_for_note_on_vel_zero(message: MidiMessage) -> MidiMessage {
+        match message {
+            MidiMessage::NoteOn { key, vel } if vel == 0 => MidiMessage::NoteOff {
+                key,
+                vel: u7::from(0),
+            },
+            _ => message,
+        }
+    }
 }
 
 /// [MidiNoteMinder] watches a MIDI message stream and remembers which notes are
@@ -185,5 +204,20 @@ pub mod tests {
             &mut |_, _| {},
         );
         assert!(gather_all_messages(&mut mnm).is_empty());
+    }
+
+    #[test]
+    fn midi_substitution_works() {
+        {
+            let m = MidiUtils::new_note_on(12, 34);
+            assert_eq!(m, MidiUtils::substitute_note_off_for_note_on_vel_zero(m));
+        }
+        {
+            let m = MidiUtils::new_note_on(12, 0);
+            assert_eq!(
+                MidiUtils::new_note_off(12, 0),
+                MidiUtils::substitute_note_off_for_note_on_vel_zero(m)
+            );
+        }
     }
 }
