@@ -21,6 +21,7 @@ pub mod prelude {
 #[cfg(feature = "std")]
 pub use version::app_version;
 pub use {
+    automation::Automator,
     composition::Composer,
     orchestration::{BasicProject, Orchestrator, Project},
 };
