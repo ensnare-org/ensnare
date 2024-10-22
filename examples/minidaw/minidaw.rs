@@ -381,7 +381,7 @@ impl MiniDaw {
                                         title,
                                         load_path.display().to_string()
                                     ))
-                                    .set_duration(Some(Duration::from_secs(2)));
+                                    .duration(Some(Duration::from_secs(2)));
                             }
                         }
                         self.project = Some(Arc::clone(&new_project));
@@ -393,29 +393,29 @@ impl MiniDaw {
                     ProjectServiceEvent::LoadFailed(path, e) => {
                         self.toasts
                             .error(format!("Error loading from {path:?}: {e:?}").to_string())
-                            .set_duration(Some(Duration::from_secs(5)));
+                            .duration(Some(Duration::from_secs(5)));
                     }
                     ProjectServiceEvent::Saved(save_path) => {
                         // TODO: this should happen only if the save operation was
                         // explicit. Autosaves should be invisible.
                         self.toasts
                             .success(format!("Saved to {}", save_path.display()).to_string())
-                            .set_duration(Some(Duration::from_secs(2)));
+                            .duration(Some(Duration::from_secs(2)));
                     }
                     ProjectServiceEvent::SaveFailed(e) => {
                         self.toasts
                             .error(format!("Error saving {}", e).to_string())
-                            .set_duration(Some(Duration::from_secs(5)));
+                            .duration(Some(Duration::from_secs(5)));
                     }
                     ProjectServiceEvent::Exported(export_path) => {
                         self.toasts
                             .success(format!("Exported to {}", export_path.display()).to_string())
-                            .set_duration(Some(Duration::from_secs(2)));
+                            .duration(Some(Duration::from_secs(2)));
                     }
                     ProjectServiceEvent::ExportFailed(e) => {
                         self.toasts
                             .error(format!("Error exporting {}", e).to_string())
-                            .set_duration(Some(Duration::from_secs(5)));
+                            .duration(Some(Duration::from_secs(5)));
                     }
                     ProjectServiceEvent::Midi(..) => {
                         panic!("ProjectServiceEvent::Midi should be handled by the aggregation service and never forwarded")

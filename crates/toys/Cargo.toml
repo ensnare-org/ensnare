@@ -14,7 +14,7 @@ repository.workspace = true
 [dependencies]
 anyhow = "1.0.79"
 delegate = "0.12"
-eframe = "0.28"
+eframe = "0.29"
 ensnare = { version = "0.0.3", path = "../..", features = ["egui"] }
 ensnare-proc-macros = { path = "../proc-macros" }
 serde = { version = "1.0.193", features = ["derive"] }

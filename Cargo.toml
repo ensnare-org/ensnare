@@ -40,8 +40,8 @@ delegate = "0.12.0"
 derivative = { version = "2.2.0", features = ["use_core"] }
 derive_builder = "0.20.0"
 derive_more = "0.99.17"
-eframe = { version = "0.28", optional = true }
-egui_extras = { version = "0.28", features = ["image"], optional = true }
+eframe = { version = "0.29", optional = true }
+egui_extras = { version = "0.29", features = ["image"], optional = true }
 ensnare-proc-macros = { version = "0.0.8", path = "crates/proc-macros" }
 getrandom = { version = "0.2.12", features = [] }
 hound = { version = "3.5", optional = true }
@@ -64,12 +64,12 @@ typetag = "0.2.16"
 
 [dev-dependencies]
 clap = { version = "4.5.4", features = ["derive"] }
-egui_dock = "0.13.0"
-egui_extras_xt = { git = "https://github.com/xTibor/egui_extras_xt/", features = [
+egui_dock = "0.14.0"
+egui_extras_xt = { git = "https://github.com/sowbug/egui_extras_xt/", features = [
     "knobs",
     "displays",
 ] }
-egui-notify = "0.15.0"
+egui-notify = "0.17.0"
 ensnare-services = { version = "0.0", path = "crates/services" }
 env_logger = "0.10"
 float-cmp = "0.9.0"

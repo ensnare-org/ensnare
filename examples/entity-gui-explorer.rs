@@ -7,7 +7,7 @@
 
 use anyhow::anyhow;
 use eframe::{
-    egui::{self, warn_if_debug_build, CollapsingHeader, Layout, ScrollArea, Style},
+    egui::{self, warn_if_debug_build, CollapsingHeader, Layout, ScrollArea},
     emath::Align,
     CreationContext,
 };
@@ -94,11 +94,7 @@ impl EntityGuiExplorer {
                 .on_hover_text("Show structure of the ui when you hover with the mouse");
             ui.ctx().set_debug_on_hover(debug_on_hover);
         }
-        let style: Style = (*ui.ctx().style()).clone();
-        let new_visuals = style.visuals.light_dark_small_toggle_button(ui);
-        if let Some(visuals) = new_visuals {
-            ui.ctx().set_visuals(visuals);
-        }
+        egui::widgets::global_theme_preference_switch(ui);
     }
 
     fn show_right(&mut self, ui: &mut eframe::egui::Ui) {
