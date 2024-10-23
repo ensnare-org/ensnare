@@ -9,9 +9,10 @@ pub struct SimpleEntities {}
 impl CollectsEntities for SimpleEntities {
     #[must_use]
     fn register(mut factory: EntityFactory<dyn Entity>) -> EntityFactory<dyn Entity> {
-        factory.register_entity_with_str_key(SimpleControllerOneNoteOneMeasure::ENTITY_KEY, |_uid| {
-            Box::new(SimpleControllerOneNoteOneMeasure::default())
-        });
+        factory
+            .register_entity_with_str_key(SimpleControllerOneNoteOneMeasure::ENTITY_KEY, |_uid| {
+                Box::new(SimpleControllerOneNoteOneMeasure::default())
+            });
         factory.register_entity_with_str_key(SimpleEffect::ENTITY_KEY, |_uid| {
             Box::new(SimpleEffect::default())
         });

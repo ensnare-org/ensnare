@@ -87,7 +87,7 @@ impl<'a> eframe::egui::Widget for SubtractiveSynthWidget<'a> {
 
         response |= CollapsingHeader::new("Oscillator 1")
             .default_open(true)
-            .id_source(ui.next_auto_id())
+            .id_salt(ui.next_auto_id())
             .show_unindented(ui, |ui| {
                 if ui
                     .add(OscillatorWidget::widget(&mut self.inner.oscillator_1))
@@ -99,7 +99,7 @@ impl<'a> eframe::egui::Widget for SubtractiveSynthWidget<'a> {
             .header_response;
         response |= CollapsingHeader::new("Oscillator 2")
             .default_open(true)
-            .id_source(ui.next_auto_id())
+            .id_salt(ui.next_auto_id())
             .show_unindented(ui, |ui| {
                 if ui
                     .add(OscillatorWidget::widget(&mut self.inner.oscillator_2))
@@ -119,7 +119,7 @@ impl<'a> eframe::egui::Widget for SubtractiveSynthWidget<'a> {
 
         if let Some(lfo_response) = CollapsingHeader::new("LFO")
             .default_open(true)
-            .id_source(ui.next_auto_id())
+            .id_salt(ui.next_auto_id())
             .show_unindented(ui, |ui| {
                 ui.add(LfoWidget::widget(&mut self.inner.lfo))
                     | ui.add(EnumComboBoxWidget::new(
@@ -134,7 +134,7 @@ impl<'a> eframe::egui::Widget for SubtractiveSynthWidget<'a> {
 
         response |= CollapsingHeader::new("DCA")
             .default_open(true)
-            .id_source(ui.next_auto_id())
+            .id_salt(ui.next_auto_id())
             .show_unindented(ui, |ui| {
                 let mut action = None;
                 if ui
@@ -157,7 +157,7 @@ impl<'a> eframe::egui::Widget for SubtractiveSynthWidget<'a> {
             .header_response;
         response |= CollapsingHeader::new("Amplitude")
             .default_open(true)
-            .id_source(ui.next_auto_id())
+            .id_salt(ui.next_auto_id())
             .show_unindented(ui, |ui| {
                 if ui
                     .add(EnvelopeWidget::widget(&mut self.inner.amp_envelope))
@@ -169,7 +169,7 @@ impl<'a> eframe::egui::Widget for SubtractiveSynthWidget<'a> {
             .header_response;
         response |= CollapsingHeader::new("Low-Pass Filter")
             .default_open(true)
-            .id_source(ui.next_auto_id())
+            .id_salt(ui.next_auto_id())
             .show_unindented(ui, |ui| {
                 let mut action = None;
                 if ui

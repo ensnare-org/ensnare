@@ -49,7 +49,7 @@ impl<'a> eframe::egui::Widget for ProjectWidget<'a> {
 
         // Create a scrolling area for all the tracks.
         eframe::egui::ScrollArea::vertical()
-            .id_source("orchestrator-scroller")
+            .id_salt("orchestrator-scroller")
             .show(ui, |ui| {
                 let track_uids = self.project.orchestrator.track_uids().to_vec();
                 for track_uid in track_uids {

@@ -13,19 +13,16 @@
 //! * *Easiest, but least control*: Use a [Project] to describe a musical
 //! composition and arrangement, then render the song with the
 //! [StereoSample](types::StereoSample) iterator obtained from
-//! [BasicProject::render()](crate::traits::Projects::)
-//! iterator until you have rendered the entire song.
-//!
-//! Another approach is to instantiate [Composer] for expressing a musical
-//! composition, [Automator] for automating control events, and [Orchestrator]
-//! for arranging musical instruments and effects into tracks, and then bringing
-//! them together in the main loop.
-//!
-//! For even more control, you can create individual [entities](crate::entities)
-//! and assemble them as you need.
-//!
-//! Finally, you can use the bare musical [cores](crate::cores) and obtain
-//! digital audio samples directly from them.
+//! [Projects::render()](crate::orchestration::Projects::render()) iterator
+//! until you have rendered the entire song.
+//! * *For more control over the main loop*: Use [Composer] for expressing a
+//! musical composition, [Automator] for automating control events, and
+//! [Orchestrator] for arranging musical instruments and effects into tracks,
+//! and then bring them together in your own main loop.
+//! * *Even more control*: Create individual [entities] and assemble them as you
+//! need.
+//! * *Maximum control, fewest batteries included*: Use bare musical [cores] and
+//! obtain digital audio samples directly from them.
 
 /// A collection of imports that are useful to users of this crate. `use
 /// ensnare::prelude::*;` for easier onboarding.

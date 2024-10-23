@@ -14,7 +14,7 @@ use crate::{
     types::ColorScheme,
 };
 use eframe::{
-    egui::{Frame, Image, ImageButton, Margin, Sense, TextFormat, Widget},
+    egui::{Frame, Image, ImageButton, Margin, Sense, TextFormat, UiBuilder, Widget},
     emath::{Align, RectTransform},
     epaint::{
         text::LayoutJob, vec2, Color32, FontId, Galley, Rect, Shape, Stroke, TextShape, Vec2,
@@ -306,7 +306,7 @@ impl<'a> Widget for TrackWidget<'a> {
 
                             // The Grid is always disabled and drawn first.
                             let _ = ui.add_enabled_ui(false, |ui| {
-                                ui.allocate_ui_at_rect(rect, |ui| {
+                                ui.allocate_new_ui(UiBuilder::new().max_rect(rect), |ui| {
                                     ui.add(GridWidget::widget(
                                         temp_range.clone(),
                                         self.project.view_state.view_range.clone(),
@@ -326,7 +326,7 @@ impl<'a> Widget for TrackWidget<'a> {
                             {
                                 TrackViewMode::Composition => {
                                     ui.add_enabled_ui(true, |ui| {
-                                        ui.allocate_ui_at_rect(rect, |ui| {
+                                        ui.allocate_new_ui(UiBuilder::new().max_rect(rect), |ui| {
                                             let mut action = None;
                                             ui.add(ArrangementWidget::widget(
                                                 self.track_info.track_uid,
@@ -381,7 +381,7 @@ impl<'a> Widget for TrackWidget<'a> {
                                 }
                                 TrackViewMode::Control(path_uid) => {
                                     ui.add_enabled_ui(true, |ui| {
-                                        ui.allocate_ui_at_rect(rect, |ui| {
+                                        ui.allocate_new_ui(UiBuilder::new().max_rect(rect), |ui| {
                                             if let Some(signal_path) = self
                                                 .project
                                                 .automator
@@ -431,7 +431,7 @@ impl<'a> Widget for TrackWidget<'a> {
                             if let Some(position) = self.project.view_state.cursor {
                                 if self.project.view_state.view_range.0.contains(&position) {
                                     let _ = ui
-                                        .allocate_ui_at_rect(rect, |ui| {
+                                        .allocate_new_ui(UiBuilder::new().max_rect(rect), |ui| {
                                             ui.add(CursorWidget::widget(
                                                 position,
                                                 self.project.view_state.view_range.clone(),
@@ -446,7 +446,7 @@ impl<'a> Widget for TrackWidget<'a> {
                                 let time = MusicalTime::new_with_units(time_pos.x as usize);
                                 if self.project.view_state.view_range.0.contains(&time) {
                                     let _ = ui
-                                        .allocate_ui_at_rect(rect, |ui| {
+                                        .allocate_new_ui(UiBuilder::new().max_rect(rect), |ui| {
                                             ui.add(CursorWidget::widget(
                                                 time,
                                                 self.project.view_state.view_range.clone(),

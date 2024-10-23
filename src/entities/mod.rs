@@ -39,7 +39,9 @@
 /// The most commonly used imports.
 pub mod prelude {
     #[cfg(feature = "simple")]
-    pub use super::{SimpleControllerOneNoteOneMeasure, SimpleEffect, SimpleEntities, SimpleInstrumentDrone};
+    pub use super::{
+        SimpleControllerOneNoteOneMeasure, SimpleEffect, SimpleEntities, SimpleInstrumentDrone,
+    };
 
     #[cfg(test)]
     pub use super::{

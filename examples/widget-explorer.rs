@@ -10,7 +10,7 @@ use derivative::Derivative;
 use eframe::{
     egui::{
         self, warn_if_debug_build, CollapsingHeader, DragValue, Frame, Id, Layout, ScrollArea,
-        Slider, Style, Ui, ViewportBuilder, Widget,
+        Slider, Ui, ViewportBuilder, Widget,
     },
     emath::Align,
     epaint::{vec2, Galley},
@@ -258,18 +258,18 @@ impl NoteSequencerSettings {
 
 #[derive(Debug, Derivative)]
 #[derivative(Default)]
-struct SimpleInstrumentSettings {
+struct SimpleInstrumentDroneSettings {
     hide: bool,
-    #[derivative(Default(value = "SimpleInstrument::default()"))]
+    #[derivative(Default(value = "SimpleInstrumentDrone::default()"))]
     entity: SimpleInstrumentDrone,
 }
-impl Displays for SimpleInstrumentSettings {
+impl Displays for SimpleInstrumentDroneSettings {
     fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
         ui.checkbox(&mut self.hide, "Hide")
     }
 }
-impl SimpleInstrumentSettings {
-    const NAME: &'static str = "SimpleInstrument";
+impl SimpleInstrumentDroneSettings {
+    const NAME: &'static str = "SimpleInstrumentDrone";
 
     fn show(&mut self, ui: &mut eframe::egui::Ui) {
         if !self.hide {
@@ -550,7 +550,7 @@ struct WidgetExplorer {
     wiggler: WigglerSettings,
     time_domain: TimeDomainSettings,
     frequency_domain: FrequencyDomainSettings,
-    simple_instrument: SimpleInstrumentSettings,
+    simple_instrument: SimpleInstrumentDroneSettings,
     simple_controller: SimpleControllerSettings,
     simple_effect: SimpleEffectSettings,
 }
@@ -603,7 +603,7 @@ impl WidgetExplorer {
                 self.note_sequencer.ui(ui)
             });
 
-            Self::wrap_settings(SimpleInstrumentSettings::NAME, ui, |ui| {
+            Self::wrap_settings(SimpleInstrumentDroneSettings::NAME, ui, |ui| {
                 self.simple_instrument.ui(ui)
             });
             Self::wrap_settings(SimpleControllerSettings::NAME, ui, |ui| {
@@ -679,7 +679,7 @@ impl WidgetExplorer {
                 self.note_sequencer.show(ui)
             });
 
-            Self::wrap_item(SimpleInstrumentSettings::NAME, ui, |ui| {
+            Self::wrap_item(SimpleInstrumentDroneSettings::NAME, ui, |ui| {
                 self.simple_instrument.show(ui)
             });
             Self::wrap_item(SimpleControllerSettings::NAME, ui, |ui| {
