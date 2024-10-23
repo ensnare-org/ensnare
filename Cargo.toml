@@ -110,6 +110,16 @@ name = "hello-world"
 required-features = ["std", "hound"]
 
 [[example]]
+name = "minidaw"
+required-features = [
+    "std",
+    "egui",
+    "egui_extras",
+    "ensnare-services/audio",
+    "ensnare-services/midi",
+]
+
+[[example]]
 name = "oscillator"
 required-features = ["std", "hound"]
 
@@ -122,18 +132,12 @@ name = "render-project"
 required-features = ["std"]
 
 [[example]]
-name = "widget-explorer"
-required-features = ["std", "hound", "egui_extras"]
+name = "subtractive-patch-explorer"
+required-features = ["std", "hound"]
 
 [[example]]
-name = "minidaw"
-required-features = [
-    "std",
-    "egui",
-    "egui_extras",
-    "ensnare-services/audio",
-    "ensnare-services/midi",
-]
+name = "widget-explorer"
+required-features = ["std", "hound", "egui_extras"]
 
 [package.metadata.cross.target.aarch64-unknown-linux-gnu]
 pre-build = [

@@ -56,23 +56,22 @@ fn main() -> anyhow::Result<()> {
     // an example of an Instrument.
     //
     // An Effect processes audio. A reverb or delay is an example of an Effect.
+
+    // SimpleController controls the playback length of this project. It is
+    // hard-coded to last one musical measure. During that measure, it emits
+    // hardcoded MIDI messages.
     let _controller_id = project.add_entity(
         track_uid,
         Box::new(SimpleControllerOneNoteOneMeasure::default()),
     );
-    let _instrument_id = project.add_entity(track_uid, Box::new(SimpleInstrumentDrone::default()));
-    let _effect_id = project.add_entity(track_uid, Box::new(SimpleEffect::default()));
 
-    // The SimpleController that we added controls the playback length of this
-    // project. It is hard-coded to last one musical measure. During that
-    // measure, it emits hardcoded MIDI messages.
-    //
-    // The SimpleInstrument in this project emits a tone, ignoring MIDI and
-    // control inputs. TODO: make it more like a synth that responds to MIDI
-    // messages.
-    //
-    // The project's SimpleEffect multiplies the input by 0.5, making the audio
-    // signal quieter.
+    // SimpleInstrumentDrone emits a tone, ignoring MIDI and control inputs.
+    // TODO: make it more like a synth that responds to MIDI messages.
+    let _instrument_id = project.add_entity(track_uid, Box::new(SimpleInstrumentDrone::default()));
+
+    // SimpleEffect multiplies the input by 0.5, making the audio signal
+    // quieter.
+    let _effect_id = project.add_entity(track_uid, Box::new(SimpleEffect::default()));
 
     // At this point, everything is set up for playback. Render the project's
     // audio stream to disk.
