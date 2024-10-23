@@ -110,6 +110,10 @@ name = "hello-world"
 required-features = ["std", "hound"]
 
 [[example]]
+name = "oscillator"
+required-features = ["std", "hound"]
+
+[[example]]
 name = "pocket-calculator"
 required-features = ["std", "egui", "ensnare-services/audio"]
 

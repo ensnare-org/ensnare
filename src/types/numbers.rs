@@ -56,23 +56,21 @@ impl Sample {
     /// A [Sample] having the maximum negative value.
     pub const MIN: Sample = Sample(Self::MIN_VALUE);
 
-    /// Converts [Sample] into an i16 scaled to i16::MIN..i16::MAX, which is
-    /// slightly harder than it seems because the negative range of
-    /// two's-complement numbers is larger than the positive one.
-    pub fn into_i16(&self) -> i16 {
+    fn almost_silent(&self) -> bool {
+        self.0.abs() < 0.00001
+    }
+}
+impl From<Sample> for i16 {
+    fn from(value: Sample) -> Self {
         const MAX_AMPLITUDE: SampleType = i16::MAX as SampleType;
         const MIN_AMPLITUDE: SampleType = i16::MIN as SampleType;
-        let v = self.0;
+        let v = value.0;
 
         if v < 0.0 {
             (v.abs() * MIN_AMPLITUDE) as i16
         } else {
             (v * MAX_AMPLITUDE) as i16
         }
-    }
-
-    fn almost_silent(&self) -> bool {
-        self.0.abs() < 0.00001
     }
 }
 impl AddAssign for Sample {
@@ -209,7 +207,7 @@ impl StereoSample {
 
     /// Converts [StereoSample] into a pair of i16 scaled to i16::MIN..i16::MAX
     pub fn into_i16(&self) -> (i16, i16) {
-        (self.0.into_i16(), self.1.into_i16())
+        (self.0.into(), self.1.into())
     }
 
     // TODO - demote to pub(crate)
@@ -531,9 +529,12 @@ mod tests {
 
     #[test]
     fn convert_sample_to_i16() {
-        assert_eq!(Sample::MAX.into_i16(), i16::MAX);
-        assert_eq!(Sample::MIN.into_i16(), i16::MIN);
-        assert_eq!(Sample::SILENCE.into_i16(), 0);
+        let value: i16 = Sample::MAX.into();
+        assert_eq!(value, i16::MAX);
+        let value: i16 = Sample::MIN.into();
+        assert_eq!(value, i16::MIN);
+        let value: i16 = Sample::SILENCE.into();
+        assert_eq!(value, 0);
     }
 
     #[test]
