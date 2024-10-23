@@ -17,7 +17,7 @@ use serde::{Deserialize, Serialize};
     SkipInner,
     TransformsAudio
 )]
-pub struct SimpleController {
+pub struct SimpleControllerOneNoteOneMeasure {
     uid: Uid,
 
     #[serde(skip)]
@@ -32,7 +32,7 @@ pub struct SimpleController {
     #[serde(skip)]
     is_performing: bool,
 }
-impl SimpleController {
+impl SimpleControllerOneNoteOneMeasure {
     #[allow(missing_docs)]
     pub fn new_with(uid: Uid) -> Self {
         Self {
@@ -44,7 +44,7 @@ impl SimpleController {
         }
     }
 }
-impl Configurable for SimpleController {
+impl Configurable for SimpleControllerOneNoteOneMeasure {
     delegate! {
         to self.c {
             fn sample_rate(&self) -> SampleRate;
@@ -57,7 +57,7 @@ impl Configurable for SimpleController {
         }
     }
 }
-impl Controls for SimpleController {
+impl Controls for SimpleControllerOneNoteOneMeasure {
     fn time_range(&self) -> Option<TimeRange> {
         Some(self.time_range.clone())
     }
@@ -108,7 +108,7 @@ mod tests {
 
     #[test]
     fn simple_controller() {
-        let c = SimpleController::default();
+        let c = SimpleControllerOneNoteOneMeasure::default();
         assert!(!c.is_finished());
     }
 }

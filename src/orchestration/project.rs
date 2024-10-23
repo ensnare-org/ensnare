@@ -902,7 +902,7 @@ impl Serializable for Project {
 mod tests {
     use super::*;
     use crate::{
-        cores::SimpleAudioSourceCoreBuilder,
+        cores::SimpleConstantAudioSourceCoreBuilder,
         entities::{
             TestAudioSource, TestControllerAlwaysSendsMidiMessage, TestEffectNegatesInput,
             TestInstrumentCountsMidiMessages,
@@ -971,7 +971,7 @@ mod tests {
                 track_uid,
                 Box::new(TestAudioSource::new_with(
                     Uid::default(),
-                    SimpleAudioSourceCoreBuilder::default()
+                    SimpleConstantAudioSourceCoreBuilder::default()
                         .level(TestAudioSource::MEDIUM)
                         .build()
                         .unwrap(),
@@ -1172,7 +1172,7 @@ mod tests {
             midi_track_uid,
             Box::new(TestAudioSource::new_with(
                 Uid::default(),
-                SimpleAudioSourceCoreBuilder::default()
+                SimpleConstantAudioSourceCoreBuilder::default()
                     .level(EXPECTED_LEVEL)
                     .build()
                     .unwrap(),
@@ -1218,7 +1218,7 @@ mod tests {
             track_1_uid,
             Box::new(TestAudioSource::new_with(
                 Uid::default(),
-                SimpleAudioSourceCoreBuilder::default()
+                SimpleConstantAudioSourceCoreBuilder::default()
                     .level(EXPECTED_LEVEL)
                     .build()
                     .unwrap(),
@@ -1228,7 +1228,7 @@ mod tests {
             track_2_uid,
             Box::new(TestAudioSource::new_with(
                 Uid::default(),
-                SimpleAudioSourceCoreBuilder::default()
+                SimpleConstantAudioSourceCoreBuilder::default()
                     .level(EXPECTED_LEVEL)
                     .build()
                     .unwrap(),

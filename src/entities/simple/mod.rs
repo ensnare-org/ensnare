@@ -3,10 +3,10 @@
 //! Simple instruments, controllers, and effects. Simple entities are minimal
 //! but musically useful. Their main purpose is to facilitate development.
 
-pub use controllers::SimpleController;
+pub use controllers::SimpleControllerOneNoteOneMeasure;
 pub use effects::SimpleEffect;
 pub use factory::SimpleEntities;
-pub use instruments::SimpleInstrument;
+pub use instruments::SimpleInstrumentDrone;
 
 mod controllers;
 mod effects;

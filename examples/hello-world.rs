@@ -1,7 +1,7 @@
 // Copyright (c) 2024 Mike Tsao
 
 //! The `hello-world` example shows how to use basic crate functionality,
-//! producing a two-second WAV file consisting of white noise.
+//! producing a two-second WAV file consisting of a droning sine wave.
 
 use clap::Parser;
 use ensnare::prelude::*;
@@ -56,15 +56,18 @@ fn main() -> anyhow::Result<()> {
     // an example of an Instrument.
     //
     // An Effect processes audio. A reverb or delay is an example of an Effect.
-    let _controller_id = project.add_entity(track_uid, Box::new(SimpleController::default()));
-    let _instrument_id = project.add_entity(track_uid, Box::new(SimpleInstrument::default()));
+    let _controller_id = project.add_entity(
+        track_uid,
+        Box::new(SimpleControllerOneNoteOneMeasure::default()),
+    );
+    let _instrument_id = project.add_entity(track_uid, Box::new(SimpleInstrumentDrone::default()));
     let _effect_id = project.add_entity(track_uid, Box::new(SimpleEffect::default()));
 
     // The SimpleController that we added controls the playback length of this
     // project. It is hard-coded to last one musical measure. During that
     // measure, it emits hardcoded MIDI messages.
     //
-    // The SimpleInstrument in this project emits noise, ignoring MIDI and
+    // The SimpleInstrument in this project emits a tone, ignoring MIDI and
     // control inputs. TODO: make it more like a synth that responds to MIDI
     // messages.
     //
@@ -75,7 +78,9 @@ fn main() -> anyhow::Result<()> {
     // audio stream to disk.
     render_to_disk(
         &mut project,
-        &args.output_filename.unwrap_or("output.wav".to_string()),
+        &args
+            .output_filename
+            .unwrap_or("hello-world-output.wav".to_string()),
     )?;
 
     Ok(())

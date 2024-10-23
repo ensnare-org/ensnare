@@ -100,7 +100,7 @@ fn edit_song() {
             lead_track_uid,
             factory
                 .new_entity(
-                    &EntityKey::from(SimpleInstrument::ENTITY_KEY),
+                    &EntityKey::from(SimpleInstrumentDrone::ENTITY_KEY),
                     Uid::default(),
                 )
                 .unwrap(),
@@ -114,7 +114,7 @@ fn edit_song() {
             lead_track_uid,
             factory
                 .new_entity(
-                    &EntityKey::from(SimpleInstrument::ENTITY_KEY),
+                    &EntityKey::from(SimpleInstrumentDrone::ENTITY_KEY),
                     Uid::default(),
                 )
                 .unwrap(),

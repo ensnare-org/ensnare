@@ -71,7 +71,7 @@ fn aux_bus() {
                 track_uid_1,
                 factory
                     .new_entity(
-                        &EntityKey::from(SimpleInstrument::ENTITY_KEY),
+                        &EntityKey::from(SimpleInstrumentDrone::ENTITY_KEY),
                         Uid::default(),
                     )
                     .unwrap(),
@@ -96,7 +96,7 @@ fn aux_bus() {
                 track_uid_2,
                 factory
                     .new_entity(
-                        &EntityKey::from(SimpleInstrument::ENTITY_KEY),
+                        &EntityKey::from(SimpleInstrumentDrone::ENTITY_KEY),
                         Uid::default(),
                     )
                     .unwrap(),

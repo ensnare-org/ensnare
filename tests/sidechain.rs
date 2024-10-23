@@ -66,7 +66,7 @@ fn demo_sidechaining() {
             sidechain_track_uid,
             factory
                 .new_entity(
-                    &EntityKey::from(SimpleInstrument::ENTITY_KEY),
+                    &EntityKey::from(SimpleInstrumentDrone::ENTITY_KEY),
                     Uid::default(),
                 )
                 .unwrap(),
@@ -112,7 +112,7 @@ fn demo_sidechaining() {
             lead_track_uid,
             factory
                 .new_entity(
-                    &EntityKey::from(SimpleInstrument::ENTITY_KEY),
+                    &EntityKey::from(SimpleInstrumentDrone::ENTITY_KEY),
                     Uid::default(),
                 )
                 .unwrap(),

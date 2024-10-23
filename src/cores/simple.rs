@@ -60,10 +60,13 @@ impl Configurable for SimpleEffectHalfCore {}
 
 /// Produces a constant audio signal. Used for ensuring that a known signal
 /// value gets all the way through the pipeline.
+///
+/// Note that audible sound consists of fluctuations in audio level, so anything
+/// this core produces will be inaudible.
 #[derive(Clone, Builder, Debug, Default, Control, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 #[builder(default)]
-pub struct SimpleAudioSourceCore {
+pub struct SimpleConstantAudioSourceCore {
     /// The value of the constant audio signal.
     // This should be a Normal, but we use this audio source for testing edge
     // conditions. Thus we need to let it go out of range.
@@ -74,14 +77,14 @@ pub struct SimpleAudioSourceCore {
     #[builder(setter(skip))]
     c: Configurables,
 }
-impl Generates<StereoSample> for SimpleAudioSourceCore {
+impl Generates<StereoSample> for SimpleConstantAudioSourceCore {
     fn generate(&mut self, values: &mut [StereoSample]) -> bool {
         let s = StereoSample::from(self.level);
         values.fill(s);
         self.level != 0.0
     }
 }
-impl Configurable for SimpleAudioSourceCore {
+impl Configurable for SimpleConstantAudioSourceCore {
     delegate! {
         to self.c {
             fn sample_rate(&self) -> SampleRate;
@@ -93,7 +96,7 @@ impl Configurable for SimpleAudioSourceCore {
         }
     }
 }
-impl SimpleAudioSourceCore {
+impl SimpleConstantAudioSourceCore {
     /// Higher than maximum valid positive value.
     pub const TOO_LOUD: SampleType = 1.1;
     /// Maximum valid positive value.
@@ -165,6 +168,67 @@ impl Configurable for SimpleNoisyAudioSourceCore {
     }
 }
 impl SimpleNoisyAudioSourceCore {
+    #[allow(missing_docs)]
+    pub fn notify_change_dca(&mut self) {}
+}
+
+/// Produces a default waveform (sine wave, 440Hz, defaults inherited from
+/// [Waveform] and [FrequencyHz]).
+#[derive(Builder, Debug, Default, Control, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+#[builder(default)]
+pub struct SimpleOscillatorCore {
+    #[serde(skip)]
+    #[builder(setter(skip))]
+    c: Configurables,
+
+    /// The oscillator.
+    oscillator: Oscillator,
+
+    #[serde(skip)]
+    #[builder(setter(skip))]
+    oscillator_buffer: GenerationBuffer<BipolarNormal>,
+
+    #[serde(skip)]
+    #[builder(setter(skip))]
+    mono_buffer: GenerationBuffer<Sample>,
+
+    /// DCA
+    #[control]
+    dca: Dca,
+}
+impl Generates<StereoSample> for SimpleOscillatorCore {
+    fn generate(&mut self, values: &mut [StereoSample]) -> bool {
+        self.oscillator_buffer.resize(values.len());
+        self.mono_buffer.resize(values.len());
+        self.oscillator
+            .generate(self.oscillator_buffer.buffer_mut());
+        for (src, dst) in self
+            .oscillator_buffer
+            .buffer()
+            .iter()
+            .zip(self.mono_buffer.buffer_mut().iter_mut())
+        {
+            *dst = (*src).into();
+        }
+        self.dca
+            .transform_batch_to_stereo(self.mono_buffer.buffer(), values);
+        true
+    }
+}
+impl Configurable for SimpleOscillatorCore {
+    delegate! {
+        to self.c {
+            fn sample_rate(&self) -> SampleRate;
+            fn update_sample_rate(&mut self, sample_rate: SampleRate);
+            fn tempo(&self) -> Tempo;
+            fn update_tempo(&mut self, tempo: Tempo);
+            fn time_signature(&self) -> TimeSignature;
+            fn update_time_signature(&mut self, time_signature: TimeSignature);
+        }
+    }
+}
+impl SimpleOscillatorCore {
     #[allow(missing_docs)]
     pub fn notify_change_dca(&mut self) {}
 }

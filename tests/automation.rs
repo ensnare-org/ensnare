@@ -46,7 +46,7 @@ fn demo_automation() {
             track_uid,
             factory
                 .new_entity(
-                    &EntityKey::from(SimpleInstrument::ENTITY_KEY),
+                    &EntityKey::from(SimpleInstrumentDrone::ENTITY_KEY),
                     Uid::default(),
                 )
                 .unwrap(),
@@ -72,7 +72,7 @@ fn demo_automation() {
         // happen.
         factory
             .new_entity(
-                &EntityKey::from(SimpleInstrument::ENTITY_KEY),
+                &EntityKey::from(SimpleInstrumentDrone::ENTITY_KEY),
                 Uid::default(),
             )
             .unwrap()
@@ -124,7 +124,7 @@ fn demo_signal_path_automation() {
     // parameter we want to control.
     let entity = factory
         .new_entity(
-            &EntityKey::from(SimpleInstrument::ENTITY_KEY),
+            &EntityKey::from(SimpleInstrumentDrone::ENTITY_KEY),
             Uid::default(),
         )
         .unwrap();

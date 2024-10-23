@@ -1,7 +1,7 @@
 // Copyright (c) 2024 Mike Tsao
 
 use crate::{
-    cores::{SimpleNoisyAudioSourceCore, SimpleNoisyAudioSourceCoreBuilder},
+    cores::{SimpleOscillatorCore, SimpleOscillatorCoreBuilder},
     prelude::*,
 };
 use ensnare_proc_macros::{
@@ -9,7 +9,8 @@ use ensnare_proc_macros::{
 };
 use serde::{Deserialize, Serialize};
 
-/// An instrument that produces a constant audio signal.
+/// An instrument that produces a simple audio signal but doesn't respond to
+/// MIDI events.
 #[derive(
     Debug,
     Default,
@@ -22,20 +23,18 @@ use serde::{Deserialize, Serialize};
     Serialize,
 )]
 #[entity(Controls, Displays, TransformsAudio)]
-pub struct SimpleInstrument {
+pub struct SimpleInstrumentDrone {
     uid: Uid,
-    inner: SimpleNoisyAudioSourceCore,
+    inner: SimpleOscillatorCore,
 }
-impl SimpleInstrument {
+impl SimpleInstrumentDrone {
     #[allow(missing_docs)]
     pub fn new_with(uid: Uid) -> Self {
         Self {
             uid,
-            inner: SimpleNoisyAudioSourceCoreBuilder::default()
-                .build()
-                .unwrap(),
+            inner: SimpleOscillatorCoreBuilder::default().build().unwrap(),
         }
     }
 }
-impl HandlesMidi for SimpleInstrument {}
-impl Serializable for SimpleInstrument {}
+impl HandlesMidi for SimpleInstrumentDrone {}
+impl Serializable for SimpleInstrumentDrone {}

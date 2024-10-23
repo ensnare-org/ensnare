@@ -261,7 +261,7 @@ impl NoteSequencerSettings {
 struct SimpleInstrumentSettings {
     hide: bool,
     #[derivative(Default(value = "SimpleInstrument::default()"))]
-    entity: SimpleInstrument,
+    entity: SimpleInstrumentDrone,
 }
 impl Displays for SimpleInstrumentSettings {
     fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
@@ -281,7 +281,7 @@ impl SimpleInstrumentSettings {
 #[derive(Debug, Default)]
 struct SimpleControllerSettings {
     hide: bool,
-    entity: SimpleController,
+    entity: SimpleControllerOneNoteOneMeasure,
 }
 impl Displays for SimpleControllerSettings {
     fn ui(&mut self, ui: &mut eframe::egui::Ui) -> eframe::egui::Response {
