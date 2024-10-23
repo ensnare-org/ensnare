@@ -106,6 +106,11 @@ pub trait Projects: Configurable + Controls + Sized {
     /// of the project performance. Renders as of the current position set in
     /// [Controls] and advances the position appropriately. If the performance
     /// ends midway, the remainder of the buffer will be untouched.
+    ///
+    /// TODO: would be better for early-end to fill the remainder of the buffer
+    /// with silence. Then the method can guarantee that it'll always fill the
+    /// given buffer, which means the caller doesn't have to remember to clear
+    /// the buffer to silence before calling.
     fn generate_audio(
         &mut self,
         frames: &mut [StereoSample],
@@ -115,6 +120,14 @@ pub trait Projects: Configurable + Controls + Sized {
     /// Generates the specified number of frames of the project and sends them
     /// to the preconfigured destination. The destination depends on the
     /// implementation of the [Projects] trait.
+    ///
+    /// This method typically builds on `generate_audio()` to do extra things
+    /// with the generated frames. For example, a `Project` might be configured
+    /// to send audio data to an audio interface, or to a GUI widget that
+    /// displays real-time audio information.
+    ///
+    /// TODO: make it clearer to callers which of these two methods is better
+    /// for most purposes.
     fn generate_and_dispatch_audio(
         &mut self,
         count: usize,
