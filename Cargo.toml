@@ -107,7 +107,7 @@ required-features = ["std", "egui"]
 
 [[example]]
 name = "hello-world"
-required-features = ["std", "hound", "egui_extras"]
+required-features = ["std", "hound"]
 
 [[example]]
 name = "pocket-calculator"
