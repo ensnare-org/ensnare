@@ -57,6 +57,23 @@ pub trait Projects: Configurable + Controls + Sized {
     /// Sets the track's output level.
     fn set_track_output(&mut self, track_uid: TrackUid, output: Normal);
 
+    /// Adds a send from one track to another.
+    ///
+    /// # Arguments
+    ///
+    /// * `src_uid` - The [TrackUid] of the source track.
+    /// * `dst_uid` - The [TrackUid] of the destination track.
+    /// * `amount` - The level of the send.
+    fn add_send(
+        &mut self,
+        src_uid: TrackUid,
+        dst_uid: TrackUid,
+        amount: Normal,
+    ) -> anyhow::Result<()>;
+
+    /// Removes an existing send between two tracks.
+    fn remove_send(&mut self, send_track_uid: TrackUid, aux_track_uid: TrackUid);
+
     /// Generates a new [Uid] that is unique within this project.
     fn mint_entity_uid(&self) -> Uid;
 
@@ -480,6 +497,9 @@ pub(crate) mod tests {
 
         // Restore prior sample rate
         p.update_sample_rate(prior_sample_rate);
+
+        // Clean up
+        assert!(p.delete_track(track_uid_1).is_ok(), "delete_track succeeds");
     }
 
     fn test_projects_track_midi_channels(p: &mut impl Projects) {
@@ -496,6 +516,9 @@ pub(crate) mod tests {
         p.set_track_midi_channel(track_uid_2, MidiChannel(2));
 
         // TODO: when we add notes, we will be able to assert that events get to the right place.
+
+        assert!(p.delete_track(track_uid_1).is_ok(), "delete_track succeeds");
+        assert!(p.delete_track(track_uid_2).is_ok(), "delete_track succeeds");
     }
 
     /// [TestProject] is a harness that helps [Projects] trait development.
@@ -743,6 +766,13 @@ pub(crate) mod tests {
                 fn set_track_output(&mut self, track_uid: TrackUid, output: Normal);
                 fn get_humidity(&self, uid: &Uid) -> Normal;
                 fn set_humidity(&mut self, uid: Uid, humidity: Normal);
+                fn add_send(
+                    &mut self,
+                    src_uid: TrackUid,
+                    dst_uid: TrackUid,
+                    amount: Normal,
+                ) -> anyhow::Result<()>;
+                fn remove_send(&mut self, send_track_uid: TrackUid, aux_track_uid: TrackUid);
             }
             to self.composer {
                 fn add_pattern(

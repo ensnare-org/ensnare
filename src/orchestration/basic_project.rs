@@ -69,6 +69,13 @@ impl Projects for BasicProject {
             fn set_track_output(&mut self, track_uid: TrackUid, output: Normal);
             fn get_humidity(&self, uid: &Uid) -> Normal;
             fn set_humidity(&mut self, uid: Uid, humidity: Normal);
+            fn add_send(
+                &mut self,
+                src_uid: TrackUid,
+                dst_uid: TrackUid,
+                amount: Normal,
+            ) -> anyhow::Result<()>;
+            fn remove_send(&mut self, send_track_uid: TrackUid, aux_track_uid: TrackUid);
         }
         to self.composer {
             fn add_pattern(
