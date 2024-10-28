@@ -120,12 +120,24 @@ pub trait Projects: Configurable + Controls + Sized {
         new_position: Option<usize>,
     ) -> anyhow::Result<()>;
 
+    /// Returns the [Pattern] with the given [PatternUid].
+    fn pattern(&self, pattern_uid: PatternUid) -> Option<&Pattern>;
+    /// Returns the mutable [Pattern] with the given [PatternUid].
+    fn pattern_mut(&mut self, pattern_uid: PatternUid) -> Option<&mut Pattern>;
+
     /// Adds a [Pattern] to the project's pattern catalog.
     fn add_pattern(
         &mut self,
         contents: Pattern,
         pattern_uid: Option<PatternUid>,
     ) -> anyhow::Result<PatternUid>;
+
+    /// Tells the project that a pattern has changed, allowing the project to
+    /// conduct internal bookkeeping.
+    fn notify_pattern_change(&mut self);
+
+    /// Removes a [Pattern] from the project's pattern catalog.
+    fn remove_pattern(&mut self, pattern_uid: PatternUid) -> anyhow::Result<Pattern>;
 
     /// Arranges the [Pattern] with the given [PatternUid] in the current
     /// composition.
@@ -137,11 +149,49 @@ pub trait Projects: Configurable + Controls + Sized {
         position: MusicalTime,
     ) -> anyhow::Result<ArrangementUid>;
 
+    /// Sets a new position for an existing arrangement. Optionally duplicates
+    /// the existing arrangement, leaves it in place, and creates a new one in
+    /// the new position.
+    fn move_arrangement(
+        &mut self,
+        track_uid: TrackUid,
+        arrangement_uid: ArrangementUid,
+        new_position: MusicalTime,
+        copy_original: bool,
+    ) -> anyhow::Result<ArrangementUid>;
+
+    /// Removes an arrangement.
+    fn unarrange(&mut self, track_uid: TrackUid, arrangement_uid: ArrangementUid);
+
+    /// Creates a new [ArrangementUid] pointing to the same arrangement as the
+    /// given [ArrangementUid].
+    fn duplicate_arrangement(
+        &mut self,
+        track_uid: TrackUid,
+        arrangement_uid: ArrangementUid,
+    ) -> anyhow::Result<ArrangementUid>;
+
     /// Returns the wet/dry mix for an entity.
     fn get_humidity(&self, uid: &Uid) -> Normal;
 
     /// Sets the wet/dry mix for an entity.
     fn set_humidity(&mut self, uid: Uid, humidity: Normal);
+
+    /// Links a source entity to a target entity with a specified control parameter.
+    fn link(&mut self, source: Uid, target: Uid, param: ControlIndex) -> anyhow::Result<()>;
+    /// Unlinks a source entity from a target entity with a specified control parameter.
+    fn unlink(&mut self, source: Uid, target: Uid, param: ControlIndex);
+    /// Removes a signal path and returns it.
+    fn remove_path(&mut self, path_uid: PathUid) -> Option<SignalPath>;
+    /// Links a signal path to a target entity with a specified control parameter.
+    fn link_path(
+        &mut self,
+        path_uid: PathUid,
+        target_uid: Uid,
+        param: ControlIndex,
+    ) -> anyhow::Result<()>;
+    /// Unlinks a signal path from a target entity with a specified control parameter.
+    fn unlink_path(&mut self, path_uid: PathUid, target_uid: Uid, param: ControlIndex);
 
     /// Returns an [Iterator] that renders the project as [StereoSample]s from
     /// start to finish.
@@ -515,7 +565,8 @@ pub(crate) mod tests {
         p.set_track_midi_channel(track_uid_1, MidiChannel(1));
         p.set_track_midi_channel(track_uid_2, MidiChannel(2));
 
-        // TODO: when we add notes, we will be able to assert that events get to the right place.
+        // TODO: when we add notes, we will be able to assert that events get to
+        // the right place.
 
         assert!(p.delete_track(track_uid_1).is_ok(), "delete_track succeeds");
         assert!(p.delete_track(track_uid_2).is_ok(), "delete_track succeeds");
@@ -541,10 +592,55 @@ pub(crate) mod tests {
         midi_router: MidiRouter,
         orchestrator: Orchestrator,
         composer: Composer,
+        automator: Automator,
 
         track_to_midi_router: HashMap<TrackUid, MidiRouter>,
     }
     impl Projects for TestProject {
+        delegate! {
+            to self.orchestrator {
+                fn track_output(&mut self, track_uid: TrackUid) -> Normal;
+                fn set_track_output(&mut self, track_uid: TrackUid, output: Normal);
+                fn get_humidity(&self, uid: &Uid) -> Normal;
+                fn set_humidity(&mut self, uid: Uid, humidity: Normal);
+                fn add_send(
+                    &mut self,
+                    src_uid: TrackUid,
+                    dst_uid: TrackUid,
+                    amount: Normal,
+                ) -> anyhow::Result<()>;
+                fn remove_send(&mut self, send_track_uid: TrackUid, aux_track_uid: TrackUid);
+            }
+            to self.composer {
+                fn pattern(&self, pattern_uid: PatternUid) -> Option<&Pattern>;
+                fn pattern_mut(&mut self, pattern_uid: PatternUid) -> Option<&mut Pattern>;
+                fn add_pattern(
+                    &mut self,
+                    contents: Pattern,
+                    pattern_uid: Option<PatternUid>,
+                ) -> anyhow::Result<PatternUid>;
+                fn remove_pattern(&mut self, pattern_uid: PatternUid) -> anyhow::Result<Pattern>;
+                fn notify_pattern_change(&mut self);
+                fn arrange_pattern(
+                    &mut self,
+                    track_uid: TrackUid,
+                    pattern_uid: PatternUid,
+                    midi_channel: Option<MidiChannel>,
+                    position: MusicalTime,
+                ) -> anyhow::Result<ArrangementUid>;
+                fn move_arrangement(&mut self, track_uid: TrackUid, arrangement_uid: ArrangementUid, new_position: MusicalTime, copy_original: bool) -> anyhow::Result<ArrangementUid>;
+                fn unarrange(&mut self, track_uid: TrackUid, arrangement_uid: ArrangementUid);
+                fn duplicate_arrangement(&mut self, track_uid: TrackUid, arrangement_uid: ArrangementUid) -> anyhow::Result<ArrangementUid>;
+            }
+            to self.automator {
+                fn link(&mut self, source: Uid, target: Uid, param: ControlIndex) -> anyhow::Result<()>;
+                fn unlink(&mut self, source: Uid, target: Uid, param: ControlIndex);
+                fn remove_path(&mut self, path_uid: PathUid) -> Option<SignalPath>;
+                fn link_path(&mut self, path_uid: PathUid, target_uid: Uid, param: ControlIndex) -> anyhow::Result<()>;
+                fn unlink_path(&mut self, path_uid: PathUid, target_uid: Uid, param: ControlIndex);
+            }
+        }
+
         fn mint_track_uid(&self) -> TrackUid {
             self.track_uid_factory.mint_next()
         }
@@ -758,36 +854,6 @@ pub(crate) mod tests {
         fn set_track_midi_channel(&mut self, track_uid: TrackUid, midi_channel: MidiChannel) {
             let router = self.track_to_midi_router.entry(track_uid).or_default();
             router.set_midi_channel(midi_channel);
-        }
-
-        delegate! {
-            to self.orchestrator {
-                fn track_output(&mut self, track_uid: TrackUid) -> Normal;
-                fn set_track_output(&mut self, track_uid: TrackUid, output: Normal);
-                fn get_humidity(&self, uid: &Uid) -> Normal;
-                fn set_humidity(&mut self, uid: Uid, humidity: Normal);
-                fn add_send(
-                    &mut self,
-                    src_uid: TrackUid,
-                    dst_uid: TrackUid,
-                    amount: Normal,
-                ) -> anyhow::Result<()>;
-                fn remove_send(&mut self, send_track_uid: TrackUid, aux_track_uid: TrackUid);
-            }
-            to self.composer {
-                fn add_pattern(
-                    &mut self,
-                    contents: Pattern,
-                    pattern_uid: Option<PatternUid>,
-                ) -> anyhow::Result<PatternUid>;
-                fn arrange_pattern(
-                    &mut self,
-                    track_uid: TrackUid,
-                    pattern_uid: PatternUid,
-                    midi_channel: Option<MidiChannel>,
-                    position: MusicalTime,
-                ) -> anyhow::Result<ArrangementUid>;
-            }
         }
     }
     impl Configurable for TestProject {

@@ -240,6 +240,25 @@ impl Projects for Project {
             fn set_humidity(&mut self, uid: Uid, humidity: Normal);
             fn add_send(&mut self, src_uid: TrackUid, dst_uid: TrackUid, amount: Normal) -> anyhow::Result<()>;
             fn remove_send(&mut self, send_track_uid: TrackUid, aux_track_uid: TrackUid);
+            fn track_output(&mut self, track_uid: TrackUid) -> Normal;
+            fn set_track_output(&mut self, track_uid: TrackUid, output: Normal);
+        }
+        to self.composer {
+            fn pattern(&self, pattern_uid: PatternUid) -> Option<&Pattern>;
+            fn pattern_mut(&mut self, pattern_uid: PatternUid) -> Option<&mut Pattern>;
+            fn add_pattern(&mut self, contents: Pattern, pattern_uid: Option<PatternUid>) -> anyhow::Result<PatternUid>;
+            fn notify_pattern_change(&mut self);
+            fn remove_pattern(&mut self, pattern_uid: PatternUid) -> anyhow::Result<Pattern>;
+            fn move_arrangement(&mut self, track_uid: TrackUid, arrangement_uid: ArrangementUid, new_position: MusicalTime, copy_original: bool) -> anyhow::Result<ArrangementUid>;
+            fn unarrange(&mut self, track_uid: TrackUid, arrangement_uid: ArrangementUid);
+            fn duplicate_arrangement(&mut self, track_uid: TrackUid, arrangement_uid: ArrangementUid) -> anyhow::Result<ArrangementUid>;
+        }
+        to self.automator {
+            fn link(&mut self, source: Uid, target: Uid, param: ControlIndex) -> anyhow::Result<()>;
+            fn unlink(&mut self, source: Uid, target: Uid, param: ControlIndex);
+            fn remove_path(&mut self, path_uid: PathUid) -> Option<SignalPath>;
+            fn link_path(&mut self, path_uid: PathUid, target_uid: Uid, param: ControlIndex) -> anyhow::Result<()> ;
+            fn unlink_path(&mut self, path_uid: PathUid, target_uid: Uid, param: ControlIndex);
         }
     }
 
@@ -292,19 +311,6 @@ impl Projects for Project {
         router.set_midi_channel(midi_channel);
     }
 
-    delegate! {
-        to self.orchestrator {
-            fn track_output(&mut self, track_uid: TrackUid) -> Normal;
-            fn set_track_output(&mut self, track_uid: TrackUid, output: Normal);
-        }
-    }
-
-    delegate! {
-        to self.composer {
-            fn add_pattern(&mut self, contents: Pattern, pattern_uid: Option<PatternUid>) -> Result<PatternUid>;
-        }
-    }
-
     fn arrange_pattern(
         &mut self,
         track_uid: TrackUid,
@@ -332,27 +338,7 @@ impl Project {
     /// The fixed [Uid] for the project's [Transport].
     pub const TRANSPORT_UID: Uid = Uid(2);
 
-    delegate! {
-        to self.orchestrator {
-        }
-        to self.composer {
-            pub fn add_pattern(&mut self, contents: Pattern, pattern_uid: Option<PatternUid>) -> Result<PatternUid>;
-            pub fn pattern(&self, pattern_uid: PatternUid) -> Option<&Pattern>;
-            pub fn pattern_mut(&mut self, pattern_uid: PatternUid) -> Option<&mut Pattern>;
-            pub fn notify_pattern_change(&mut self);
-            pub fn remove_pattern(&mut self, pattern_uid: PatternUid) -> Result<Pattern>;
-            pub fn move_arrangement(&mut self, track_uid: TrackUid, arrangement_uid: ArrangementUid, new_position: MusicalTime, copy_original: bool) -> Result<ArrangementUid>;
-            pub fn unarrange(&mut self, track_uid: TrackUid, arrangement_uid: ArrangementUid);
-            pub fn duplicate_arrangement(&mut self, track_uid: TrackUid, arrangement_uid: ArrangementUid) -> Result<ArrangementUid>;
-        }
-        to self.automator {
-            pub fn link(&mut self, source: Uid, target: Uid, param: ControlIndex) -> Result<()>;
-            pub fn unlink(&mut self, source: Uid, target: Uid, param: ControlIndex);
-            pub fn remove_path(&mut self, path_uid: PathUid) -> Option<SignalPath>;
-            pub fn link_path(&mut self, path_uid: PathUid, target_uid: Uid, param: ControlIndex) -> Result<()> ;
-            pub fn unlink_path(&mut self, path_uid: PathUid, target_uid: Uid, param: ControlIndex);
-        }
-    }
+    delegate! {}
 
     /// Starts with a default project and configures for easy first use.
     pub fn new_project() -> Self {

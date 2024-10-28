@@ -61,6 +61,7 @@ pub struct BasicProject {
 
     orchestrator: Orchestrator,
     composer: Composer,
+    automator: Automator,
 }
 impl Projects for BasicProject {
     delegate! {
@@ -69,28 +70,29 @@ impl Projects for BasicProject {
             fn set_track_output(&mut self, track_uid: TrackUid, output: Normal);
             fn get_humidity(&self, uid: &Uid) -> Normal;
             fn set_humidity(&mut self, uid: Uid, humidity: Normal);
-            fn add_send(
-                &mut self,
-                src_uid: TrackUid,
-                dst_uid: TrackUid,
-                amount: Normal,
-            ) -> anyhow::Result<()>;
+            fn add_send(&mut self, src_uid: TrackUid, dst_uid: TrackUid, amount: Normal) -> anyhow::Result<()>;
             fn remove_send(&mut self, send_track_uid: TrackUid, aux_track_uid: TrackUid);
         }
         to self.composer {
-            fn add_pattern(
-                &mut self,
-                contents: Pattern,
-                pattern_uid: Option<PatternUid>,
-            ) -> anyhow::Result<PatternUid>;
-            // TODO: see Project's version - it looks up the midi router and asks for the channel if none is supplied
-            fn arrange_pattern(
-                &mut self,
-                track_uid: TrackUid,
-                pattern_uid: PatternUid,
-                midi_channel: Option<MidiChannel>,
-                position: MusicalTime,
-            ) -> anyhow::Result<ArrangementUid>;
+            fn pattern(&self, pattern_uid: PatternUid) -> Option<&Pattern>;
+            fn pattern_mut(&mut self, pattern_uid: PatternUid) -> Option<&mut Pattern>;
+            fn add_pattern(&mut self, contents: Pattern, pattern_uid: Option<PatternUid>) -> anyhow::Result<PatternUid>;
+            fn notify_pattern_change(&mut self);
+            fn remove_pattern(&mut self, pattern_uid: PatternUid) -> anyhow::Result<Pattern>;
+
+            // TODO: see Project's version - it looks up the midi router and
+            // asks for the channel if none is supplied
+            fn arrange_pattern(&mut self,track_uid: TrackUid, pattern_uid: PatternUid, midi_channel: Option<MidiChannel>, position: MusicalTime) -> anyhow::Result<ArrangementUid>;
+            fn move_arrangement(&mut self, track_uid: TrackUid, arrangement_uid: ArrangementUid, new_position: MusicalTime, copy_original: bool) -> anyhow::Result<ArrangementUid>;
+            fn unarrange(&mut self, track_uid: TrackUid, arrangement_uid: ArrangementUid);
+            fn duplicate_arrangement(&mut self, track_uid: TrackUid, arrangement_uid: ArrangementUid) -> anyhow::Result<ArrangementUid>;
+        }
+        to self.automator {
+            fn link(&mut self, source: Uid, target: Uid, param: ControlIndex) -> anyhow::Result<()>;
+            fn unlink(&mut self, source: Uid, target: Uid, param: ControlIndex);
+            fn remove_path(&mut self, path_uid: PathUid) -> Option<SignalPath>;
+            fn link_path(&mut self, path_uid: PathUid, target_uid: Uid, param: ControlIndex) -> anyhow::Result<()>;
+            fn unlink_path(&mut self, path_uid: PathUid, target_uid: Uid, param: ControlIndex);
         }
     }
 
