@@ -3,9 +3,11 @@
 //! Representation of a whole music project, including support for
 //! serialization.
 
+use super::{midi_router::MidiRouter, Orchestrator};
 use crate::prelude::*;
 use anyhow::anyhow;
 use delegate::delegate;
+use rustc_hash::FxHashMap;
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 
@@ -53,9 +55,38 @@ pub struct BasicProject {
     entity_uid_to_track_uid: HashMap<Uid, TrackUid>,
     track_uid_to_entity_uids: HashMap<TrackUid, Vec<Uid>>,
 
+    track_to_midi_router: FxHashMap<TrackUid, MidiRouter>,
+
     transport: Transport,
+
+    orchestrator: Orchestrator,
+    composer: Composer,
 }
 impl Projects for BasicProject {
+    delegate! {
+        to self.orchestrator {
+            fn track_output(&mut self, track_uid: TrackUid) -> Normal;
+            fn set_track_output(&mut self, track_uid: TrackUid, output: Normal);
+            fn get_humidity(&self, uid: &Uid) -> Normal;
+            fn set_humidity(&mut self, uid: Uid, humidity: Normal);
+        }
+        to self.composer {
+            fn add_pattern(
+                &mut self,
+                contents: Pattern,
+                pattern_uid: Option<PatternUid>,
+            ) -> anyhow::Result<PatternUid>;
+            // TODO: see Project's version - it looks up the midi router and asks for the channel if none is supplied
+            fn arrange_pattern(
+                &mut self,
+                track_uid: TrackUid,
+                pattern_uid: PatternUid,
+                midi_channel: Option<MidiChannel>,
+                position: MusicalTime,
+            ) -> anyhow::Result<ArrangementUid>;
+        }
+    }
+
     fn mint_track_uid(&self) -> TrackUid {
         self.track_uid_factory.mint_next()
     }
@@ -246,6 +277,13 @@ impl Projects for BasicProject {
             self.generate_audio(buffer_slice, midi_events_fn.as_deref_mut());
             remaining -= to_generate;
         }
+    }
+
+    fn set_track_midi_channel(&mut self, track_uid: TrackUid, midi_channel: MidiChannel) {
+        self.track_to_midi_router
+            .entry(track_uid)
+            .or_default()
+            .set_midi_channel(midi_channel);
     }
 }
 impl Configurable for BasicProject {

@@ -6,7 +6,8 @@ use core::fmt::Debug;
 use rustc_hash::FxHashMap;
 use serde::{Deserialize, Serialize};
 
-/// Handles the virtual connections between MIDI senders and receivers.
+/// Handles the virtual connections between a group of MIDI senders and
+/// receivers.
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub struct MidiRouter {
@@ -23,8 +24,9 @@ pub struct MidiRouter {
     pub uid_to_channel: FxHashMap<Uid, MidiChannel>,
 }
 impl MidiRouter {
-    /// Causes an entity to listen on the given MIDI channel, or clears all the
-    /// channels it's listening to.
+    /// Causes an entity to listen on the given MIDI channel, adding to any
+    /// existing channels. If the given channel is `None`, clears all the
+    /// channels the entity is listening to.
     pub fn set_midi_receiver_channel(
         &mut self,
         entity_uid: Uid,

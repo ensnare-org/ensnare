@@ -49,6 +49,14 @@ pub trait Projects: Configurable + Controls + Sized {
     /// Sets or clears the single solo track.
     fn set_solo_track(&mut self, track_uid: Option<TrackUid>);
 
+    /// Sets the track's MIDI receive channel.
+    fn set_track_midi_channel(&mut self, track_uid: TrackUid, midi_channel: MidiChannel);
+
+    /// Returns the track's output level.
+    fn track_output(&mut self, track_uid: TrackUid) -> Normal;
+    /// Sets the track's output level.
+    fn set_track_output(&mut self, track_uid: TrackUid, output: Normal);
+
     /// Generates a new [Uid] that is unique within this project.
     fn mint_entity_uid(&self) -> Uid;
 
@@ -94,6 +102,29 @@ pub trait Projects: Configurable + Controls + Sized {
         new_track_uid: Option<TrackUid>,
         new_position: Option<usize>,
     ) -> anyhow::Result<()>;
+
+    /// Adds a [Pattern] to the project's pattern catalog.
+    fn add_pattern(
+        &mut self,
+        contents: Pattern,
+        pattern_uid: Option<PatternUid>,
+    ) -> anyhow::Result<PatternUid>;
+
+    /// Arranges the [Pattern] with the given [PatternUid] in the current
+    /// composition.
+    fn arrange_pattern(
+        &mut self,
+        track_uid: TrackUid,
+        pattern_uid: PatternUid,
+        midi_channel: Option<MidiChannel>,
+        position: MusicalTime,
+    ) -> anyhow::Result<ArrangementUid>;
+
+    /// Returns the wet/dry mix for an entity.
+    fn get_humidity(&self, uid: &Uid) -> Normal;
+
+    /// Sets the wet/dry mix for an entity.
+    fn set_humidity(&mut self, uid: Uid, humidity: Normal);
 
     /// Returns an [Iterator] that renders the project as [StereoSample]s from
     /// start to finish.
@@ -186,8 +217,8 @@ impl<'a, P: Projects> Iterator for ProjectsRenderer<'a, P> {
 pub(crate) mod tests {
     use super::*;
     use crate::{
-        // entities::{TestAudioSource, Timer},
-        orchestration::TrackUidFactory,
+        orchestration::{midi_router::MidiRouter, TrackUidFactory},
+        Orchestrator,
     };
     use anyhow::anyhow;
     use delegate::delegate;
@@ -199,6 +230,7 @@ pub(crate) mod tests {
         test_projects_track_signal_flow(&mut p);
         test_projects_entity_lifetime(&mut p);
         test_projects_rendering(&mut p);
+        test_projects_track_midi_channels(&mut p);
     }
 
     fn test_projects_uids(p: &mut impl Projects) {
@@ -450,6 +482,22 @@ pub(crate) mod tests {
         p.update_sample_rate(prior_sample_rate);
     }
 
+    fn test_projects_track_midi_channels(p: &mut impl Projects) {
+        assert_eq!(
+            p.track_uids().len(),
+            0,
+            "supplied impl Projects should be clean"
+        );
+
+        let track_uid_1 = p.create_track().unwrap();
+        let track_uid_2 = p.create_track().unwrap();
+
+        p.set_track_midi_channel(track_uid_1, MidiChannel(1));
+        p.set_track_midi_channel(track_uid_2, MidiChannel(2));
+
+        // TODO: when we add notes, we will be able to assert that events get to the right place.
+    }
+
     /// [TestProject] is a harness that helps [Projects] trait development.
     /// TODO: when [BasicProject] is operational, consider deleting this struct
     /// and moving the tests to its module.
@@ -466,6 +514,12 @@ pub(crate) mod tests {
         track_uid_to_entity_uids: HashMap<TrackUid, Vec<Uid>>,
 
         transport: Transport,
+
+        midi_router: MidiRouter,
+        orchestrator: Orchestrator,
+        composer: Composer,
+
+        track_to_midi_router: HashMap<TrackUid, MidiRouter>,
     }
     impl Projects for TestProject {
         fn mint_track_uid(&self) -> TrackUid {
@@ -675,6 +729,34 @@ pub(crate) mod tests {
                 buffer_slice.fill(StereoSample::SILENCE);
                 self.generate_audio(buffer_slice, midi_events_fn.as_deref_mut());
                 remaining -= to_generate;
+            }
+        }
+
+        fn set_track_midi_channel(&mut self, track_uid: TrackUid, midi_channel: MidiChannel) {
+            let router = self.track_to_midi_router.entry(track_uid).or_default();
+            router.set_midi_channel(midi_channel);
+        }
+
+        delegate! {
+            to self.orchestrator {
+                fn track_output(&mut self, track_uid: TrackUid) -> Normal;
+                fn set_track_output(&mut self, track_uid: TrackUid, output: Normal);
+                fn get_humidity(&self, uid: &Uid) -> Normal;
+                fn set_humidity(&mut self, uid: Uid, humidity: Normal);
+            }
+            to self.composer {
+                fn add_pattern(
+                    &mut self,
+                    contents: Pattern,
+                    pattern_uid: Option<PatternUid>,
+                ) -> anyhow::Result<PatternUid>;
+                fn arrange_pattern(
+                    &mut self,
+                    track_uid: TrackUid,
+                    pattern_uid: PatternUid,
+                    midi_channel: Option<MidiChannel>,
+                    position: MusicalTime,
+                ) -> anyhow::Result<ArrangementUid>;
             }
         }
     }

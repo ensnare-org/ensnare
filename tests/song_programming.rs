@@ -2,11 +2,12 @@
 
 use ensnare::{
     entities::{BiQuadFilterLowPass24db, Drumkit, Reverb, SubtractiveSynth},
+    orchestration::ProjectExporter,
     prelude::*,
     util::init_sample_libraries,
 };
 
-fn set_up_drum_track(project: &mut Project, factory: &EntityFactory<dyn Entity>) {
+fn set_up_drum_track(project: &mut impl Projects, factory: &EntityFactory<dyn Entity>) {
     // Create the track and set it to 50% gain, because we'll have two tracks total.
     let track_uid = project.create_track().unwrap();
     project.set_track_midi_channel(track_uid, MidiChannel::DRUM);
@@ -75,7 +76,7 @@ fn set_up_drum_track(project: &mut Project, factory: &EntityFactory<dyn Entity>)
     project.set_humidity(filter_uid, Normal::from(0.0));
 }
 
-fn set_up_lead_track(project: &mut Project, factory: &EntityFactory<dyn Entity>) {
+fn set_up_lead_track(project: &mut impl Projects, factory: &EntityFactory<dyn Entity>) {
     // Create the track and set it to 50% gain, because we'll have two tracks total.
     let track_uid = project.create_track().unwrap();
     project.set_track_output(track_uid, Normal::from(0.5));
@@ -133,7 +134,7 @@ fn set_up_lead_track(project: &mut Project, factory: &EntityFactory<dyn Entity>)
 // Demonstrates making a song in Rust. We assume that we knew what the song is
 // from the start, so there is no editing -- just programming. Compare the
 // edit_song() test, which demonstrates adding elements, changing them, and
-// removing them, as you'd expect a GUI DAW to do.
+// removing them, as you'd expect an interactive DAW to do.
 #[test]
 fn program_song() {
     Paths::set_instance(Paths::default());
@@ -141,7 +142,7 @@ fn program_song() {
     let factory =
         SimpleEntities::register(BuiltInEntities::register(EntityFactory::default())).finalize();
 
-    let mut project = Project::default();
+    let mut project = BasicProject::default();
     project.update_tempo(Tempo(128.0));
 
     set_up_drum_track(&mut project, &factory);
@@ -150,5 +151,6 @@ fn program_song() {
     let output_prefix: std::path::PathBuf = [env!("CARGO_TARGET_TMPDIR"), "simple-song"]
         .iter()
         .collect();
-    assert!(project.save_and_export(output_prefix).is_ok());
+
+    assert!(ProjectExporter::export_to_wav(&mut project, output_prefix).is_ok());
 }

@@ -236,6 +236,8 @@ impl Projects for Project {
             fn is_track_muted(&mut self, track_uid: TrackUid) -> bool;
             fn solo_track(&self) -> Option<TrackUid>;
             fn set_solo_track(&mut self, track_uid: Option<TrackUid>);
+            fn get_humidity(&self, uid: &Uid) -> Normal;
+            fn set_humidity(&mut self, uid: Uid, humidity: Normal);
         }
     }
 
@@ -282,6 +284,43 @@ impl Projects for Project {
             remaining -= to_generate;
         }
     }
+
+    fn set_track_midi_channel(&mut self, track_uid: TrackUid, midi_channel: MidiChannel) {
+        let router = self.track_to_midi_router.entry(track_uid).or_default();
+        router.set_midi_channel(midi_channel);
+    }
+
+    delegate! {
+        to self.orchestrator {
+            fn track_output(&mut self, track_uid: TrackUid) -> Normal;
+            fn set_track_output(&mut self, track_uid: TrackUid, output: Normal);
+        }
+    }
+
+    delegate! {
+        to self.composer {
+            fn add_pattern(&mut self, contents: Pattern, pattern_uid: Option<PatternUid>) -> Result<PatternUid>;
+        }
+    }
+
+    fn arrange_pattern(
+        &mut self,
+        track_uid: TrackUid,
+        pattern_uid: PatternUid,
+        midi_channel: Option<MidiChannel>,
+        position: MusicalTime,
+    ) -> Result<ArrangementUid> {
+        let midi_channel = if let Some(midi_channel) = midi_channel {
+            midi_channel
+        } else {
+            self.track_to_midi_router
+                .entry(track_uid)
+                .or_default()
+                .midi_channel()
+        };
+        self.composer
+            .arrange_pattern(track_uid, pattern_uid, Some(midi_channel), position)
+    }
 }
 #[allow(missing_docs)]
 impl Project {
@@ -293,9 +332,6 @@ impl Project {
 
     delegate! {
         to self.orchestrator {
-            pub fn get_humidity(&self, uid: &Uid) -> Normal;
-            pub fn set_humidity(&mut self, uid: Uid, humidity: Normal);
-
             pub fn track_output(&mut self, track_uid: TrackUid) -> Normal;
             pub fn set_track_output(&mut self, track_uid: TrackUid, output: Normal);
 
@@ -708,37 +744,12 @@ impl Project {
         self.e.new_arrangement_arrangement_uid = Some(arrangement_uid);
     }
 
-    /// Arranges a pattern on a track.
-    pub fn arrange_pattern(
-        &mut self,
-        track_uid: TrackUid,
-        pattern_uid: PatternUid,
-        midi_channel: Option<MidiChannel>,
-        position: MusicalTime,
-    ) -> Result<ArrangementUid> {
-        let midi_channel = if let Some(midi_channel) = midi_channel {
-            midi_channel
-        } else {
-            self.track_to_midi_router
-                .entry(track_uid)
-                .or_default()
-                .midi_channel()
-        };
-        self.composer
-            .arrange_pattern(track_uid, pattern_uid, midi_channel, position)
-    }
-
     pub fn track_midi_channel(&self, track_uid: TrackUid) -> Option<MidiChannel> {
         if let Some(router) = self.track_to_midi_router.get(&track_uid) {
             Some(router.midi_channel())
         } else {
             None
         }
-    }
-
-    pub fn set_track_midi_channel(&mut self, track_uid: TrackUid, midi_channel: MidiChannel) {
-        let router = self.track_to_midi_router.entry(track_uid).or_default();
-        router.set_midi_channel(midi_channel);
     }
 
     // TODO: reduce visibility

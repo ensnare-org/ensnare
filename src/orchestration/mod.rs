@@ -15,6 +15,7 @@ pub use {
     repositories::{EntityRepository, TrackRepository},
     track::{TrackTitle, TrackUid, TrackUidFactory},
     traits::Projects,
+    util::ProjectExporter,
 };
 
 use {bus::BusStation, midi_router::MidiRouter};
@@ -28,3 +29,4 @@ mod project;
 mod repositories;
 mod track;
 mod traits;
+mod util;
