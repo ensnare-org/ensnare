@@ -83,6 +83,7 @@ mod tests {
         }
     }
     impl UidFactory<TestUid> {
+        #[allow(missing_docs)]
         pub const FIRST_UID: AtomicUsize = AtomicUsize::new(1);
     }
     impl Default for UidFactory<TestUid> {
