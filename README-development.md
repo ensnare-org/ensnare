@@ -6,9 +6,15 @@ crate in your app or crate), See the [main README](./README.md).
 
 ## First-time setup
 
-To set up your Linux machine for development, see the `apt install` packages in
-[`.github/workflows/build.yml`](./.github/workflows/build.yml). Other platforms
-don't have special dependencies.
+### Linux
+
+Install the required build dependencies:
+
+```bash
+sudo apt install pkg-config gcc clang mold libclang-dev librust-alsa-sys-dev
+```
+
+Other platforms don't have special dependencies.
 
 ## Useful Cargo commands
 
